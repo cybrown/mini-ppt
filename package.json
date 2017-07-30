@@ -10,9 +10,12 @@
     "@types/react": "^15.6.0",
     "@types/react-dom": "^15.5.1",
     "@types/react-hot-loader": "^3.0.3",
+    "@types/react-redux": "^4.4.47",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-hot-loader": "next",
+    "react-redux": "^5.0.5",
+    "redux": "^3.7.2",
     "runpack": "^0.4.1"
   }
 }
