@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { State } from "./State";
 import { Widget, widgetsSelector, HasPosition, RenderWidget } from "./widget";
-import { AppAction } from "./AppAction";
+import { AppAction, create } from "./AppAction";
 import { Dispatch } from "redux";
 import { createSelector } from 'reselect';
 
@@ -16,12 +16,8 @@ const App = connect((state: State) => ({
     widgets: widgetsSelector(state),
     value: state.value
 }), (dispatch: Dispatch<AppAction>) => ({
-    onMoveWidget: (id: string, x: number, y: number) => dispatch({
-        type: 'widget.move', id, x, y
-    }),
-    onInputChange: (value: string) => dispatch({
-        type: 'input.change', value
-    }),
+    onMoveWidget: (id: string, x: number, y: number) => dispatch(create('WidgetMoveAction', {id, x, y})),
+    onInputChange: (value: string) => dispatch(create('InputChangeAction', {value})),
 }))(props => (
     <div>
         <h1>Mini ppt app</h1>

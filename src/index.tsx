@@ -8,6 +8,7 @@ import { State } from "./State";
 import { AppAction } from "./AppAction";
 import { set } from "./util";
 import { widgetRepositoryReducer } from "./widget";
+import { inputReducer } from "./input";
 
 const root = document.createElement('div');
 document.body.appendChild(root);
@@ -36,14 +37,6 @@ const initialState: State = {
     },
     value: 'toto'
 }
-
-const inputReducer = (value: string, action: AppAction) => {
-    switch (action.type) {
-        case 'input.change':
-            return action.value;
-    }
-    return value;
-};
 
 const appReducer: Reducer<State> = (state = initialState, action: AppAction) => (
     set(state, {

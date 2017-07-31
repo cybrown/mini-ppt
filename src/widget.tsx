@@ -34,7 +34,7 @@ export const widgetsSelector = createSelector(widgetData, widgetList, (widgetDat
 
 export const widgetRepositoryReducer = (widgets: State['data']['widgets'], action: AppAction) => {
     switch (action.type) {
-        case 'widget.move':
+        case 'WidgetMoveAction':
             return set(widgets, {[action.id]: set(widgets[action.id], {
                 x: action.x,
                 y: action.y
@@ -115,4 +115,12 @@ export const RenderWidget: React.SFC<{widget: Widget}> = ({widget}) => {
         case 'rectangle':
             return <Rectangle color={widget.color} width={widget.width} height={widget.height} />;
     }
+}
+
+export interface WidgetActions {
+    WidgetMoveAction: {
+        id: string;
+        x: number;
+        y: number;
+    };
 }

@@ -1,13 +1,16 @@
-export interface WidgetMoveAction {
-    type: 'widget.move';
-    id: string;
-    x: number;
-    y: number;
+import { WidgetActions } from "./widget";
+import { InputActions } from "./input";
+
+interface Actions extends WidgetActions, InputActions {
+
 }
 
-export interface InputChangeAction {
-    type: 'input.change';
-    value: string;
+type ActionsWithTypes = {
+    [ActionType in keyof Actions]: {type: ActionType} & Actions[ActionType];
 }
 
-export type AppAction = WidgetMoveAction | InputChangeAction;
+export type AppAction = ActionsWithTypes[keyof ActionsWithTypes];
+
+export function create<Type extends keyof Actions>(type: Type, data: Actions[Type]) {
+    return { type, ...data as any }
+}
