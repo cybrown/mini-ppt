@@ -5,4 +5,9 @@ export interface WidgetMoveAction {
     y: number;
 }
 
-export type AppAction = WidgetMoveAction;
+export interface InputChangeAction {
+    type: 'input.change';
+    value: string;
+}
+
+export type AppAction = WidgetMoveAction | InputChangeAction;

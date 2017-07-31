@@ -4,5 +4,6 @@ export interface State {
     widgets: string[];
     data: {
         widgets: {[id: string]: Widget}
-    }
+    };
+    value: string;
 }

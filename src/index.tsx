@@ -2,10 +2,12 @@ import * as React from 'react';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import App from './App';
-import { createStore } from 'redux';
+import { createStore, Reducer } from 'redux';
 import { Provider } from 'react-redux';
 import { State } from "./State";
 import { AppAction } from "./AppAction";
+import { set } from "./util";
+import { widgetRepositoryReducer } from "./widget";
 
 const root = document.createElement('div');
 document.body.appendChild(root);
@@ -31,29 +33,28 @@ const initialState: State = {
                 height: 50
             }
         }
-    }
+    },
+    value: 'toto'
 }
 
-function set<T>(obj: T, data: Partial<T>): T {
-    return {...obj as any, ...data as any};
-}
-
-const store = createStore<State>((state = initialState, action: AppAction) => {
+const inputReducer = (value: string, action: AppAction) => {
     switch (action.type) {
-        case 'widget.move':
-            return set(state, {
-                data: set(state.data, {
-                    widgets: set(state.data.widgets, {
-                        [action.id]: set(state.data.widgets[action.id], {
-                            x: action.x,
-                            y: action.y
-                        })
-                    })
-                })
-            })
+        case 'input.change':
+            return action.value;
     }
-    return state;
-}, (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__());
+    return value;
+};
+
+const appReducer: Reducer<State> = (state = initialState, action: AppAction) => (
+    set(state, {
+        data: set(state.data, {
+            widgets: widgetRepositoryReducer(state.data.widgets, action)
+        }),
+        value: inputReducer(state.value, action)
+    })
+);
+
+const store = createStore<State>(appReducer, (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__());
 
 const doRender = (component?: JSX.Element) => render(<AppContainer>{component}</AppContainer>, root);
 
