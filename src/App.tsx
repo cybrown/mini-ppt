@@ -18,10 +18,14 @@ const App = connect((state: State) => ({
 }), (dispatch: Dispatch<AppAction>) => ({
     onMoveWidget: (id: string, x: number, y: number) => dispatch(create('WidgetMoveAction', {id, x, y})),
     onInputChange: (value: string) => dispatch(create('InputChangeAction', {value})),
+    onNewTextZoneClick: (text: string) => dispatch(create('WidgetNewTextZone', {
+        widgetId: Math.random().toString(), text
+    }))
 }))(props => (
     <div>
         <h1>Mini ppt app</h1>
         <input value={props.value} onChange={(e) => props.onInputChange(e.target.value)} />
+        <button onClick={() => props.onNewTextZoneClick(props.value)}>New text zone</button>
         <DrawingZone>
             {props.widgets.map(widget => (
                 <HasPosition key={widget.id} x={widget.x} y={widget.y} onMove={(x, y) => props.onMoveWidget(widget.id, x, y)}>

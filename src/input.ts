@@ -10,6 +10,8 @@ export const inputReducer = (value: string, action: AppAction) => {
     switch (action.type) {
         case 'InputChangeAction':
             return action.value;
+        case 'WidgetNewTextZone':
+            return '';
     }
     return value;
 };

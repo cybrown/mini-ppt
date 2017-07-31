@@ -32,6 +32,14 @@ const widgetList = (state: State) => state.widgets;
 
 export const widgetsSelector = createSelector(widgetData, widgetList, (widgetData, widgetList) => widgetList.map(id => widgetData[id]));
 
+export const widgetListReducer = (widgetsId: State['widgets'], action: AppAction) => {
+    switch (action.type) {
+        case 'WidgetNewTextZone':
+            return [...widgetsId, action.widgetId];
+    }
+    return widgetsId;
+}
+
 export const widgetRepositoryReducer = (widgets: State['data']['widgets'], action: AppAction) => {
     switch (action.type) {
         case 'WidgetMoveAction':
@@ -39,6 +47,14 @@ export const widgetRepositoryReducer = (widgets: State['data']['widgets'], actio
                 x: action.x,
                 y: action.y
             })});
+        case 'WidgetNewTextZone':
+            return set(widgets, {[action.widgetId]: {
+                id: action.widgetId,
+                kind: 'text',
+                x: 0,
+                y: 0,
+                text: action.text
+            }})
     }
     return widgets;
 }
@@ -122,5 +138,9 @@ export interface WidgetActions {
         id: string;
         x: number;
         y: number;
+    };
+    WidgetNewTextZone: {
+        widgetId: string;
+        text: string;
     };
 }

@@ -11,6 +11,6 @@ type ActionsWithTypes = {
 
 export type AppAction = ActionsWithTypes[keyof ActionsWithTypes];
 
-export function create<Type extends keyof Actions>(type: Type, data: Actions[Type]) {
+export function create<Type extends keyof Actions>(type: Type, data: Actions[Type]): ActionsWithTypes[Type] {
     return { type, ...data as any }
 }

@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import { State } from "./State";
 import { AppAction } from "./AppAction";
 import { set } from "./util";
-import { widgetRepositoryReducer } from "./widget";
+import { widgetRepositoryReducer, widgetListReducer } from "./widget";
 import { inputReducer } from "./input";
 
 const root = document.createElement('div');
@@ -40,6 +40,7 @@ const initialState: State = {
 
 const appReducer: Reducer<State> = (state = initialState, action: AppAction) => (
     set(state, {
+        widgets: widgetListReducer(state.widgets, action),
         data: set(state.data, {
             widgets: widgetRepositoryReducer(state.data.widgets, action)
         }),
