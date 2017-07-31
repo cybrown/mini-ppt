@@ -36,6 +36,8 @@ export const widgetListReducer = (widgetsId: State['widgets'], action: AppAction
     switch (action.type) {
         case 'WidgetNewTextZone':
             return [...widgetsId, action.widgetId];
+        case 'WidgetNewRectangle':
+            return [...widgetsId, action.widgetId];
     }
     return widgetsId;
 }
@@ -53,7 +55,17 @@ export const widgetRepositoryReducer = (widgets: State['data']['widgets'], actio
                 kind: 'text',
                 x: 0,
                 y: 0,
-                text: action.text
+                text: 'Text'
+            }})
+        case 'WidgetNewRectangle':
+            return set(widgets, {[action.widgetId]: {
+                id: action.widgetId,
+                kind: 'rectangle',
+                x: 0,
+                y: 0,
+                width: 30,
+                height: 30,
+                color: 'blue'
             }})
     }
     return widgets;
@@ -141,6 +153,8 @@ export interface WidgetActions {
     };
     WidgetNewTextZone: {
         widgetId: string;
-        text: string;
+    };
+    WidgetNewRectangle: {
+        widgetId: string;
     };
 }

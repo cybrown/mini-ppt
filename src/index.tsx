@@ -8,7 +8,7 @@ import { State } from "./State";
 import { AppAction } from "./AppAction";
 import { set } from "./util";
 import { widgetRepositoryReducer, widgetListReducer } from "./widget";
-import { inputReducer } from "./input";
+import './style.css';
 
 const root = document.createElement('div');
 document.body.appendChild(root);
@@ -34,8 +34,7 @@ const initialState: State = {
                 height: 50
             }
         }
-    },
-    value: 'toto'
+    }
 }
 
 const appReducer: Reducer<State> = (state = initialState, action: AppAction) => (
@@ -43,8 +42,7 @@ const appReducer: Reducer<State> = (state = initialState, action: AppAction) => 
         widgets: widgetListReducer(state.widgets, action),
         data: set(state.data, {
             widgets: widgetRepositoryReducer(state.data.widgets, action)
-        }),
-        value: inputReducer(state.value, action)
+        })
     })
 );
 

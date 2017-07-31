@@ -7,25 +7,35 @@ import { Dispatch } from "redux";
 import { createSelector } from 'reselect';
 
 const DrawingZone: React.SFC = ({children}) => (
-    <div style={{position: 'relative'}}>
+    <div style={{backgroundColor: 'white', position: 'relative', width: 500 + 'px', height: 500 + 'px'}}>
         {children}
     </div>
 )
 
+const Toolbar: React.SFC<{
+    onCreateTextZone: () => void;
+    onCreateRectangle: () => void;
+}> = ({onCreateTextZone, onCreateRectangle}) => (
+    <div>
+        <button onClick={onCreateTextZone}>Text zone</button>
+        <button onClick={onCreateRectangle}>Rectangle</button>
+    </div>
+);
+
 const App = connect((state: State) => ({
-    widgets: widgetsSelector(state),
-    value: state.value
+    widgets: widgetsSelector(state)
 }), (dispatch: Dispatch<AppAction>) => ({
     onMoveWidget: (id: string, x: number, y: number) => dispatch(create('WidgetMoveAction', {id, x, y})),
-    onInputChange: (value: string) => dispatch(create('InputChangeAction', {value})),
-    onNewTextZoneClick: (text: string) => dispatch(create('WidgetNewTextZone', {
-        widgetId: Math.random().toString(), text
+    onNewTextZoneClick: () => dispatch(create('WidgetNewTextZone', {
+        widgetId: Math.random().toString()
+    })),
+    onNewRectangle: () => dispatch(create('WidgetNewRectangle', {
+        widgetId: Math.random().toString()
     }))
 }))(props => (
     <div>
         <h1>Mini ppt app</h1>
-        <input value={props.value} onChange={(e) => props.onInputChange(e.target.value)} />
-        <button onClick={() => props.onNewTextZoneClick(props.value)}>New text zone</button>
+        <Toolbar onCreateTextZone={() => props.onNewTextZoneClick()} onCreateRectangle={() => props.onNewRectangle()} />
         <DrawingZone>
             {props.widgets.map(widget => (
                 <HasPosition key={widget.id} x={widget.x} y={widget.y} onMove={(x, y) => props.onMoveWidget(widget.id, x, y)}>

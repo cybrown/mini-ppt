@@ -1,7 +1,6 @@
 import { WidgetActions } from "./widget";
-import { InputActions } from "./input";
 
-interface Actions extends WidgetActions, InputActions {
+interface Actions extends WidgetActions {
 
 }
 

@@ -5,5 +5,4 @@ export interface State {
     data: {
         widgets: {[id: string]: Widget}
     };
-    value: string;
 }
