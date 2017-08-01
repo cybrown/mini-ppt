@@ -28,8 +28,8 @@ export interface WidgetRectangle extends BaseWidget {
 export type Widget = WidgetTextZone | WidgetRectangle;
 
 const widgetData = (state: State) => state.data.widgets;
-const widgetList = (state: State) => state.data.slides[state.editor.currentSlide].widgetsIds;
-
+export const currentSlide = (state: State) => state.data.slides[state.editor.currentSlide];
+export const widgetList = createSelector(currentSlide, (currentSlide) => currentSlide.widgetsIds);
 export const widgetsSelector = createSelector(widgetData, widgetList, (widgetData, widgetList) => widgetList.map(id => widgetData[id]));
 
 export const widgetRepositoryReducer = (widgets: State['data']['widgets'], action: AppAction) => {
@@ -126,7 +126,7 @@ export class HasPosition extends React.Component<{x: number, y: number, onMove: 
     }
 }
 
-export const RenderWidget: React.SFC<{widget: Widget}> = ({widget}) => {
+export const WidgetRenderer: React.SFC<{widget: Widget}> = ({widget}) => {
     switch (widget.kind) {
         case 'text':
             return <TextZone text={widget.text} />;

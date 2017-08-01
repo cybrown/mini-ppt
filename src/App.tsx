@@ -1,25 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { State } from "./State";
-import { Widget, widgetsSelector, HasPosition, RenderWidget } from "./widget";
+import { Widget, widgetsSelector, HasPosition, WidgetRenderer, currentSlide } from "./widget";
 import { AppAction, create } from "./AppAction";
 import { Dispatch } from "redux";
-import { createSelector } from 'reselect';
-import { Slide } from "./slide";
-
-const SlideEditor: React.SFC<{
-    widgets: Widget[],
-    slide: Slide,
-    onMoveWidget: (id: string, x: number, y: number) => void
-}> = ({children, widgets, slide, onMoveWidget}) => (
-    <div style={{backgroundColor: 'white', position: 'relative', width: 500 + 'px', height: 500 + 'px'}}>
-        {widgets.map(widget => (
-            <HasPosition key={widget.id} x={widget.x} y={widget.y} onMove={(x, y) => onMoveWidget(widget.id, x, y)}>
-                <RenderWidget widget={widget} />
-            </HasPosition>
-        ))}
-    </div>
-)
+import { Slide, SlideEditor } from "./slide";
 
 const Toolbar: React.SFC<{
     onCreateTextZone: () => void;
@@ -33,7 +18,7 @@ const Toolbar: React.SFC<{
 
 const App = connect((state: State) => ({
     widgets: widgetsSelector(state),
-    slide: state.data.slides[state.editor.currentSlide]
+    slide: currentSlide(state)
 }), (dispatch: Dispatch<AppAction>) => ({
     onMoveWidget: (id: string, x: number, y: number) => dispatch(create('WidgetMoveAction', {id, x, y})),
     onNewTextZoneClick: (slideId: string) => dispatch(create('WidgetNewTextZone', {
