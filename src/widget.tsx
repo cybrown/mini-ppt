@@ -3,6 +3,7 @@ import { createSelector } from "reselect/lib";
 import { set } from "./util";
 import { AppAction } from "./AppAction";
 import * as React from "react";
+import { Slide } from "./slide";
 
 export type WidgetKind = 'text' | 'rectangle';
 
@@ -11,6 +12,8 @@ export interface BaseWidget {
     id: string;
     x: number;
     y: number;
+    width: number;
+    height: number;
 }
 
 export interface WidgetTextZone extends BaseWidget {
@@ -21,16 +24,18 @@ export interface WidgetTextZone extends BaseWidget {
 export interface WidgetRectangle extends BaseWidget {
     kind: 'rectangle';
     color: string;
-    width: number;
-    height: number;
 }
 
 export type Widget = WidgetTextZone | WidgetRectangle;
 
 const widgetData = (state: State) => state.data.widgets;
-export const currentSlide = (state: State) => state.data.slides[state.editor.currentSlide];
-export const widgetList = createSelector(currentSlide, (currentSlide) => currentSlide.widgetsIds);
+export const currentSlideRecord = (state: State) => state.data.slides[state.editor.currentSlide];
+export const widgetList = createSelector(currentSlideRecord, (currentSlide) => currentSlide.widgetsIds);
 export const widgetsSelector = createSelector(widgetData, widgetList, (widgetData, widgetList) => widgetList.map(id => widgetData[id]));
+export const currentSlide = createSelector(currentSlideRecord, widgetsSelector, (currentSlide, widgets): Slide => ({
+    id: currentSlide.id,
+    widgets
+}))
 
 export const widgetRepositoryReducer = (widgets: State['data']['widgets'], action: AppAction) => {
     switch (action.type) {
@@ -45,6 +50,8 @@ export const widgetRepositoryReducer = (widgets: State['data']['widgets'], actio
                 kind: 'text',
                 x: 0,
                 y: 0,
+                width: 50,
+                height: 20,
                 text: 'Text'
             }})
         case 'WidgetNewRectangle':
@@ -61,75 +68,18 @@ export const widgetRepositoryReducer = (widgets: State['data']['widgets'], actio
     return widgets;
 }
 
-const TextZone: React.SFC<{text: string}> = ({text}) => (
-    <div>{text}</div>
+const TextZone: React.SFC<{text: string, width: number, height: number}> = ({text, width, height}) => (
+    <div style={{width: width + 'px', height: height + 'px'}}>{text}</div>
 );
 
 const Rectangle: React.SFC<{color: string, width: number, height: number}> = ({color, width, height}) => (
     <div style={{width: width + 'px', height: height + 'px', backgroundColor: color}}></div>
 )
 
-export class HasPosition extends React.Component<{x: number, y: number, onMove: (x: number, y: number) => void}, {deltaX: number, deltaY: number}> {
-
-    isMoving = false;
-    originalX = 0;
-    originalY = 0;
-
-    state = {
-        deltaX: 0,
-        deltaY: 0
-    }
-
-    onmousedown: React.EventHandler<React.MouseEvent<HTMLDivElement>> = event => {
-        this.isMoving = true;
-        this.originalX = event.clientX;
-        this.originalY = event.clientY;
-        this.setupDocumentEvents();
-    }
-
-    onmousemove: EventListener = (event: MouseEvent) => {
-        const deltaX = event.clientX - this.originalX;
-        const deltaY = event.clientY - this.originalY;
-        this.setState({
-            deltaX, deltaY
-        })
-    }
-
-    onmouseup = () => {
-        this.removeDocumentEvents();
-        this.props.onMove(this.props.x + this.state.deltaX, this.props.y + this.state.deltaY);
-        this.setState({deltaX: 0, deltaY: 0})
-    }
-
-    private setupDocumentEvents() {
-        document.addEventListener('mousemove', this.onmousemove);
-        document.addEventListener('mouseup', this.onmouseup);
-    }
-
-    private removeDocumentEvents() {
-        document.removeEventListener('mousemove', this.onmousemove);
-        document.removeEventListener('mouseup', this.onmouseup);
-    }
-
-    componentWillUnmount() {
-        this.removeDocumentEvents();
-    }
-
-    render() {
-        const {x, y, children} = this.props;
-        return (
-            <div style={{position: 'absolute', left: x + this.state.deltaX + 'px', top: y + this.state.deltaY + 'px'}}
-                 onMouseDown={this.onmousedown}>
-                {children}
-            </div>
-        )
-    }
-}
-
 export const WidgetRenderer: React.SFC<{widget: Widget}> = ({widget}) => {
     switch (widget.kind) {
         case 'text':
-            return <TextZone text={widget.text} />;
+            return <TextZone text={widget.text} width={widget.width} height={widget.height} />;
         case 'rectangle':
             return <Rectangle color={widget.color} width={widget.width} height={widget.height} />;
     }

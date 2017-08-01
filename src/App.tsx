@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { State } from "./State";
-import { Widget, widgetsSelector, HasPosition, WidgetRenderer, currentSlide } from "./widget";
+import { widgetsSelector, currentSlide } from "./widget";
 import { AppAction, create } from "./AppAction";
 import { Dispatch } from "redux";
-import { Slide, SlideEditor } from "./slide";
+import { SlideEditor } from "./slide";
 
 const Toolbar: React.SFC<{
     onCreateTextZone: () => void;
@@ -33,7 +33,7 @@ const App = connect((state: State) => ({
     <div>
         <h1>Mini ppt app</h1>
         <Toolbar onCreateTextZone={() => props.onNewTextZoneClick(props.slide.id)} onCreateRectangle={() => props.onNewRectangle(props.slide.id)} />
-        <SlideEditor slide={props.slide} widgets={props.widgets} onMoveWidget={props.onMoveWidget} />
+        <SlideEditor slide={props.slide} onMoveWidget={props.onMoveWidget} />
     </div>
 ));
 

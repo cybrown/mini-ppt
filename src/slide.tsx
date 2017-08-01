@@ -1,12 +1,17 @@
 import { State } from "./State";
 import { AppAction } from "./AppAction";
-import { set } from "./util";
-import { Widget, HasPosition, WidgetRenderer } from "./widget";
+import { set, HasPosition, Movable } from "./util";
+import { Widget, WidgetRenderer } from "./widget";
 import * as React from "react";
+
+export interface SlideRecord {
+    id: string;
+    widgetsIds: string[];
+}
 
 export interface Slide {
     id: string;
-    widgetsIds: string[];
+    widgets: Widget[];
 }
 
 export const slideRepositoryReducer = (slides: State['data']['slides'], action: AppAction): State['data']['slides'] => {
@@ -22,16 +27,44 @@ export const slideRepositoryReducer = (slides: State['data']['slides'], action: 
     return slides;
 }
 
-export const SlideEditor: React.SFC<{
-    widgets: Widget[],
-    slide: Slide,
-    onMoveWidget: (id: string, x: number, y: number) => void
-}> = ({children, widgets, slide, onMoveWidget}) => (
+export const SlideRenderer: React.SFC<{ slide: Slide }> = ({slide}) => (
     <div style={{backgroundColor: 'white', position: 'relative', width: 500 + 'px', height: 500 + 'px'}}>
-        {widgets.map(widget => (
-            <HasPosition key={widget.id} x={widget.x} y={widget.y} onMove={(x, y) => onMoveWidget(widget.id, x, y)}>
+        {slide.widgets.map(widget => (
+            <HasPosition key={widget.id} x={widget.x} y={widget.y}>
                 <WidgetRenderer widget={widget} />
             </HasPosition>
         ))}
+    </div>
+)
+
+const WidgetBox: React.SFC<{widget: Widget}> = ({widget}) => (
+    <div style={{border: 'black thin dotted',
+                 boxSizing: 'border-box',
+                 width: widget.width + 'px',
+                 height: widget.height + 'px'}}>
+        <div style={{position: 'absolute', backgroundColor: 'white', left: '-4px', top: '-4px', width: '8px', height: '8px', border: 'black thin solid'}}></div>
+        <div style={{position: 'absolute', backgroundColor: 'white', left: widget.width - 6 + 'px', top: '-4px', width: '8px', height: '8px', border: 'black thin solid'}}></div>
+        <div style={{position: 'absolute', backgroundColor: 'white', left: widget.width - 6 + 'px', top: widget.height - 6 + 'px', width: '8px', height: '8px', border: 'black thin solid'}}></div>
+        <div style={{position: 'absolute', backgroundColor: 'white', left: '-4px', top: widget.height - 6 + 'px', width: '8px', height: '8px', border: 'black thin solid'}}></div>
+    </div>
+)
+
+export const SlideEditor: React.SFC<{
+    slide: Slide,
+    onMoveWidget: (id: string, x: number, y: number) => void
+}> = ({slide, onMoveWidget}) => (
+    <div style={{position: 'relative'}}>
+        <div style={{position: 'absolute'}}>
+            <SlideRenderer slide={slide} />
+        </div>
+        <div style={{position: 'absolute'}}>
+            {slide.widgets.map(widget => (
+                <HasPosition key={widget.id} x={widget.x} y={widget.y}>
+                    <Movable onMove={(deltaX, deltaY) => onMoveWidget(widget.id, widget.x + deltaX, widget.y + deltaY)}>
+                        <WidgetBox key={widget.id} widget={widget} />
+                    </Movable>
+                </HasPosition>
+            ))}
+        </div>
     </div>
 )

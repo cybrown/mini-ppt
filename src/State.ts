@@ -1,10 +1,10 @@
 import { Widget } from "./widget";
-import { Slide } from "./slide";
+import { SlideRecord } from "./slide";
 
 export interface State {
     data: {
         widgets: {[id: string]: Widget},
-        slides: {[id: string]: Slide}
+        slides: {[id: string]: SlideRecord}
     };
     editor: {
         currentSlide: string;

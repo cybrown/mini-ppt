@@ -20,8 +20,10 @@ const initialState: State = {
             id0: {
                 kind: 'text',
                 id: 'id0',
-                x: 0,
-                y: 0,
+                x: 100,
+                y: 50,
+                width: 50,
+                height: 50,
                 text: 'Hello, world'
             },
             id1: {
