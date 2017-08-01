@@ -28,19 +28,9 @@ export interface WidgetRectangle extends BaseWidget {
 export type Widget = WidgetTextZone | WidgetRectangle;
 
 const widgetData = (state: State) => state.data.widgets;
-const widgetList = (state: State) => state.widgets;
+const widgetList = (state: State) => state.data.slides[state.editor.currentSlide].widgetsIds;
 
 export const widgetsSelector = createSelector(widgetData, widgetList, (widgetData, widgetList) => widgetList.map(id => widgetData[id]));
-
-export const widgetListReducer = (widgetsId: State['widgets'], action: AppAction) => {
-    switch (action.type) {
-        case 'WidgetNewTextZone':
-            return [...widgetsId, action.widgetId];
-        case 'WidgetNewRectangle':
-            return [...widgetsId, action.widgetId];
-    }
-    return widgetsId;
-}
 
 export const widgetRepositoryReducer = (widgets: State['data']['widgets'], action: AppAction) => {
     switch (action.type) {
@@ -152,9 +142,11 @@ export interface WidgetActions {
         y: number;
     };
     WidgetNewTextZone: {
+        slideId: string;
         widgetId: string;
     };
     WidgetNewRectangle: {
+        slideId: string;
         widgetId: string;
     };
 }

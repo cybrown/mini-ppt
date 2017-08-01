@@ -7,14 +7,14 @@ import { Provider } from 'react-redux';
 import { State } from "./State";
 import { AppAction } from "./AppAction";
 import { set } from "./util";
-import { widgetRepositoryReducer, widgetListReducer } from "./widget";
+import { widgetRepositoryReducer } from "./widget";
 import './style.css';
+import { slideRepositoryReducer } from "./slide";
 
 const root = document.createElement('div');
 document.body.appendChild(root);
 
 const initialState: State = {
-    widgets: ['id0', 'id1'],
     data: {
         widgets: {
             id0: {
@@ -33,15 +33,24 @@ const initialState: State = {
                 width: 50,
                 height: 50
             }
+        },
+        slides: {
+            toto: {
+                id: 'toto',
+                widgetsIds: ['id0', 'id1']
+            }
         }
+    },
+    editor: {
+        currentSlide: 'toto'
     }
 }
 
 const appReducer: Reducer<State> = (state = initialState, action: AppAction) => (
     set(state, {
-        widgets: widgetListReducer(state.widgets, action),
         data: set(state.data, {
-            widgets: widgetRepositoryReducer(state.data.widgets, action)
+            widgets: widgetRepositoryReducer(state.data.widgets, action),
+            slides: slideRepositoryReducer(state.data.slides, action)
         })
     })
 );
