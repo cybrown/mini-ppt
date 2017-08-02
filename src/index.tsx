@@ -8,8 +8,13 @@ import { State } from "./State";
 import { AppAction } from "./AppAction";
 import { set } from "./util";
 import { widgetRepositoryReducer } from "./widget";
-import './style.css';
+import './style.scss';
 import { slideRepositoryReducer } from "./slide";
+import * as injectTapEventPlugin from 'react-tap-event-plugin';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import 'roboto-fontface/css/roboto/roboto-fontface.css';
+
+injectTapEventPlugin();
 
 const root = document.createElement('div');
 document.body.appendChild(root);
@@ -59,9 +64,17 @@ const appReducer: Reducer<State> = (state = initialState, action: AppAction) => 
 
 const store = createStore<State>(appReducer, (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__());
 
-const doRender = (component?: JSX.Element) => render(<AppContainer>{component}</AppContainer>, root);
+const doRender = (component?: JSX.Element) => render(
+    <Provider store={store}>
+        <MuiThemeProvider>
+            <AppContainer>
+                {component}
+            </AppContainer>
+        </MuiThemeProvider>
+    </Provider>
+, root);
 
-doRender(<Provider store={store}><App /></Provider>);
+doRender(<App />);
 
 declare var require: any;
 declare var module: any;
