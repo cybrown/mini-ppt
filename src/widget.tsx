@@ -71,6 +71,8 @@ export const widgetRepositoryReducer = (widgets: State['data']['widgets'], actio
                 height: action.height,
                 color: 'blue'
             }})
+        case 'WidgetChangeColor':
+            return set(widgets, {[action.widgetId]: set(widgets[action.widgetId], {color: action.color})})
     }
     return widgets;
 }
@@ -123,4 +125,8 @@ export interface WidgetActions {
         widgetId: string;
     };
     WidgetUnselect: {};
+    WidgetChangeColor: {
+        widgetId: string;
+        color: string;
+    };
 }

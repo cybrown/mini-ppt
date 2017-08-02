@@ -5,7 +5,7 @@ import { widgetsSelector, currentSlide, Widget, selectedWidgets } from "./widget
 import { AppAction, create } from "./AppAction";
 import { Dispatch } from "redux";
 import { SlideEditor, Slide } from "./slide";
-import { AppBar, Toolbar, ToolbarGroup, IconButton, Paper, Divider } from "material-ui";
+import { AppBar, Toolbar, ToolbarGroup, IconButton, Paper } from "material-ui";
 
 const Editor: React.SFC<{
     slide: Slide;
@@ -24,11 +24,24 @@ const Editor: React.SFC<{
     </div>
 )
 
-const RightPanel = () => (
+const ColorButton: React.SFC<{color: string}> = ({color}) => (
+    <div style={{backgroundColor: color, width: '40px', height: '20px'}}></div>
+)
+
+const RightPanel: React.SFC<{
+    widget?: Widget;
+    onChangeColorWidget: (color: string) => void;
+}> = ({widget, onChangeColorWidget}) => (
     <Paper style={{position: 'absolute', right: 0, top: 0, width: '200px'}}>
-        right panel
-        <Divider />
-        right panel
+        {widget && widget.kind === 'rectangle' ? (
+            <div>
+                {['red', 'green', 'blue', 'yellow', 'orange', 'purple', 'grey', 'white', 'black'].map(color => (
+                    <div key={color} onClick={() => onChangeColorWidget(color)}>
+                        <ColorButton color={color} />
+                    </div>
+                ))}
+            </div>
+        ) : <span>Nothing to modify</span>}
     </Paper>
 );
 
@@ -58,7 +71,10 @@ const App = connect((state: State) => ({
     onSelectWidget: (widgetId: string) => dispatch(create('WidgetSelect', {
         widgetId
     })),
-    onWidgetUnselect: () => dispatch(create('WidgetUnselect', {}))
+    onWidgetUnselect: () => dispatch(create('WidgetUnselect', {})),
+    onChangeColorWidget: (widgetId: string, color: string) => dispatch(create('WidgetChangeColor', {
+        widgetId, color
+    }))
 }))(props => (
     <div>
         <AppBar title="Mini PPT app" />
@@ -75,7 +91,7 @@ const App = connect((state: State) => ({
                     selectedWidgets={props.selectedWidgets}
                     onSelectWidget={props.onSelectWidget}
                     onWidgetUnselect={props.onWidgetUnselect} />
-            <RightPanel />
+            <RightPanel widget={props.selectedWidgets.length === 1 ? props.selectedWidgets[0] : undefined} onChangeColorWidget={color => props.onChangeColorWidget(props.selectedWidgets[0].id, color)} />
         </div>
     </div>
 ));
