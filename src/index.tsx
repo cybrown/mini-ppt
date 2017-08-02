@@ -13,6 +13,7 @@ import { slideRepositoryReducer } from "./slide";
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
+import './fonts/mini-ppt-glyphs.css';
 
 injectTapEventPlugin();
 
