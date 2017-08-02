@@ -29,11 +29,19 @@ const App = connect((state: State) => ({
     onResizeWidget: (id: string, width: number, height: number) => dispatch(create('WidgetResizeAction', {id, width, height})),
     onNewTextZoneClick: (slideId: string) => dispatch(create('WidgetNewTextZone', {
         slideId,
-        widgetId: Math.random().toString()
+        widgetId: Math.random().toString(),
+        x: 250 - 100 / 2,
+        y: 250 - 20 / 2,
+        width: 100,
+        height: 20
     })),
     onNewRectangle: (slideId: string) => dispatch(create('WidgetNewRectangle', {
         slideId,
-        widgetId: Math.random().toString()
+        widgetId: Math.random().toString(),
+        x: 250 - 40 / 2,
+        y: 250 - 40 / 2,
+        width: 40,
+        height: 40
     }))
 }))(props => (
     <div>

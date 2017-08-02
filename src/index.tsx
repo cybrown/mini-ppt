@@ -22,30 +22,11 @@ document.body.appendChild(root);
 
 const initialState: State = {
     data: {
-        widgets: {
-            id0: {
-                kind: 'text',
-                id: 'id0',
-                x: 100,
-                y: 50,
-                width: 50,
-                height: 50,
-                text: 'Hello, world'
-            },
-            id1: {
-                kind: 'rectangle',
-                id: 'id1',
-                x: 0,
-                y: 0,
-                color: 'green',
-                width: 50,
-                height: 50
-            }
-        },
+        widgets: {},
         slides: {
             toto: {
                 id: 'toto',
-                widgetsIds: ['id0', 'id1']
+                widgetsIds: []
             }
         }
     },

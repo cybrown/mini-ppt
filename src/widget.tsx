@@ -53,20 +53,20 @@ export const widgetRepositoryReducer = (widgets: State['data']['widgets'], actio
             return set(widgets, {[action.widgetId]: {
                 id: action.widgetId,
                 kind: 'text',
-                x: 0,
-                y: 0,
-                width: 50,
-                height: 20,
+                x: action.x,
+                y: action.y,
+                width: action.width,
+                height: action.height,
                 text: 'Text'
             }})
         case 'WidgetNewRectangle':
             return set(widgets, {[action.widgetId]: {
                 id: action.widgetId,
                 kind: 'rectangle',
-                x: 0,
-                y: 0,
-                width: 30,
-                height: 30,
+                x: action.x,
+                y: action.y,
+                width: action.width,
+                height: action.height,
                 color: 'blue'
             }})
     }
@@ -99,10 +99,18 @@ export interface WidgetActions {
     WidgetNewTextZone: {
         slideId: string;
         widgetId: string;
+        x: number;
+        y: number;
+        width: number;
+        height: number;
     };
     WidgetNewRectangle: {
         slideId: string;
         widgetId: string;
+        x: number;
+        y: number;
+        width: number;
+        height: number;
     };
     WidgetResizeAction: {
         id: string;
