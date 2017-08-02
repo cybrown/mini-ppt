@@ -67,10 +67,10 @@ export const SlideEditor: React.SFC<{
     onResizeWidget: (id: string, width: number, y: number) => void;
 }> = ({slide, onMoveWidget, onResizeWidget}) => (
     <div style={{position: 'relative'}}>
-        <div style={{position: 'absolute'}}>
+        <div>
             <SlideRenderer slide={slide} />
         </div>
-        <div style={{position: 'absolute'}}>
+        <div style={{position: 'absolute', top: 0, left: 0}}>
             {slide.widgets.map(widget => (
                 <HasPosition key={widget.id} x={widget.x} y={widget.y}>
                     <Movable onMove={(deltaX, deltaY) => onMoveWidget(widget.id, widget.x + deltaX, widget.y + deltaY)}>

@@ -4,8 +4,22 @@ import { State } from "./State";
 import { widgetsSelector, currentSlide } from "./widget";
 import { AppAction, create } from "./AppAction";
 import { Dispatch } from "redux";
-import { SlideEditor } from "./slide";
-import { AppBar, Toolbar, ToolbarGroup, IconButton } from "material-ui";
+import { SlideEditor, Slide } from "./slide";
+import { AppBar, Toolbar, ToolbarGroup, IconButton, Paper } from "material-ui";
+
+const Editor: React.SFC<{
+    slide: Slide;
+    onMoveWidget: (id: string, x: number, y: number) => void;
+    onResizeWidget: (id: string, width: number, height: number) => void;
+}> = (props) => (
+    <div style={{
+        marginTop: '100px'
+    }}>
+        <Paper zDepth={2} style={{width: '500px', height: '500px', marginLeft: 'auto', marginRight: 'auto'}}>
+            <SlideEditor slide={props.slide} onMoveWidget={props.onMoveWidget} onResizeWidget={props.onResizeWidget} />
+        </Paper>
+    </div>
+)
 
 const App = connect((state: State) => ({
     widgets: widgetsSelector(state),
@@ -30,7 +44,7 @@ const App = connect((state: State) => ({
                 <IconButton iconClassName="mppt-icon mppt-icon-rectangle" onClick={() => props.onNewRectangle(props.slide.id)} />
             </ToolbarGroup>
         </Toolbar>
-        <SlideEditor slide={props.slide} onMoveWidget={props.onMoveWidget} onResizeWidget={props.onResizeWidget} />
+        <Editor slide={props.slide} onMoveWidget={props.onMoveWidget} onResizeWidget={props.onResizeWidget} />
     </div>
 ));
 
