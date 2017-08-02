@@ -31,8 +31,21 @@ const initialState: State = {
         }
     },
     editor: {
-        currentSlide: 'toto'
+        currentSlide: 'toto',
+        selectedWidgets: []
     }
+};
+
+const editorReducer: Reducer<State['editor']> = (state: State['editor'], action: AppAction): State['editor'] => {
+    switch (action.type) {
+        case 'WidgetSelect':
+            return set(state, {
+                selectedWidgets: [action.widgetId]
+            });
+        case 'WidgetUnselect':
+            return set(state, {selectedWidgets: []});
+    }
+    return state;
 }
 
 const appReducer: Reducer<State> = (state = initialState, action: AppAction) => (
@@ -40,7 +53,8 @@ const appReducer: Reducer<State> = (state = initialState, action: AppAction) => 
         data: set(state.data, {
             widgets: widgetRepositoryReducer(state.data.widgets, action),
             slides: slideRepositoryReducer(state.data.slides, action)
-        })
+        }),
+        editor: editorReducer(state.editor, action)
     })
 );
 

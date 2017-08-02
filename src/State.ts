@@ -8,5 +8,6 @@ export interface State {
     };
     editor: {
         currentSlide: string;
+        selectedWidgets: string[];
     }
 }

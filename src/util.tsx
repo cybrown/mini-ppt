@@ -4,8 +4,12 @@ export function set<T>(obj: T, data: Partial<T>): T {
     return {...obj as any, ...data as any};
 }
 
-export const HasPosition: React.SFC<{x: number, y: number}> = ({x, y, children}) => (
-    <div style={{position: 'absolute', left: x + 'px', top: y + 'px'}}>
+export const HasPosition: React.SFC<{
+    x: number;
+    y: number;
+    onClick?: () => void;
+}> = ({x, y, children, onClick}) => (
+    <div style={{position: 'absolute', left: x + 'px', top: y + 'px'}} onClick={e => (onClick && onClick(), e.stopPropagation())}>
         {children}
     </div>
 );

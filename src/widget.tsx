@@ -37,6 +37,8 @@ export const currentSlide = createSelector(currentSlideRecord, widgetsSelector, 
     widgets
 }))
 
+export const selectedWidgets = (state: State) => state.editor.selectedWidgets.map(widgetId => state.data.widgets[widgetId]);
+
 export const widgetRepositoryReducer = (widgets: State['data']['widgets'], action: AppAction) => {
     switch (action.type) {
         case 'WidgetMoveAction':
@@ -117,4 +119,8 @@ export interface WidgetActions {
         width: number;
         height: number;
     };
+    WidgetSelect: {
+        widgetId: string;
+    };
+    WidgetUnselect: {};
 }
