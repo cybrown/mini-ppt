@@ -10,7 +10,13 @@ export const HasPosition: React.SFC<{x: number, y: number}> = ({x, y, children})
     </div>
 );
 
-export class Movable extends React.Component<{onMove: (x: number, y: number) => void}, {deltaX: number, deltaY: number}> {
+export class Movable extends React.Component<{
+    onMove: (x: number, y: number) => void;
+    immediate?: boolean;
+}, {
+    deltaX: number;
+    deltaY: number;
+}> {
 
     isMoving = false;
     originalX = 0;
@@ -26,14 +32,22 @@ export class Movable extends React.Component<{onMove: (x: number, y: number) => 
         this.originalX = event.clientX;
         this.originalY = event.clientY;
         this.setupDocumentEvents();
+        event.preventDefault();
+        event.stopPropagation();
     }
 
     onmousemove: EventListener = (event: MouseEvent) => {
         const deltaX = event.clientX - this.originalX;
         const deltaY = event.clientY - this.originalY;
-        this.setState({
-            deltaX, deltaY
-        })
+        if (this.props.immediate) {
+            this.originalX += deltaX;
+            this.originalY += deltaY;
+            this.props.onMove(deltaX, deltaY);
+        } else {
+            this.setState({
+                deltaX, deltaY
+            });
+        }
     }
 
     onmouseup = () => {

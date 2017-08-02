@@ -21,6 +21,7 @@ const App = connect((state: State) => ({
     slide: currentSlide(state)
 }), (dispatch: Dispatch<AppAction>) => ({
     onMoveWidget: (id: string, x: number, y: number) => dispatch(create('WidgetMoveAction', {id, x, y})),
+    onResizeWidget: (id: string, width: number, height: number) => dispatch(create('WidgetResizeAction', {id, width, height})),
     onNewTextZoneClick: (slideId: string) => dispatch(create('WidgetNewTextZone', {
         slideId,
         widgetId: Math.random().toString()
@@ -33,7 +34,7 @@ const App = connect((state: State) => ({
     <div>
         <h1>Mini ppt app</h1>
         <Toolbar onCreateTextZone={() => props.onNewTextZoneClick(props.slide.id)} onCreateRectangle={() => props.onNewRectangle(props.slide.id)} />
-        <SlideEditor slide={props.slide} onMoveWidget={props.onMoveWidget} />
+        <SlideEditor slide={props.slide} onMoveWidget={props.onMoveWidget} onResizeWidget={props.onResizeWidget} />
     </div>
 ));
 
