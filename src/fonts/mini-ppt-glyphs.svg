@@ -8,5 +8,5 @@
 <missing-glyph horiz-adv-x="1024" />
 <glyph unicode="&#x20;" horiz-adv-x="512" d="" />
 <glyph unicode="&#xea53;" glyph-name="rectangle" d="M73.692 831.452h877.714v-768h-877.714v658.286h109.714v-548.572h658.286v548.572h-768z" />
-<glyph unicode="&#xea5f;" glyph-name="text" d="M1088 768h-128zM832 896v-256l-64 128h-192v-704h128v-64h-384v64h128v704h-192l-64-128v256z" />
+<glyph unicode="&#xea5f;" glyph-name="text" d="M72.93 855.070h881.778v-176.356q0 88.178-88.178 88.178h-176.356q-88.178 0-88.178-88.178v-440.888q0-176.356 176.356-176.356h-529.066q176.356 0 176.356 176.356v440.888q0 88.178-88.178 88.178h-176.356q-88.178 0-88.178-88.178z" />
 </font></defs></svg>
