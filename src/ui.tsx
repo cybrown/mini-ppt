@@ -12,7 +12,7 @@ import { rgbaToString } from "./util";
 import { SlideEditor } from "./slide";
 
 export interface UIState {
-    currentSlide: string;
+    currentSlide: string | null;
     selectedWidgets: string[];
     showChangeTextPopup: boolean;
     currentWidgetText: string;
@@ -37,10 +37,13 @@ export interface UIActions {
     UIChangeBackgroundColorPickerVisibility: {
         visible: boolean;
     };
+    UISetCurrentSlide: {
+        slideId: string;
+    };
 }
 
 export const uiInitialState: UIState = {
-    currentSlide: 'toto',
+    currentSlide: null,
     selectedWidgets: [],
     showChangeTextPopup: false,
     currentWidgetText: '',
@@ -77,6 +80,10 @@ export const uiReducer: Reducer<UIState> = (state: UIState, action: AppAction): 
         case 'UIChangeBackgroundColorPickerVisibility':
             return set(state, {
                 showBackgroundColorPicker: action.visible
+            });
+        case 'UISetCurrentSlide':
+            return set(state, {
+                currentSlide: action.slideId
             });
     }
     return state;
@@ -126,8 +133,8 @@ export const AppToolBar = connect((state: State) => ({
 }))(props => (
     <Toolbar>
         <ToolbarGroup firstChild={true}>
-            <IconButton iconClassName="mppt-icon mppt-icon-text" onClick={() => props.onNewTextZoneClick(props.slide.id, props.currentBackgroundColor)} />
-            <IconButton iconClassName="mppt-icon mppt-icon-rectangle" onClick={() => props.onNewRectangle(props.slide.id, props.currentBackgroundColor)} />
+            <IconButton iconClassName="mppt-icon mppt-icon-text" onClick={() => props.slide && props.onNewTextZoneClick(props.slide.id, props.currentBackgroundColor)} />
+            <IconButton iconClassName="mppt-icon mppt-icon-rectangle" onClick={() => props.slide && props.onNewRectangle(props.slide.id, props.currentBackgroundColor)} />
             <IconButton ref={el => el && (anchorForBackgroundColorPicker = ReactDOM.findDOMNode(el))} onClick={() => props.onSetColorPickerisibility(!props.showBackgroundColorPicker)}>
                 <FontIcon color={props.currentBackgroundColor} className="mppt-icon mppt-icon-bucket" />
             </IconButton>
@@ -193,14 +200,16 @@ export const Editor = connect((state: State) => ({
     <div style={{
         paddingTop: '100px'
     }}>
-        <Paper zDepth={2} style={{width: '500px', height: '500px', marginLeft: 'auto', marginRight: 'auto'}} onClick={props.onWidgetUnselect}>
-            <SlideEditor onSelectWidget={widgetId => props.onSelectWidget(props.widgets.filter(widget => widget.id === widgetId)[0])}
-                         slide={props.slide}
-                         onMoveWidget={props.onMoveWidget}
-                         onResizeWidget={props.onResizeWidget}
-                         selectedWidgets={props.selectedWidgets}
-                         onStartChangeText={props.onStartChangeText} />
-        </Paper>
+        {props.slide !== null ? (
+            <Paper zDepth={2} style={{width: '500px', height: '500px', marginLeft: 'auto', marginRight: 'auto'}} onClick={props.onWidgetUnselect}>
+                <SlideEditor onSelectWidget={widgetId => props.onSelectWidget(props.widgets.filter(widget => widget.id === widgetId)[0])}
+                            slide={props.slide}
+                            onMoveWidget={props.onMoveWidget}
+                            onResizeWidget={props.onResizeWidget}
+                            selectedWidgets={props.selectedWidgets}
+                            onStartChangeText={props.onStartChangeText} />
+            </Paper>
+        ) : null}
     </div>
 ));
 

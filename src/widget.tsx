@@ -30,13 +30,13 @@ export interface WidgetRectangle extends BaseWidget {
 export type Widget = WidgetTextZone | WidgetRectangle;
 
 const widgetData = (state: State) => state.data.widgets;
-export const currentSlideRecord = (state: State) => state.data.slides[state.ui.currentSlide];
-export const widgetList = createSelector(currentSlideRecord, (currentSlide) => currentSlide.widgetsIds);
+export const currentSlideRecord = (state: State) => state.ui.currentSlide ? state.data.slides[state.ui.currentSlide] : null;
+export const widgetList = createSelector(currentSlideRecord, (currentSlide) => currentSlide ? currentSlide.widgetsIds : []);
 export const widgetsSelector = createSelector(widgetData, widgetList, (widgetData, widgetList) => widgetList.map(id => widgetData[id]));
-export const currentSlide = createSelector(currentSlideRecord, widgetsSelector, (currentSlide, widgets): Slide => ({
+export const currentSlide = createSelector(currentSlideRecord, widgetsSelector, (currentSlide, widgets): Slide | null => (currentSlide ? {
     id: currentSlide.id,
     widgets
-}))
+} : null))
 
 export const selectedWidgets = (state: State) => state.ui.selectedWidgets.map(widgetId => state.data.widgets[widgetId]);
 

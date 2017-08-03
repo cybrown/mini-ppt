@@ -4,6 +4,12 @@ import { set, HasPosition, Movable } from "./util";
 import { Widget, WidgetRenderer } from "./widget";
 import * as React from "react";
 
+export interface SlideActions {
+    SlideNew: {
+        slide: SlideRecord;
+    };
+}
+
 export interface SlideRecord {
     id: string;
     widgetsIds: string[];
@@ -21,6 +27,10 @@ export const slideRepositoryReducer = (slides: State['data']['slides'], action: 
                 [action.slideId]: set(slides[action.slideId], {
                     widgetsIds: [...slides[action.slideId].widgetsIds, action.widget.id]
                 })
+            });
+        case 'SlideNew':
+            return set(slides, {
+                [action.slide.id]: set(slides[action.slide.id], action.slide)
             });
     }
     return slides;
