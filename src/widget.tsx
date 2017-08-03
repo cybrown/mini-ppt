@@ -42,44 +42,29 @@ export const selectedWidgets = (state: State) => state.ui.selectedWidgets.map(wi
 
 export const widgetRepositoryReducer = (widgets: State['data']['widgets'], action: AppAction) => {
     switch (action.type) {
-        case 'WidgetMoveAction':
-            return set(widgets, {[action.id]: set(widgets[action.id], {
-                x: action.x,
-                y: action.y
-            })});
-        case 'WidgetResizeAction':
-            return set(widgets, {[action.id]: set(widgets[action.id], {
-                width: action.width,
-                height: action.height
-            })});
-        case 'WidgetNewTextZone':
-            return set(widgets, {[action.widgetId]: {
-                id: action.widgetId,
-                kind: 'text',
-                x: action.x,
-                y: action.y,
-                width: action.width,
-                height: action.height,
-                text: 'Text',
-                fontSize: 12,
-                backgroundColor: action.backgroundColor
-            }})
-        case 'WidgetNewRectangle':
-            return set(widgets, {[action.widgetId]: {
-                id: action.widgetId,
-                kind: 'rectangle',
-                x: action.x,
-                y: action.y,
-                width: action.width,
-                height: action.height,
-                backgroundColor: action.backgroundColor
-            }})
-        case 'WidgetChangeBackgroundColor':
-            return set(widgets, {[action.widgetId]: set(widgets[action.widgetId], {backgroundColor: action.backgroundColor})});
-        case 'WidgetChangeFontSize':
-            return set(widgets, {[action.widgetId]: set(widgets[action.widgetId], {fontSize: action.fontSize})});
-        case 'WidgetChangeText':
-            return set(widgets, {[action.widgetId]: set(widgets[action.widgetId], {text: action.text})});
+        case 'WidgetNew':
+            return set(widgets, {[action.widget.id]: action.widget});
+        case 'WidgetUpdate':
+            return set(widgets, {
+                [action.widgetId]: set(widgets[action.widgetId], {
+                    backgroundColor: action.backgroundColor !== undefined ? action.backgroundColor : widgets[action.widgetId].backgroundColor,
+                    height: action.height !== undefined ? action.height : widgets[action.widgetId].height,
+                    width: action.width !== undefined ? action.width : widgets[action.widgetId].width,
+                    x: action.x !== undefined ? action.x : widgets[action.widgetId].x,
+                    y: action.y !== undefined ? action.y : widgets[action.widgetId].y,
+                })
+            });
+        case 'WidgetUpdateTextZone': {
+            const widget = widgets[action.widgetId];
+            if (widget.kind === 'text') {
+                return set(widgets, {
+                    [action.widgetId]: set(widget, {
+                        text: action.text !== undefined ? action.text : widget.text,
+                        fontSize: action.fontSize !== undefined ? action.fontSize : widget.fontSize,
+                    })
+                });
+            }
+        }
     }
     return widgets;
 }
@@ -108,44 +93,21 @@ export const WidgetRenderer: React.SFC<{widget: Widget}> = ({widget}) => {
 }
 
 export interface WidgetActions {
-    WidgetMoveAction: {
-        id: string;
-        x: number;
-        y: number;
-    };
-    WidgetNewTextZone: {
+    WidgetNew: {
         slideId: string;
-        widgetId: string;
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-        backgroundColor: string;
+        widget: Widget;
     };
-    WidgetNewRectangle: {
-        slideId: string;
+    WidgetUpdate: {
         widgetId: string;
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-        backgroundColor: string;
+        x?: number;
+        y?: number;
+        backgroundColor?: string;
+        width?: number;
+        height?: number;
     };
-    WidgetResizeAction: {
-        id: string;
-        width: number;
-        height: number;
-    };
-    WidgetChangeBackgroundColor: {
+    WidgetUpdateTextZone: {
         widgetId: string;
-        backgroundColor: string;
-    };
-    WidgetChangeFontSize: {
-        widgetId: string;
-        fontSize: number
-    };
-    WidgetChangeText: {
-        widgetId: string;
-        text: string;
+        fontSize?: number;
+        text?: string;
     };
 }

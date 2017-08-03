@@ -16,11 +16,10 @@ export interface Slide {
 
 export const slideRepositoryReducer = (slides: State['data']['slides'], action: AppAction): State['data']['slides'] => {
     switch (action.type) {
-        case 'WidgetNewRectangle':
-        case 'WidgetNewTextZone':
+        case 'WidgetNew':
             return set(slides, {
                 [action.slideId]: set(slides[action.slideId], {
-                    widgetsIds: [...slides[action.slideId].widgetsIds, action.widgetId]
+                    widgetsIds: [...slides[action.slideId].widgetsIds, action.widget.id]
                 })
             });
     }

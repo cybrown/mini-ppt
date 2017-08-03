@@ -76,25 +76,33 @@ const App = connect((state: State) => ({
     currentBackgroundColor: state.ui.currentBackgroundColor,
     showBackgroundColorPicker: state.ui.showBackgroundColorPicker
 }), (dispatch: Dispatch<AppAction>) => ({
-    onMoveWidget: (id: string, x: number, y: number) => dispatch(create('WidgetMoveAction', {id, x, y})),
-    onResizeWidget: (id: string, width: number, height: number) => dispatch(create('WidgetResizeAction', {id, width, height})),
-    onNewTextZoneClick: (slideId: string, backgroundColor: string) => dispatch(create('WidgetNewTextZone', {
+    onMoveWidget: (widgetId: string, x: number, y: number) => dispatch(create('WidgetUpdate', {widgetId, x, y})),
+    onResizeWidget: (widgetId: string, width: number, height: number) => dispatch(create('WidgetUpdate', {widgetId, width, height})),
+    onNewTextZoneClick: (slideId: string, backgroundColor: string) => dispatch(create('WidgetNew', {
         slideId,
-        widgetId: Math.random().toString(),
-        x: 250 - 100 / 2,
-        y: 250 - 20 / 2,
-        width: 100,
-        height: 20,
-        backgroundColor
+        widget: {
+            id: Math.random().toString(),
+            x: 250 - 100 / 2,
+            y: 250 - 20 / 2,
+            width: 100,
+            height: 20,
+            backgroundColor,
+            fontSize: 14,
+            kind: 'text',
+            text: 'Text'
+        }
     })),
-    onNewRectangle: (slideId: string, backgroundColor: string) => dispatch(create('WidgetNewRectangle', {
+    onNewRectangle: (slideId: string, backgroundColor: string) => dispatch(create('WidgetNew', {
         slideId,
-        widgetId: Math.random().toString(),
-        x: 250 - 40 / 2,
-        y: 250 - 40 / 2,
-        width: 40,
-        height: 40,
-        backgroundColor
+        widget: {
+            id: Math.random().toString(),
+            kind: 'rectangle',
+            x: 250 - 40 / 2,
+            y: 250 - 40 / 2,
+            width: 40,
+            height: 40,
+            backgroundColor
+        },
     })),
     onSelectWidget: (widget: Widget) => dispatch(create('UIWidgetReplaceSelection', {
         widgets: [widget]
@@ -102,18 +110,18 @@ const App = connect((state: State) => ({
     onWidgetUnselect: () => dispatch(create('UIWidgetReplaceSelection', {widgets: []})),
     onChangeColorWidget: (widgetId: string | null, backgroundColor: string) => {
         if (widgetId) {
-            dispatch(create('WidgetChangeBackgroundColor', { widgetId, backgroundColor }));
+            dispatch(create('WidgetUpdate', { widgetId, backgroundColor }));
         }
         dispatch(create('UIChangeCurrentBackgroundColor', {backgroundColor}));
     ;},
-    onChangeFontSizeWidget: (widgetId: string, fontSize: number) => dispatch(create('WidgetChangeFontSize', {
+    onChangeFontSizeWidget: (widgetId: string, fontSize: number) => dispatch(create('WidgetUpdateTextZone', {
         widgetId, fontSize
     })),
     onStartChangeText: (text: string) => dispatch(create('UIChangeTextPopupSetVisibility', {visible: true, text})),
     onCancelChangeText: () => dispatch(create('UIChangeTextPopupSetVisibility', {visible: false})),
     changeCurrentWidgetText: (text: string) => dispatch(create('UIChangeWidgetText', {text})),
     onSubmitChangeText: (widgetId: string, text: string) => {
-        dispatch(create('WidgetChangeText', {widgetId, text}));
+        dispatch(create('WidgetUpdateTextZone', {widgetId, text}));
         dispatch(create('UIChangeTextPopupSetVisibility', {visible: false}));
     },
     onSetColorPickerisibility: (visible: boolean) => dispatch(create('UIChangeBackgroundColorPickerVisibility', {visible}))

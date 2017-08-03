@@ -45,7 +45,8 @@ export const uiReducer: Reducer<UIState> = (state: UIState, action: AppAction): 
         case 'UIWidgetReplaceSelection':
             return set(state, {
                 selectedWidgets: action.widgets.map(w => w.id),
-                showBackgroundColorPicker: false
+                showBackgroundColorPicker: false,
+                currentBackgroundColor: action.widgets.length === 1 ? action.widgets[0].backgroundColor : state.currentBackgroundColor
             });
         case 'UIChangeWidgetText':
             return set(state, {
@@ -61,13 +62,9 @@ export const uiReducer: Reducer<UIState> = (state: UIState, action: AppAction): 
             return set(state, {
                 currentBackgroundColor: action.backgroundColor
             });
-        case 'WidgetNewRectangle':
+        case 'WidgetNew':
             return set(state, {
-                selectedWidgets: [action.widgetId]
-            });
-        case 'WidgetNewTextZone':
-            return set(state, {
-                selectedWidgets: [action.widgetId],
+                selectedWidgets: [action.widget.id]
             });
         case 'UIChangeBackgroundColorPickerVisibility':
             return set(state, {
