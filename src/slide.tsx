@@ -44,11 +44,13 @@ const WidgetBox: React.SFC<{
     widget: Widget;
     onMoveWidget: (id: string, x: number, y: number) => void;
     onResizeWidget: (id: string, width: number, y: number) => void;
-}> = ({widget, onMoveWidget, onResizeWidget}) => (
+    onStartChangeText: (widgetId: string, text: string) => void;
+}> = ({widget, onMoveWidget, onResizeWidget, onStartChangeText}) => (
     <div style={{border: 'black thin dotted',
                  boxSizing: 'border-box',
                  width: widget.width + 'px',
-                 height: widget.height + 'px'}}>
+                 height: widget.height + 'px'}}
+        onDoubleClick={e => (widget.kind === 'text' && onStartChangeText(widget.id, widget.text), e.stopPropagation(), e.preventDefault())}>
         <Movable immediate onMove={(deltaX, deltaY) => (onMoveWidget(widget.id, widget.x + deltaX, widget.y + deltaY), onResizeWidget(widget.id, widget.width - deltaX, widget.height - deltaY))}>
             <div style={{position: 'absolute', backgroundColor: 'white', left: '-4px', top: '-4px', width: '8px', height: '8px', border: 'black thin solid'}}></div>
         </Movable>
@@ -70,7 +72,8 @@ export const SlideEditor: React.SFC<{
     onResizeWidget: (id: string, width: number, y: number) => void;
     selectedWidgets: Widget[];
     onSelectWidget: (widgetId: string) => void;
-}> = ({slide, onMoveWidget, onResizeWidget, selectedWidgets, onSelectWidget}) => (
+    onStartChangeText: (widgetId: string, text: string) => void;
+}> = ({slide, onMoveWidget, onResizeWidget, selectedWidgets, onSelectWidget, onStartChangeText}) => (
     <div style={{position: 'relative'}}>
         <div>
             <SlideRenderer slide={slide} onWidgetClick={onSelectWidget} />
@@ -79,7 +82,11 @@ export const SlideEditor: React.SFC<{
             {selectedWidgets.map(widget => (
                 <HasPosition key={widget.id} x={widget.x} y={widget.y}>
                     <Movable onMove={(deltaX, deltaY) => onMoveWidget(widget.id, widget.x + deltaX, widget.y + deltaY)}>
-                        <WidgetBox key={widget.id} widget={widget} onMoveWidget={onMoveWidget} onResizeWidget={onResizeWidget} />
+                        <WidgetBox key={widget.id}
+                                   widget={widget}
+                                   onMoveWidget={onMoveWidget}
+                                   onResizeWidget={onResizeWidget}
+                                   onStartChangeText={onStartChangeText} />
                     </Movable>
                 </HasPosition>
             ))}

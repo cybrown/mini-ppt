@@ -1,8 +1,7 @@
 import { WidgetActions } from "./widget";
+import { UIActions } from "./ui";
 
-interface Actions extends WidgetActions {
-
-}
+interface Actions extends WidgetActions, UIActions { }
 
 type ActionsWithTypes = {
     [ActionType in keyof Actions]: {type: ActionType} & Actions[ActionType];

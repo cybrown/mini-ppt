@@ -14,6 +14,7 @@ import * as injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import './fonts/mini-ppt-glyphs.css';
+import { editorReducer, uiInitialState } from "./ui";
 
 injectTapEventPlugin();
 
@@ -30,23 +31,8 @@ const initialState: State = {
             }
         }
     },
-    editor: {
-        currentSlide: 'toto',
-        selectedWidgets: []
-    }
+    ui: uiInitialState
 };
-
-const editorReducer: Reducer<State['editor']> = (state: State['editor'], action: AppAction): State['editor'] => {
-    switch (action.type) {
-        case 'WidgetSelect':
-            return set(state, {
-                selectedWidgets: [action.widgetId]
-            });
-        case 'WidgetUnselect':
-            return set(state, {selectedWidgets: []});
-    }
-    return state;
-}
 
 const appReducer: Reducer<State> = (state = initialState, action: AppAction) => (
     set(state, {
@@ -54,7 +40,7 @@ const appReducer: Reducer<State> = (state = initialState, action: AppAction) => 
             widgets: widgetRepositoryReducer(state.data.widgets, action),
             slides: slideRepositoryReducer(state.data.slides, action)
         }),
-        editor: editorReducer(state.editor, action)
+        ui: editorReducer(state.ui, action)
     })
 );
 

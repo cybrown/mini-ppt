@@ -5,7 +5,7 @@ import { widgetsSelector, currentSlide, Widget, selectedWidgets, WidgetRectangle
 import { AppAction, create } from "./AppAction";
 import { Dispatch } from "redux";
 import { SlideEditor, Slide } from "./slide";
-import { AppBar, Toolbar, ToolbarGroup, IconButton, Paper, TextField } from "material-ui";
+import { AppBar, Toolbar, ToolbarGroup, IconButton, Paper, TextField, Dialog, FlatButton } from "material-ui";
 
 const Editor: React.SFC<{
     slide: Slide;
@@ -14,12 +14,18 @@ const Editor: React.SFC<{
     selectedWidgets: Widget[];
     onSelectWidget: (widgetId: string) => void;
     onWidgetUnselect: () => void;
+    onStartChangeText: (widgetId: string, text: string) => void;
 }> = (props) => (
     <div style={{
         paddingTop: '100px'
     }}>
         <Paper zDepth={2} style={{width: '500px', height: '500px', marginLeft: 'auto', marginRight: 'auto'}} onClick={props.onWidgetUnselect}>
-            <SlideEditor onSelectWidget={props.onSelectWidget} slide={props.slide} onMoveWidget={props.onMoveWidget} onResizeWidget={props.onResizeWidget} selectedWidgets={props.selectedWidgets} />
+            <SlideEditor onSelectWidget={props.onSelectWidget}
+                         slide={props.slide}
+                         onMoveWidget={props.onMoveWidget}
+                         onResizeWidget={props.onResizeWidget}
+                         selectedWidgets={props.selectedWidgets}
+                         onStartChangeText={props.onStartChangeText} />
         </Paper>
     </div>
 )
@@ -78,7 +84,9 @@ const RightPanel: React.SFC<{
 const App = connect((state: State) => ({
     widgets: widgetsSelector(state),
     slide: currentSlide(state),
-    selectedWidgets: selectedWidgets(state)
+    selectedWidgets: selectedWidgets(state),
+    showChangeTextPopup: state.ui.showChangeTextPopup,
+    currentWidgetText: state.ui.currentWidgetText
 }), (dispatch: Dispatch<AppAction>) => ({
     onMoveWidget: (id: string, x: number, y: number) => dispatch(create('WidgetMoveAction', {id, x, y})),
     onResizeWidget: (id: string, width: number, height: number) => dispatch(create('WidgetResizeAction', {id, width, height})),
@@ -98,16 +106,20 @@ const App = connect((state: State) => ({
         width: 40,
         height: 40
     })),
-    onSelectWidget: (widgetId: string) => dispatch(create('WidgetSelect', {
+    onSelectWidget: (widgetId: string) => dispatch(create('UIWidgetSelect', {
         widgetId
     })),
-    onWidgetUnselect: () => dispatch(create('WidgetUnselect', {})),
+    onWidgetUnselect: () => dispatch(create('UIWidgetUnselect', {})),
     onChangeColorWidget: (widgetId: string, color: string) => dispatch(create('WidgetChangeColor', {
         widgetId, color
     })),
     onChangeFontSizeWidget: (widgetId: string, fontSize: number) => dispatch(create('WidgetChangeFontSize', {
         widgetId, fontSize
-    }))
+    })),
+    onStartChangeText: (widgetId: string, text: string) => dispatch(create('UIShowChangeTextPopup', {widgetId, text})),
+    onCancelChangeText: () => dispatch(create('UIHideChangeTextPopup', {})),
+    changeCurrentWidgetText: (text: string) => dispatch(create('UIChangeWidgetText', {text})),
+    onSubmitChangeText: (widgetId: string, text: string) => (dispatch(create('WidgetChangeText', {widgetId, text})), dispatch(create('UIHideChangeTextPopup', {})))
 }))(props => (
     <div>
         <AppBar title="Mini PPT app" />
@@ -123,11 +135,33 @@ const App = connect((state: State) => ({
                     onResizeWidget={props.onResizeWidget}
                     selectedWidgets={props.selectedWidgets}
                     onSelectWidget={props.onSelectWidget}
-                    onWidgetUnselect={props.onWidgetUnselect} />
+                    onWidgetUnselect={props.onWidgetUnselect}
+                    onStartChangeText={props.onStartChangeText} />
             <RightPanel widget={props.selectedWidgets.length === 1 ? props.selectedWidgets[0] : undefined}
                         onChangeColorWidget={color => props.onChangeColorWidget(props.selectedWidgets[0].id, color)}
                         onChangeFontSizeWidget={fontSize => props.onChangeFontSizeWidget(props.selectedWidgets[0].id, fontSize)} />
         </div>
+        { props.showChangeTextPopup ? (
+            <Dialog title="Change text"
+                    actions={[
+                        <FlatButton
+                            label="Cancel"
+                            primary={true}
+                            onClick={props.onCancelChangeText}
+                        />,
+                        <FlatButton
+                            label="Submit"
+                            primary={true}
+                            keyboardFocused={true}
+                            onClick={() => props.onSubmitChangeText(props.selectedWidgets[0].id, props.currentWidgetText)}
+                        />,
+                    ]}
+                    modal={false}
+                    open={true}
+                    onRequestClose={() => null} >
+                <TextField fullWidth value={props.currentWidgetText} onChange={e => props.changeCurrentWidgetText((e.target as any).value)} />
+            </Dialog>
+        ) : null}
     </div>
 ));
 

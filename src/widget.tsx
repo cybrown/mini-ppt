@@ -30,7 +30,7 @@ export interface WidgetRectangle extends BaseWidget {
 export type Widget = WidgetTextZone | WidgetRectangle;
 
 const widgetData = (state: State) => state.data.widgets;
-export const currentSlideRecord = (state: State) => state.data.slides[state.editor.currentSlide];
+export const currentSlideRecord = (state: State) => state.data.slides[state.ui.currentSlide];
 export const widgetList = createSelector(currentSlideRecord, (currentSlide) => currentSlide.widgetsIds);
 export const widgetsSelector = createSelector(widgetData, widgetList, (widgetData, widgetList) => widgetList.map(id => widgetData[id]));
 export const currentSlide = createSelector(currentSlideRecord, widgetsSelector, (currentSlide, widgets): Slide => ({
@@ -38,7 +38,7 @@ export const currentSlide = createSelector(currentSlideRecord, widgetsSelector, 
     widgets
 }))
 
-export const selectedWidgets = (state: State) => state.editor.selectedWidgets.map(widgetId => state.data.widgets[widgetId]);
+export const selectedWidgets = (state: State) => state.ui.selectedWidgets.map(widgetId => state.data.widgets[widgetId]);
 
 export const widgetRepositoryReducer = (widgets: State['data']['widgets'], action: AppAction) => {
     switch (action.type) {
@@ -77,6 +77,8 @@ export const widgetRepositoryReducer = (widgets: State['data']['widgets'], actio
             return set(widgets, {[action.widgetId]: set(widgets[action.widgetId], {color: action.color})});
         case 'WidgetChangeFontSize':
             return set(widgets, {[action.widgetId]: set(widgets[action.widgetId], {fontSize: action.fontSize})});
+        case 'WidgetChangeText':
+            return set(widgets, {[action.widgetId]: set(widgets[action.widgetId], {text: action.text})});
     }
     return widgets;
 }
@@ -130,10 +132,6 @@ export interface WidgetActions {
         width: number;
         height: number;
     };
-    WidgetSelect: {
-        widgetId: string;
-    };
-    WidgetUnselect: {};
     WidgetChangeColor: {
         widgetId: string;
         color: string;
@@ -141,5 +139,9 @@ export interface WidgetActions {
     WidgetChangeFontSize: {
         widgetId: string;
         fontSize: number
+    };
+    WidgetChangeText: {
+        widgetId: string;
+        text: string;
     };
 }
