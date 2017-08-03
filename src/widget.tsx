@@ -24,7 +24,7 @@ export interface WidgetTextZone extends BaseWidget {
 
 export interface WidgetRectangle extends BaseWidget {
     kind: 'rectangle';
-    color: string;
+    backgroundColor: string;
 }
 
 export type Widget = WidgetTextZone | WidgetRectangle;
@@ -71,10 +71,10 @@ export const widgetRepositoryReducer = (widgets: State['data']['widgets'], actio
                 y: action.y,
                 width: action.width,
                 height: action.height,
-                color: action.color
+                backgroundColor: action.backgroundColor
             }})
-        case 'WidgetChangeColor':
-            return set(widgets, {[action.widgetId]: set(widgets[action.widgetId], {color: action.color})});
+        case 'WidgetChangeBackgroundColor':
+            return set(widgets, {[action.widgetId]: set(widgets[action.widgetId], {backgroundColor: action.backgroundColor})});
         case 'WidgetChangeFontSize':
             return set(widgets, {[action.widgetId]: set(widgets[action.widgetId], {fontSize: action.fontSize})});
         case 'WidgetChangeText':
@@ -92,8 +92,8 @@ const TextZone: React.SFC<{
     <div style={{width: width + 'px', height: height + 'px', fontSize: fontSize + 'px'}}>{text}</div>
 );
 
-const Rectangle: React.SFC<{color: string, width: number, height: number}> = ({color, width, height}) => (
-    <div style={{width: width + 'px', height: height + 'px', backgroundColor: color}}></div>
+const Rectangle: React.SFC<{backgroundColor: string, width: number, height: number}> = ({backgroundColor, width, height}) => (
+    <div style={{width: width + 'px', height: height + 'px', backgroundColor}}></div>
 )
 
 export const WidgetRenderer: React.SFC<{widget: Widget}> = ({widget}) => {
@@ -101,7 +101,7 @@ export const WidgetRenderer: React.SFC<{widget: Widget}> = ({widget}) => {
         case 'text':
             return <TextZone text={widget.text} width={widget.width} height={widget.height} fontSize={widget.fontSize} />;
         case 'rectangle':
-            return <Rectangle color={widget.color} width={widget.width} height={widget.height} />;
+            return <Rectangle backgroundColor={widget.backgroundColor} width={widget.width} height={widget.height} />;
     }
 }
 
@@ -126,16 +126,16 @@ export interface WidgetActions {
         y: number;
         width: number;
         height: number;
-        color: string;
+        backgroundColor: string;
     };
     WidgetResizeAction: {
         id: string;
         width: number;
         height: number;
     };
-    WidgetChangeColor: {
+    WidgetChangeBackgroundColor: {
         widgetId: string;
-        color: string;
+        backgroundColor: string;
     };
     WidgetChangeFontSize: {
         widgetId: string;

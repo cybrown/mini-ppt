@@ -65,7 +65,7 @@ const RightPanel: React.SFC<{
     ) : null
 );
 
-let anchorForColorPicker: any;  // TODO: find another solution to store the color picker's anchor
+let anchorForBackgroundColorPicker: any;  // TODO: find another solution to store the color picker's anchor
 
 const App = connect((state: State) => ({
     widgets: widgetsSelector(state),
@@ -73,8 +73,8 @@ const App = connect((state: State) => ({
     selectedWidgets: selectedWidgets(state),
     showChangeTextPopup: state.ui.showChangeTextPopup,
     currentWidgetText: state.ui.currentWidgetText,
-    currentColor: state.ui.currentColor,
-    showColorPicker: state.ui.showColorPicker
+    currentBackgroundColor: state.ui.currentBackgroundColor,
+    showBackgroundColorPicker: state.ui.showBackgroundColorPicker
 }), (dispatch: Dispatch<AppAction>) => ({
     onMoveWidget: (id: string, x: number, y: number) => dispatch(create('WidgetMoveAction', {id, x, y})),
     onResizeWidget: (id: string, width: number, height: number) => dispatch(create('WidgetResizeAction', {id, width, height})),
@@ -86,24 +86,24 @@ const App = connect((state: State) => ({
         width: 100,
         height: 20
     })),
-    onNewRectangle: (slideId: string, color: string) => dispatch(create('WidgetNewRectangle', {
+    onNewRectangle: (slideId: string, backgroundColor: string) => dispatch(create('WidgetNewRectangle', {
         slideId,
         widgetId: Math.random().toString(),
         x: 250 - 40 / 2,
         y: 250 - 40 / 2,
         width: 40,
         height: 40,
-        color
+        backgroundColor
     })),
     onSelectWidget: (widget: Widget) => dispatch(create('UIWidgetSelect', {
         widget
     })),
     onWidgetUnselect: () => dispatch(create('UIWidgetUnselect', {})),
-    onChangeColorWidget: (widgetId: string | null, color: string) => {
+    onChangeColorWidget: (widgetId: string | null, backgroundColor: string) => {
         if (widgetId) {
-            dispatch(create('WidgetChangeColor', { widgetId, color }));
+            dispatch(create('WidgetChangeBackgroundColor', { widgetId, backgroundColor }));
         }
-        dispatch(create('UIChangeCurrentColor', {color}));
+        dispatch(create('UIChangeCurrentBackgroundColor', {backgroundColor}));
     ;},
     onChangeFontSizeWidget: (widgetId: string, fontSize: number) => dispatch(create('WidgetChangeFontSize', {
         widgetId, fontSize
@@ -115,23 +115,23 @@ const App = connect((state: State) => ({
         dispatch(create('WidgetChangeText', {widgetId, text}));
         dispatch(create('UIHideChangeTextPopup', {}));
     },
-    onSetColorPickerisibility: (visible: boolean) => dispatch(create('UIChangeColorPickerVisibility', {visible}))
+    onSetColorPickerisibility: (visible: boolean) => dispatch(create('UIChangeBackgroundColorPickerVisibility', {visible}))
 }))(props => (
     <div>
         <AppBar title="Mini PPT app" />
         <Toolbar>
             <ToolbarGroup firstChild={true}>
                 <IconButton iconClassName="mppt-icon mppt-icon-text" onClick={() => props.onNewTextZoneClick(props.slide.id)} />
-                <IconButton iconClassName="mppt-icon mppt-icon-rectangle" onClick={() => props.onNewRectangle(props.slide.id, props.currentColor)} />
-                <IconButton ref={el => el && (anchorForColorPicker = ReactDOM.findDOMNode(el))} onClick={() => props.onSetColorPickerisibility(!props.showColorPicker)}>
-                    <FontIcon color={props.currentColor} className="mppt-icon mppt-icon-bucket" />
+                <IconButton iconClassName="mppt-icon mppt-icon-rectangle" onClick={() => props.onNewRectangle(props.slide.id, props.currentBackgroundColor)} />
+                <IconButton ref={el => el && (anchorForBackgroundColorPicker = ReactDOM.findDOMNode(el))} onClick={() => props.onSetColorPickerisibility(!props.showBackgroundColorPicker)}>
+                    <FontIcon color={props.currentBackgroundColor} className="mppt-icon mppt-icon-bucket" />
                 </IconButton>
-                <Popover open={props.showColorPicker}
-                         anchorEl={anchorForColorPicker}
+                <Popover open={props.showBackgroundColorPicker}
+                         anchorEl={anchorForBackgroundColorPicker}
                          anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
                          targetOrigin={{horizontal: 'left', vertical: 'top'}}
                          useLayerForClickAway={false}>
-            <SketchPicker color={props.currentColor} onChange={color => props.onChangeColorWidget(props.selectedWidgets[0] ? props.selectedWidgets[0].id : null, rgbaToString(color.rgb))} />
+            <SketchPicker color={props.currentBackgroundColor} onChange={color => props.onChangeColorWidget(props.selectedWidgets[0] ? props.selectedWidgets[0].id : null, rgbaToString(color.rgb))} />
         </Popover>
             </ToolbarGroup>
         </Toolbar>

@@ -16,10 +16,10 @@ export interface UIActions {
         widget: Widget;
     };
     UIWidgetUnselect: {};
-    UIChangeCurrentColor: {
-        color: string;
+    UIChangeCurrentBackgroundColor: {
+        backgroundColor: string;
     };
-    UIChangeColorPickerVisibility: {
+    UIChangeBackgroundColorPickerVisibility: {
         visible: boolean;
     };
 }
@@ -29,8 +29,8 @@ export const uiInitialState: UIState = {
     selectedWidgets: [],
     showChangeTextPopup: false,
     currentWidgetText: '',
-    currentColor: 'rgba(0,0,255,1)',
-    showColorPicker: false
+    currentBackgroundColor: 'rgba(0,0,255,1)',
+    showBackgroundColorPicker: false
 };
 
 export interface UIState {
@@ -38,8 +38,8 @@ export interface UIState {
     selectedWidgets: string[];
     showChangeTextPopup: boolean;
     currentWidgetText: string;
-    currentColor: string;
-    showColorPicker: boolean;
+    currentBackgroundColor: string;
+    showBackgroundColorPicker: boolean;
 }
 
 export const editorReducer: Reducer<UIState> = (state: UIState, action: AppAction): UIState => {
@@ -47,12 +47,12 @@ export const editorReducer: Reducer<UIState> = (state: UIState, action: AppActio
         case 'UIWidgetSelect':
             return set(state, {
                 selectedWidgets: [action.widget.id],
-                currentColor: action.widget.kind === 'rectangle' ? action.widget.color : state.currentColor
+                currentBackgroundColor: action.widget.kind === 'rectangle' ? action.widget.backgroundColor : state.currentBackgroundColor
             });
         case 'UIWidgetUnselect':
             return set(state, {
                 selectedWidgets: [],
-                showColorPicker: false
+                showBackgroundColorPicker: false
             });
         case 'UIShowChangeTextPopup':
             return set(state, {
@@ -69,9 +69,9 @@ export const editorReducer: Reducer<UIState> = (state: UIState, action: AppActio
                 showChangeTextPopup: false,
                 currentWidgetText: ''
             });
-        case 'UIChangeCurrentColor':
+        case 'UIChangeCurrentBackgroundColor':
             return set(state, {
-                currentColor: action.color
+                currentBackgroundColor: action.backgroundColor
             });
         case 'WidgetNewRectangle':
             return set(state, {
@@ -81,9 +81,9 @@ export const editorReducer: Reducer<UIState> = (state: UIState, action: AppActio
             return set(state, {
                 selectedWidgets: [action.widgetId],
             });
-        case 'UIChangeColorPickerVisibility':
+        case 'UIChangeBackgroundColorPickerVisibility':
             return set(state, {
-                showColorPicker: action.visible
+                showBackgroundColorPicker: action.visible
             });
     }
     return state;
