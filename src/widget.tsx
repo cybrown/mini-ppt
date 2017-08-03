@@ -19,6 +19,7 @@ export interface BaseWidget {
 export interface WidgetTextZone extends BaseWidget {
     kind: 'text';
     text: string;
+    fontSize: number;
 }
 
 export interface WidgetRectangle extends BaseWidget {
@@ -59,7 +60,8 @@ export const widgetRepositoryReducer = (widgets: State['data']['widgets'], actio
                 y: action.y,
                 width: action.width,
                 height: action.height,
-                text: 'Text'
+                text: 'Text',
+                fontSize: 12
             }})
         case 'WidgetNewRectangle':
             return set(widgets, {[action.widgetId]: {
@@ -72,13 +74,20 @@ export const widgetRepositoryReducer = (widgets: State['data']['widgets'], actio
                 color: 'blue'
             }})
         case 'WidgetChangeColor':
-            return set(widgets, {[action.widgetId]: set(widgets[action.widgetId], {color: action.color})})
+            return set(widgets, {[action.widgetId]: set(widgets[action.widgetId], {color: action.color})});
+        case 'WidgetChangeFontSize':
+            return set(widgets, {[action.widgetId]: set(widgets[action.widgetId], {fontSize: action.fontSize})});
     }
     return widgets;
 }
 
-const TextZone: React.SFC<{text: string, width: number, height: number}> = ({text, width, height}) => (
-    <div style={{width: width + 'px', height: height + 'px'}}>{text}</div>
+const TextZone: React.SFC<{
+    text: string;
+    width: number;
+    height: number;
+    fontSize: number;
+}> = ({text, width, height, fontSize}) => (
+    <div style={{width: width + 'px', height: height + 'px', fontSize: fontSize + 'px'}}>{text}</div>
 );
 
 const Rectangle: React.SFC<{color: string, width: number, height: number}> = ({color, width, height}) => (
@@ -88,7 +97,7 @@ const Rectangle: React.SFC<{color: string, width: number, height: number}> = ({c
 export const WidgetRenderer: React.SFC<{widget: Widget}> = ({widget}) => {
     switch (widget.kind) {
         case 'text':
-            return <TextZone text={widget.text} width={widget.width} height={widget.height} />;
+            return <TextZone text={widget.text} width={widget.width} height={widget.height} fontSize={widget.fontSize} />;
         case 'rectangle':
             return <Rectangle color={widget.color} width={widget.width} height={widget.height} />;
     }
@@ -128,5 +137,9 @@ export interface WidgetActions {
     WidgetChangeColor: {
         widgetId: string;
         color: string;
+    };
+    WidgetChangeFontSize: {
+        widgetId: string;
+        fontSize: number
     };
 }
