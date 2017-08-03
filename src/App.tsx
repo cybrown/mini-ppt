@@ -5,8 +5,10 @@ import { widgetsSelector, currentSlide, Widget, selectedWidgets, WidgetTextZone 
 import { AppAction, create } from "./AppAction";
 import { Dispatch } from "redux";
 import { SlideEditor, Slide } from "./slide";
-import { AppBar, Toolbar, ToolbarGroup, IconButton, Paper, TextField, Dialog, FlatButton, FontIcon } from "material-ui";
+import { AppBar, Toolbar, ToolbarGroup, IconButton, Paper, TextField, Dialog, FlatButton, FontIcon, Popover } from "material-ui";
 import { SketchPicker } from "react-color";
+import * as ReactDOM from "react-dom";
+import { rgbaToString } from "./util";
 
 const Editor: React.SFC<{
     slide: Slide;
@@ -54,17 +56,16 @@ const TextPropertiesPanel: React.SFC<{
 
 const RightPanel: React.SFC<{
     widget?: Widget;
-    currentColor: string;
-    onChangeColorWidget: (color: string) => void;
     onChangeFontSizeWidget: (fontSize: number) => void;
-}> = ({widget, onChangeColorWidget, onChangeFontSizeWidget, currentColor}) => (
+}> = ({widget, onChangeFontSizeWidget}) => (
     widget ? (
         <Paper style={{position: 'absolute', right: 0, top: 0, width: '218px'}}>
-            <SketchPicker color={currentColor} onChange={color => onChangeColorWidget(color.hex)} />
             <PropertiesPanel widget={widget} onChangeFontSizeWidget={onChangeFontSizeWidget} />
         </Paper>
     ) : null
 );
+
+let anchorForColorPicker: any;  // TODO: find another solution to store the color picker's anchor
 
 const App = connect((state: State) => ({
     widgets: widgetsSelector(state),
@@ -72,7 +73,8 @@ const App = connect((state: State) => ({
     selectedWidgets: selectedWidgets(state),
     showChangeTextPopup: state.ui.showChangeTextPopup,
     currentWidgetText: state.ui.currentWidgetText,
-    currentColor: state.ui.currentColor
+    currentColor: state.ui.currentColor,
+    showColorPicker: state.ui.showColorPicker
 }), (dispatch: Dispatch<AppAction>) => ({
     onMoveWidget: (id: string, x: number, y: number) => dispatch(create('WidgetMoveAction', {id, x, y})),
     onResizeWidget: (id: string, width: number, height: number) => dispatch(create('WidgetResizeAction', {id, width, height})),
@@ -97,16 +99,23 @@ const App = connect((state: State) => ({
         widget
     })),
     onWidgetUnselect: () => dispatch(create('UIWidgetUnselect', {})),
-    onChangeColorWidget: (widgetId: string, color: string) => (dispatch(create('WidgetChangeColor', {
-        widgetId, color
-    })), dispatch(create('UIChangeCurrentColor', {color}))),
+    onChangeColorWidget: (widgetId: string | null, color: string) => {
+        if (widgetId) {
+            dispatch(create('WidgetChangeColor', { widgetId, color }));
+        }
+        dispatch(create('UIChangeCurrentColor', {color}));
+    ;},
     onChangeFontSizeWidget: (widgetId: string, fontSize: number) => dispatch(create('WidgetChangeFontSize', {
         widgetId, fontSize
     })),
     onStartChangeText: (widgetId: string, text: string) => dispatch(create('UIShowChangeTextPopup', {widgetId, text})),
     onCancelChangeText: () => dispatch(create('UIHideChangeTextPopup', {})),
     changeCurrentWidgetText: (text: string) => dispatch(create('UIChangeWidgetText', {text})),
-    onSubmitChangeText: (widgetId: string, text: string) => (dispatch(create('WidgetChangeText', {widgetId, text})), dispatch(create('UIHideChangeTextPopup', {})))
+    onSubmitChangeText: (widgetId: string, text: string) => {
+        dispatch(create('WidgetChangeText', {widgetId, text}));
+        dispatch(create('UIHideChangeTextPopup', {}));
+    },
+    onSetColorPickerisibility: (visible: boolean) => dispatch(create('UIChangeColorPickerVisibility', {visible}))
 }))(props => (
     <div>
         <AppBar title="Mini PPT app" />
@@ -114,9 +123,16 @@ const App = connect((state: State) => ({
             <ToolbarGroup firstChild={true}>
                 <IconButton iconClassName="mppt-icon mppt-icon-text" onClick={() => props.onNewTextZoneClick(props.slide.id)} />
                 <IconButton iconClassName="mppt-icon mppt-icon-rectangle" onClick={() => props.onNewRectangle(props.slide.id, props.currentColor)} />
-                <IconButton>
+                <IconButton ref={el => el && (anchorForColorPicker = ReactDOM.findDOMNode(el))} onClick={() => props.onSetColorPickerisibility(!props.showColorPicker)}>
                     <FontIcon color={props.currentColor} className="mppt-icon mppt-icon-bucket" />
                 </IconButton>
+                <Popover open={props.showColorPicker}
+                         anchorEl={anchorForColorPicker}
+                         anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                         targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                         useLayerForClickAway={false}>
+            <SketchPicker color={props.currentColor} onChange={color => props.onChangeColorWidget(props.selectedWidgets[0] ? props.selectedWidgets[0].id : null, rgbaToString(color.rgb))} />
+        </Popover>
             </ToolbarGroup>
         </Toolbar>
         <div style={{position: 'relative'}}>
@@ -128,8 +144,6 @@ const App = connect((state: State) => ({
                     onWidgetUnselect={props.onWidgetUnselect}
                     onStartChangeText={props.onStartChangeText} />
             <RightPanel widget={props.selectedWidgets.length === 1 ? props.selectedWidgets[0] : undefined}
-                        currentColor={props.currentColor}
-                        onChangeColorWidget={color => props.onChangeColorWidget(props.selectedWidgets[0].id, color)}
                         onChangeFontSizeWidget={fontSize => props.onChangeFontSizeWidget(props.selectedWidgets[0].id, fontSize)} />
         </div>
         { props.showChangeTextPopup ? (
