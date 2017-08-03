@@ -81,7 +81,7 @@ export const SlideEditor: React.SFC<{
         <div style={{position: 'absolute', top: 0, left: 0}}>
             {selectedWidgets.map(widget => (
                 <HasPosition key={widget.id} x={widget.x} y={widget.y}>
-                    <Movable onMove={(deltaX, deltaY) => onMoveWidget(widget.id, widget.x + deltaX, widget.y + deltaY)}>
+                    <Movable immediate onMove={(deltaX, deltaY) => onMoveWidget(widget.id, widget.x + deltaX, widget.y + deltaY)}>
                         <WidgetBox key={widget.id}
                                    widget={widget}
                                    onMoveWidget={onMoveWidget}
