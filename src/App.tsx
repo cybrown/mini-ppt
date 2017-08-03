@@ -17,7 +17,7 @@ const Editor: React.SFC<{
     selectedWidgets: Widget[];
     onSelectWidget: (widgetId: string) => void;
     onWidgetUnselect: () => void;
-    onStartChangeText: (widgetId: string, text: string) => void;
+    onStartChangeText: (text: string) => void;
 }> = (props) => (
     <div style={{
         paddingTop: '100px'
@@ -96,10 +96,10 @@ const App = connect((state: State) => ({
         height: 40,
         backgroundColor
     })),
-    onSelectWidget: (widget: Widget) => dispatch(create('UIWidgetSelect', {
-        widget
+    onSelectWidget: (widget: Widget) => dispatch(create('UIWidgetReplaceSelection', {
+        widgets: [widget]
     })),
-    onWidgetUnselect: () => dispatch(create('UIWidgetUnselect', {})),
+    onWidgetUnselect: () => dispatch(create('UIWidgetReplaceSelection', {widgets: []})),
     onChangeColorWidget: (widgetId: string | null, backgroundColor: string) => {
         if (widgetId) {
             dispatch(create('WidgetChangeBackgroundColor', { widgetId, backgroundColor }));
@@ -109,12 +109,12 @@ const App = connect((state: State) => ({
     onChangeFontSizeWidget: (widgetId: string, fontSize: number) => dispatch(create('WidgetChangeFontSize', {
         widgetId, fontSize
     })),
-    onStartChangeText: (widgetId: string, text: string) => dispatch(create('UIShowChangeTextPopup', {widgetId, text})),
-    onCancelChangeText: () => dispatch(create('UIHideChangeTextPopup', {})),
+    onStartChangeText: (text: string) => dispatch(create('UIChangeTextPopupSetVisibility', {visible: true, text})),
+    onCancelChangeText: () => dispatch(create('UIChangeTextPopupSetVisibility', {visible: false})),
     changeCurrentWidgetText: (text: string) => dispatch(create('UIChangeWidgetText', {text})),
     onSubmitChangeText: (widgetId: string, text: string) => {
         dispatch(create('WidgetChangeText', {widgetId, text}));
-        dispatch(create('UIHideChangeTextPopup', {}));
+        dispatch(create('UIChangeTextPopupSetVisibility', {visible: false}));
     },
     onSetColorPickerisibility: (visible: boolean) => dispatch(create('UIChangeBackgroundColorPickerVisibility', {visible}))
 }))(props => (

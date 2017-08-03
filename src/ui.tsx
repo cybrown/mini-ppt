@@ -13,18 +13,16 @@ export interface UIState {
 }
 
 export interface UIActions {
-    UIShowChangeTextPopup: {
-        widgetId: string;
-        text: string;
+    UIChangeTextPopupSetVisibility: {
+        visible: boolean;
+        text?: string;
     };
-    UIHideChangeTextPopup: {};
     UIChangeWidgetText: {
         text: string;
     };
-    UIWidgetSelect: {
-        widget: Widget;
+    UIWidgetReplaceSelection: {
+        widgets: Widget[];
     };
-    UIWidgetUnselect: {};
     UIChangeCurrentBackgroundColor: {
         backgroundColor: string;
     };
@@ -44,30 +42,20 @@ export const uiInitialState: UIState = {
 
 export const uiReducer: Reducer<UIState> = (state: UIState, action: AppAction): UIState => {
     switch (action.type) {
-        case 'UIWidgetSelect':
+        case 'UIWidgetReplaceSelection':
             return set(state, {
-                selectedWidgets: [action.widget.id],
-                currentBackgroundColor: action.widget.backgroundColor
-            });
-        case 'UIWidgetUnselect':
-            return set(state, {
-                selectedWidgets: [],
+                selectedWidgets: action.widgets.map(w => w.id),
                 showBackgroundColorPicker: false
-            });
-        case 'UIShowChangeTextPopup':
-            return set(state, {
-                showChangeTextPopup: true,
-                currentWidgetText: action.text
             });
         case 'UIChangeWidgetText':
             return set(state, {
                 showChangeTextPopup: true,
                 currentWidgetText: action.text
             });
-        case 'UIHideChangeTextPopup':
+        case 'UIChangeTextPopupSetVisibility':
             return set(state, {
-                showChangeTextPopup: false,
-                currentWidgetText: ''
+                showChangeTextPopup: action.visible,
+                currentWidgetText: action.text ? action.text : state.currentWidgetText
             });
         case 'UIChangeCurrentBackgroundColor':
             return set(state, {
