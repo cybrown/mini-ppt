@@ -38,11 +38,11 @@ export const slideRepositoryReducer = (slides: State['data']['slides'], action: 
 
 export const SlideRenderer: React.SFC<{
     slide: Slide;
-    onWidgetClick: (widgetId: string) => void;
+    onWidgetClick?: (widgetId: string) => void;
 }> = ({slide, onWidgetClick}) => (
     <div style={{backgroundColor: 'white', position: 'relative', width: 500 + 'px', height: 500 + 'px'}}>
         {slide.widgets.map(widget => (
-            <HasPosition key={widget.id} x={widget.x} y={widget.y} onClick={() => onWidgetClick(widget.id)}>
+            <HasPosition key={widget.id} x={widget.x} y={widget.y} onClick={onWidgetClick && (() => onWidgetClick(widget.id))}>
                 <WidgetRenderer widget={widget}/>
             </HasPosition>
         ))}

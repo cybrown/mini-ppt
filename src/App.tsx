@@ -5,7 +5,7 @@ import { selectedWidgets } from "./widget";
 import { AppAction, create } from "./AppAction";
 import { Dispatch } from "redux";
 import { AppBar } from "material-ui";
-import { AppToolBar, RightPanel, Editor, ChangeTextDialog } from "./ui";
+import { AppToolBar, RightPanel, Editor, ChangeTextDialog, SlideList } from "./ui";
 
 const App = connect((state: State) => ({
     selectedWidgets: selectedWidgets(state),
@@ -26,6 +26,7 @@ const App = connect((state: State) => ({
         <AppBar title="Mini PPT app" />
         <AppToolBar />
         <div style={{position: 'relative'}}>
+            <SlideList />
             <Editor />
             <RightPanel widget={props.selectedWidgets.length === 1 ? props.selectedWidgets[0] : undefined}
                         onChangeFontSizeWidget={fontSize => props.onChangeFontSizeWidget(props.selectedWidgets[0].id, fontSize)} />

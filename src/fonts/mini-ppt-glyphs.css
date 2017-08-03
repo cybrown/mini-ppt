@@ -25,6 +25,9 @@
 .mppt-icon-bucket:before {
   content: "\e900";
 }
+.mppt-icon-plus:before {
+  content: "\ea0a";
+}
 .mppt-icon-rectangle:before {
   content: "\ea53";
 }

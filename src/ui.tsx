@@ -9,7 +9,7 @@ import { SketchPicker } from "react-color";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { rgbaToString } from "./util";
-import { SlideEditor } from "./slide";
+import { SlideEditor, SlideRenderer } from "./slide";
 
 export interface UIState {
     currentSlide: string | null;
@@ -83,7 +83,13 @@ export const uiReducer: Reducer<UIState> = (state: UIState, action: AppAction): 
             });
         case 'UISetCurrentSlide':
             return set(state, {
-                currentSlide: action.slideId
+                currentSlide: action.slideId,
+                selectedWidgets: []
+            });
+        case 'SlideNew':
+            return set(state, {
+                currentSlide: action.slide.id,
+                selectedWidgets: []
             });
     }
     return state;
@@ -129,10 +135,17 @@ export const AppToolBar = connect((state: State) => ({
         }
         dispatch(create('UIChangeCurrentBackgroundColor', {backgroundColor}));
     },
-    onSetColorPickerisibility: (visible: boolean) => dispatch(create('UIChangeBackgroundColorPickerVisibility', {visible}))
+    onSetColorPickerisibility: (visible: boolean) => dispatch(create('UIChangeBackgroundColorPickerVisibility', {visible})),
+    onCreateNewSlide: () => dispatch(create('SlideNew', {
+        slide: {
+            id: Math.random().toString(),
+            widgetsIds: []
+        }
+    }))
 }))(props => (
     <Toolbar>
         <ToolbarGroup firstChild={true}>
+            <IconButton iconClassName="mppt-icon mppt-icon-plus" onClick={props.onCreateNewSlide} />
             <IconButton iconClassName="mppt-icon mppt-icon-text" onClick={() => props.slide && props.onNewTextZoneClick(props.slide.id, props.currentBackgroundColor)} />
             <IconButton iconClassName="mppt-icon mppt-icon-rectangle" onClick={() => props.slide && props.onNewRectangle(props.slide.id, props.currentBackgroundColor)} />
             <IconButton ref={el => el && (anchorForBackgroundColorPicker = ReactDOM.findDOMNode(el))} onClick={() => props.onSetColorPickerisibility(!props.showBackgroundColorPicker)}>
@@ -244,3 +257,25 @@ export const ChangeTextDialog = connect((state: State) => ({
         <TextField fullWidth value={props.currentWidgetText} onChange={e => props.changeCurrentWidgetText((e.target as any).value)} />
     </Dialog>
 );
+
+export const SlideList = connect((state: State) => ({
+    slides: Object.keys(state.data.slides).map(id => state.data.slides[id]).map(slideRecord => ({
+        id: slideRecord.id,
+        widgets: slideRecord.widgetsIds.map(widgetId => state.data.widgets[widgetId])
+    })),
+    currentSlide: state.ui.currentSlide
+}), (dispatch: Dispatch<AppAction>) => ({
+    onSetCurrentSlide: (slideId: string) => dispatch(create('UISetCurrentSlide', { slideId }))
+}))(props => (
+    <Paper style={{backgroundColor: 'lightgrey', position: 'absolute', top: 0, bottom: 0, width: '200px', overflow: 'auto'}} zDepth={2}>
+        {props.slides.map(slide => (
+            <div key={slide.id} style={{width: '200px', height: '200px', padding: '35.25px'}} >
+                <Paper zDepth={slide.id === props.currentSlide ? 3 : 1} style={{width: '125px', height: '125px'}} onClick={() => props.onSetCurrentSlide(slide.id)}>
+                    <div style={{transform: 'scale(0.25, 0.25)', transformOrigin: 'top left', pointerEvents: 'none'}}>
+                        <SlideRenderer slide={slide} />
+                    </div>
+                </Paper>
+            </div>
+        ))}
+    </Paper>
+));
