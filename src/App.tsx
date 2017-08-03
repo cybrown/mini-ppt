@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { State } from "./State";
-import { widgetsSelector, currentSlide, Widget, selectedWidgets, WidgetRectangle, WidgetTextZone } from "./widget";
+import { widgetsSelector, currentSlide, Widget, selectedWidgets, WidgetTextZone } from "./widget";
 import { AppAction, create } from "./AppAction";
 import { Dispatch } from "redux";
 import { SlideEditor, Slide } from "./slide";
-import { AppBar, Toolbar, ToolbarGroup, IconButton, Paper, TextField, Dialog, FlatButton } from "material-ui";
+import { AppBar, Toolbar, ToolbarGroup, IconButton, Paper, TextField, Dialog, FlatButton, FontIcon } from "material-ui";
+import { SketchPicker } from "react-color";
 
 const Editor: React.SFC<{
     slide: Slide;
@@ -30,35 +31,17 @@ const Editor: React.SFC<{
     </div>
 )
 
-const ColorButton: React.SFC<{color: string; selected: boolean;}> = ({color, selected}) => (
-    <div style={{backgroundColor: color, width: '40px', height: '20px', border: (selected ? 'black thin solid' : 'none')}}></div>
-)
-
 const PropertiesPanel: React.SFC<{
     widget: Widget;
-    onChangeColorWidget: (color: string) => void;
     onChangeFontSizeWidget: (fontSize: number) => void;
-}> = ({widget, onChangeColorWidget, onChangeFontSizeWidget}) => {
+}> = ({widget, onChangeFontSizeWidget}) => {
     switch (widget.kind) {
         case 'rectangle':
-            return <RectanglePropertiesPanel widget={widget} onChangeColorWidget={onChangeColorWidget} />
+            return null;
         case 'text':
-            return <TextPropertiesPanel widget={widget} onChangeFontSizeWidget={onChangeFontSizeWidget} />
+            return <TextPropertiesPanel widget={widget} onChangeFontSizeWidget={onChangeFontSizeWidget} />;
     }
 }
-
-const RectanglePropertiesPanel: React.SFC<{
-    widget: WidgetRectangle;
-    onChangeColorWidget: (color: string) => void;
-}> = ({widget, onChangeColorWidget}) => (
-    <div>
-        {['red', 'green', 'blue', 'yellow', 'orange', 'purple', 'grey', 'white', 'black'].map(color => (
-            <div key={color} onClick={() => onChangeColorWidget(color)}>
-                <ColorButton color={color} selected={widget.color === color} />
-            </div>
-        ))}
-    </div>
-)
 
 const TextPropertiesPanel: React.SFC<{
     widget: WidgetTextZone;
@@ -71,12 +54,14 @@ const TextPropertiesPanel: React.SFC<{
 
 const RightPanel: React.SFC<{
     widget?: Widget;
+    currentColor: string;
     onChangeColorWidget: (color: string) => void;
     onChangeFontSizeWidget: (fontSize: number) => void;
-}> = ({widget, onChangeColorWidget, onChangeFontSizeWidget}) => (
+}> = ({widget, onChangeColorWidget, onChangeFontSizeWidget, currentColor}) => (
     widget ? (
-        <Paper style={{position: 'absolute', right: 0, top: 0, width: '200px'}}>
-            <PropertiesPanel widget={widget} onChangeColorWidget={onChangeColorWidget} onChangeFontSizeWidget={onChangeFontSizeWidget} />
+        <Paper style={{position: 'absolute', right: 0, top: 0, width: '218px'}}>
+            <SketchPicker color={currentColor} onChange={color => onChangeColorWidget(color.hex)} />
+            <PropertiesPanel widget={widget} onChangeFontSizeWidget={onChangeFontSizeWidget} />
         </Paper>
     ) : null
 );
@@ -86,7 +71,8 @@ const App = connect((state: State) => ({
     slide: currentSlide(state),
     selectedWidgets: selectedWidgets(state),
     showChangeTextPopup: state.ui.showChangeTextPopup,
-    currentWidgetText: state.ui.currentWidgetText
+    currentWidgetText: state.ui.currentWidgetText,
+    currentColor: state.ui.currentColor
 }), (dispatch: Dispatch<AppAction>) => ({
     onMoveWidget: (id: string, x: number, y: number) => dispatch(create('WidgetMoveAction', {id, x, y})),
     onResizeWidget: (id: string, width: number, height: number) => dispatch(create('WidgetResizeAction', {id, width, height})),
@@ -98,21 +84,22 @@ const App = connect((state: State) => ({
         width: 100,
         height: 20
     })),
-    onNewRectangle: (slideId: string) => dispatch(create('WidgetNewRectangle', {
+    onNewRectangle: (slideId: string, color: string) => dispatch(create('WidgetNewRectangle', {
         slideId,
         widgetId: Math.random().toString(),
         x: 250 - 40 / 2,
         y: 250 - 40 / 2,
         width: 40,
-        height: 40
+        height: 40,
+        color
     })),
-    onSelectWidget: (widgetId: string) => dispatch(create('UIWidgetSelect', {
-        widgetId
+    onSelectWidget: (widget: Widget) => dispatch(create('UIWidgetSelect', {
+        widget
     })),
     onWidgetUnselect: () => dispatch(create('UIWidgetUnselect', {})),
-    onChangeColorWidget: (widgetId: string, color: string) => dispatch(create('WidgetChangeColor', {
+    onChangeColorWidget: (widgetId: string, color: string) => (dispatch(create('WidgetChangeColor', {
         widgetId, color
-    })),
+    })), dispatch(create('UIChangeCurrentColor', {color}))),
     onChangeFontSizeWidget: (widgetId: string, fontSize: number) => dispatch(create('WidgetChangeFontSize', {
         widgetId, fontSize
     })),
@@ -126,7 +113,10 @@ const App = connect((state: State) => ({
         <Toolbar>
             <ToolbarGroup firstChild={true}>
                 <IconButton iconClassName="mppt-icon mppt-icon-text" onClick={() => props.onNewTextZoneClick(props.slide.id)} />
-                <IconButton iconClassName="mppt-icon mppt-icon-rectangle" onClick={() => props.onNewRectangle(props.slide.id)} />
+                <IconButton iconClassName="mppt-icon mppt-icon-rectangle" onClick={() => props.onNewRectangle(props.slide.id, props.currentColor)} />
+                <IconButton>
+                    <FontIcon color={props.currentColor} className="mppt-icon mppt-icon-bucket" />
+                </IconButton>
             </ToolbarGroup>
         </Toolbar>
         <div style={{position: 'relative'}}>
@@ -134,10 +124,11 @@ const App = connect((state: State) => ({
                     onMoveWidget={props.onMoveWidget}
                     onResizeWidget={props.onResizeWidget}
                     selectedWidgets={props.selectedWidgets}
-                    onSelectWidget={props.onSelectWidget}
+                    onSelectWidget={widgetId => props.onSelectWidget(props.widgets.filter(widget => widget.id === widgetId)[0])}
                     onWidgetUnselect={props.onWidgetUnselect}
                     onStartChangeText={props.onStartChangeText} />
             <RightPanel widget={props.selectedWidgets.length === 1 ? props.selectedWidgets[0] : undefined}
+                        currentColor={props.currentColor}
                         onChangeColorWidget={color => props.onChangeColorWidget(props.selectedWidgets[0].id, color)}
                         onChangeFontSizeWidget={fontSize => props.onChangeFontSizeWidget(props.selectedWidgets[0].id, fontSize)} />
         </div>

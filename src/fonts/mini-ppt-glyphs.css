@@ -22,7 +22,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+.mppt-icon-bucket:before {
+  content: "\e900";
+}
 .mppt-icon-rectangle:before {
   content: "\ea53";
 }

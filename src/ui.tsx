@@ -1,6 +1,7 @@
 import { Reducer } from "redux";
 import { AppAction } from "./AppAction";
 import { set } from "./util";
+import { Widget } from "./widget";
 
 export interface UIActions {
     UIShowChangeTextPopup: {
@@ -12,16 +13,20 @@ export interface UIActions {
         text: string;
     };
     UIWidgetSelect: {
-        widgetId: string;
+        widget: Widget;
     };
     UIWidgetUnselect: {};
+    UIChangeCurrentColor: {
+        color: string;
+    };
 }
 
 export const uiInitialState: UIState = {
     currentSlide: 'toto',
     selectedWidgets: [],
     showChangeTextPopup: false,
-    currentWidgetText: ''
+    currentWidgetText: '',
+    currentColor: 'red'
 };
 
 export interface UIState {
@@ -29,13 +34,15 @@ export interface UIState {
     selectedWidgets: string[];
     showChangeTextPopup: boolean;
     currentWidgetText: string;
+    currentColor: string;
 }
 
 export const editorReducer: Reducer<UIState> = (state: UIState, action: AppAction): UIState => {
     switch (action.type) {
         case 'UIWidgetSelect':
             return set(state, {
-                selectedWidgets: [action.widgetId]
+                selectedWidgets: [action.widget.id],
+                currentColor: action.widget.kind === 'rectangle' ? action.widget.color : state.currentColor
             });
         case 'UIWidgetUnselect':
             return set(state, {selectedWidgets: []});
@@ -53,6 +60,18 @@ export const editorReducer: Reducer<UIState> = (state: UIState, action: AppActio
             return set(state, {
                 showChangeTextPopup: false,
                 currentWidgetText: ''
+            });
+        case 'UIChangeCurrentColor':
+            return set(state, {
+                currentColor: action.color
+            });
+        case 'WidgetNewRectangle':
+            return set(state, {
+                selectedWidgets: [action.widgetId]
+            });
+        case 'WidgetNewTextZone':
+            return set(state, {
+                selectedWidgets: [action.widgetId]
             });
     }
     return state;

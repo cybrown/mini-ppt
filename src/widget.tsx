@@ -71,7 +71,7 @@ export const widgetRepositoryReducer = (widgets: State['data']['widgets'], actio
                 y: action.y,
                 width: action.width,
                 height: action.height,
-                color: 'blue'
+                color: action.color
             }})
         case 'WidgetChangeColor':
             return set(widgets, {[action.widgetId]: set(widgets[action.widgetId], {color: action.color})});
@@ -126,6 +126,7 @@ export interface WidgetActions {
         y: number;
         width: number;
         height: number;
+        color: string;
     };
     WidgetResizeAction: {
         id: string;
