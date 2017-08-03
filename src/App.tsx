@@ -78,13 +78,14 @@ const App = connect((state: State) => ({
 }), (dispatch: Dispatch<AppAction>) => ({
     onMoveWidget: (id: string, x: number, y: number) => dispatch(create('WidgetMoveAction', {id, x, y})),
     onResizeWidget: (id: string, width: number, height: number) => dispatch(create('WidgetResizeAction', {id, width, height})),
-    onNewTextZoneClick: (slideId: string) => dispatch(create('WidgetNewTextZone', {
+    onNewTextZoneClick: (slideId: string, backgroundColor: string) => dispatch(create('WidgetNewTextZone', {
         slideId,
         widgetId: Math.random().toString(),
         x: 250 - 100 / 2,
         y: 250 - 20 / 2,
         width: 100,
-        height: 20
+        height: 20,
+        backgroundColor
     })),
     onNewRectangle: (slideId: string, backgroundColor: string) => dispatch(create('WidgetNewRectangle', {
         slideId,
@@ -121,7 +122,7 @@ const App = connect((state: State) => ({
         <AppBar title="Mini PPT app" />
         <Toolbar>
             <ToolbarGroup firstChild={true}>
-                <IconButton iconClassName="mppt-icon mppt-icon-text" onClick={() => props.onNewTextZoneClick(props.slide.id)} />
+                <IconButton iconClassName="mppt-icon mppt-icon-text" onClick={() => props.onNewTextZoneClick(props.slide.id, props.currentBackgroundColor)} />
                 <IconButton iconClassName="mppt-icon mppt-icon-rectangle" onClick={() => props.onNewRectangle(props.slide.id, props.currentBackgroundColor)} />
                 <IconButton ref={el => el && (anchorForBackgroundColorPicker = ReactDOM.findDOMNode(el))} onClick={() => props.onSetColorPickerisibility(!props.showBackgroundColorPicker)}>
                     <FontIcon color={props.currentBackgroundColor} className="mppt-icon mppt-icon-bucket" />

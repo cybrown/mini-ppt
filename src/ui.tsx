@@ -3,6 +3,15 @@ import { AppAction } from "./AppAction";
 import { set } from "./util";
 import { Widget } from "./widget";
 
+export interface UIState {
+    currentSlide: string;
+    selectedWidgets: string[];
+    showChangeTextPopup: boolean;
+    currentWidgetText: string;
+    currentBackgroundColor: string;
+    showBackgroundColorPicker: boolean;
+}
+
 export interface UIActions {
     UIShowChangeTextPopup: {
         widgetId: string;
@@ -29,25 +38,16 @@ export const uiInitialState: UIState = {
     selectedWidgets: [],
     showChangeTextPopup: false,
     currentWidgetText: '',
-    currentBackgroundColor: 'rgba(0,0,255,1)',
+    currentBackgroundColor: 'rgba(192,137,45,0.3)',
     showBackgroundColorPicker: false
 };
 
-export interface UIState {
-    currentSlide: string;
-    selectedWidgets: string[];
-    showChangeTextPopup: boolean;
-    currentWidgetText: string;
-    currentBackgroundColor: string;
-    showBackgroundColorPicker: boolean;
-}
-
-export const editorReducer: Reducer<UIState> = (state: UIState, action: AppAction): UIState => {
+export const uiReducer: Reducer<UIState> = (state: UIState, action: AppAction): UIState => {
     switch (action.type) {
         case 'UIWidgetSelect':
             return set(state, {
                 selectedWidgets: [action.widget.id],
-                currentBackgroundColor: action.widget.kind === 'rectangle' ? action.widget.backgroundColor : state.currentBackgroundColor
+                currentBackgroundColor: action.widget.backgroundColor
             });
         case 'UIWidgetUnselect':
             return set(state, {

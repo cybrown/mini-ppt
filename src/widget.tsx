@@ -14,6 +14,7 @@ export interface BaseWidget {
     y: number;
     width: number;
     height: number;
+    backgroundColor: string;
 }
 
 export interface WidgetTextZone extends BaseWidget {
@@ -24,7 +25,6 @@ export interface WidgetTextZone extends BaseWidget {
 
 export interface WidgetRectangle extends BaseWidget {
     kind: 'rectangle';
-    backgroundColor: string;
 }
 
 export type Widget = WidgetTextZone | WidgetRectangle;
@@ -61,7 +61,8 @@ export const widgetRepositoryReducer = (widgets: State['data']['widgets'], actio
                 width: action.width,
                 height: action.height,
                 text: 'Text',
-                fontSize: 12
+                fontSize: 12,
+                backgroundColor: action.backgroundColor
             }})
         case 'WidgetNewRectangle':
             return set(widgets, {[action.widgetId]: {
@@ -88,8 +89,9 @@ const TextZone: React.SFC<{
     width: number;
     height: number;
     fontSize: number;
-}> = ({text, width, height, fontSize}) => (
-    <div style={{width: width + 'px', height: height + 'px', fontSize: fontSize + 'px'}}>{text}</div>
+    backgroundColor: string;
+}> = ({text, width, height, fontSize, backgroundColor}) => (
+    <div style={{width: width + 'px', height: height + 'px', fontSize: fontSize + 'px', backgroundColor}}>{text}</div>
 );
 
 const Rectangle: React.SFC<{backgroundColor: string, width: number, height: number}> = ({backgroundColor, width, height}) => (
@@ -99,7 +101,7 @@ const Rectangle: React.SFC<{backgroundColor: string, width: number, height: numb
 export const WidgetRenderer: React.SFC<{widget: Widget}> = ({widget}) => {
     switch (widget.kind) {
         case 'text':
-            return <TextZone text={widget.text} width={widget.width} height={widget.height} fontSize={widget.fontSize} />;
+            return <TextZone backgroundColor={widget.backgroundColor} text={widget.text} width={widget.width} height={widget.height} fontSize={widget.fontSize} />;
         case 'rectangle':
             return <Rectangle backgroundColor={widget.backgroundColor} width={widget.width} height={widget.height} />;
     }
@@ -118,6 +120,7 @@ export interface WidgetActions {
         y: number;
         width: number;
         height: number;
+        backgroundColor: string;
     };
     WidgetNewRectangle: {
         slideId: string;
