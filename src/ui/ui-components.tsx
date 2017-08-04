@@ -1,99 +1,13 @@
-import { Reducer } from "redux";
-import { AppAction, create } from "./AppAction";
-import { set } from "./util";
-import { Widget, currentSlide, selectedWidgets, WidgetTextZone, widgetsSelector } from "./widget";
+import { AppAction, create } from "../AppAction";
+import { Widget, currentSlide, selectedWidgets, WidgetTextZone, widgetsSelector } from "../widget";
 import { connect, Dispatch } from "react-redux";
-import { State } from "./State";
+import { State } from "../State";
 import { Toolbar, ToolbarGroup, IconButton, FontIcon, Popover, TextField, Paper, Dialog, FlatButton } from "material-ui";
 import { SketchPicker } from "react-color";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { rgbaToString } from "./util";
-import { SlideEditor, SlideRenderer } from "./slide";
-
-export interface UIState {
-    currentSlide: string | null;
-    selectedWidgets: string[];
-    showChangeTextPopup: boolean;
-    currentWidgetText: string;
-    currentBackgroundColor: string;
-    showBackgroundColorPicker: boolean;
-}
-
-export interface UIActions {
-    UIChangeTextPopupSetVisibility: {
-        visible: boolean;
-        text?: string;
-    };
-    UIChangeWidgetText: {
-        text: string;
-    };
-    UIWidgetReplaceSelection: {
-        widgets: Widget[];
-    };
-    UIChangeCurrentBackgroundColor: {
-        backgroundColor: string;
-    };
-    UIChangeBackgroundColorPickerVisibility: {
-        visible: boolean;
-    };
-    UISetCurrentSlide: {
-        slideId: string;
-    };
-}
-
-export const uiInitialState: UIState = {
-    currentSlide: null,
-    selectedWidgets: [],
-    showChangeTextPopup: false,
-    currentWidgetText: '',
-    currentBackgroundColor: 'rgba(192,137,45,0.3)',
-    showBackgroundColorPicker: false
-};
-
-export const uiReducer: Reducer<UIState> = (state: UIState, action: AppAction): UIState => {
-    switch (action.type) {
-        case 'UIWidgetReplaceSelection':
-            return set(state, {
-                selectedWidgets: action.widgets.map(w => w.id),
-                showBackgroundColorPicker: false,
-                currentBackgroundColor: action.widgets.length === 1 ? action.widgets[0].backgroundColor : state.currentBackgroundColor
-            });
-        case 'UIChangeWidgetText':
-            return set(state, {
-                showChangeTextPopup: true,
-                currentWidgetText: action.text
-            });
-        case 'UIChangeTextPopupSetVisibility':
-            return set(state, {
-                showChangeTextPopup: action.visible,
-                currentWidgetText: action.text ? action.text : state.currentWidgetText
-            });
-        case 'UIChangeCurrentBackgroundColor':
-            return set(state, {
-                currentBackgroundColor: action.backgroundColor
-            });
-        case 'WidgetNew':
-            return set(state, {
-                selectedWidgets: [action.widget.id]
-            });
-        case 'UIChangeBackgroundColorPickerVisibility':
-            return set(state, {
-                showBackgroundColorPicker: action.visible
-            });
-        case 'UISetCurrentSlide':
-            return set(state, {
-                currentSlide: action.slideId,
-                selectedWidgets: []
-            });
-        case 'SlideNew':
-            return set(state, {
-                currentSlide: action.slide.id,
-                selectedWidgets: []
-            });
-    }
-    return state;
-}
+import { rgbaToString } from "../util";
+import { SlideEditor, SlideRenderer } from "../slide";
 
 let anchorForBackgroundColorPicker: any;  // TODO: find another solution to store the color picker's anchor
 
@@ -146,6 +60,8 @@ export const AppToolBar = connect((state: State) => ({
     <Toolbar>
         <ToolbarGroup firstChild={true}>
             <IconButton iconClassName="mppt-icon mppt-icon-plus" onClick={props.onCreateNewSlide} />
+        </ToolbarGroup>
+        <ToolbarGroup>
             <IconButton iconClassName="mppt-icon mppt-icon-text" onClick={() => props.slide && props.onNewTextZoneClick(props.slide.id, props.currentBackgroundColor)} />
             <IconButton iconClassName="mppt-icon mppt-icon-rectangle" onClick={() => props.slide && props.onNewRectangle(props.slide.id, props.currentBackgroundColor)} />
             <IconButton ref={el => el && (anchorForBackgroundColorPicker = ReactDOM.findDOMNode(el))} onClick={() => props.onSetColorPickerisibility(!props.showBackgroundColorPicker)}>
@@ -158,6 +74,8 @@ export const AppToolBar = connect((state: State) => ({
                         useLayerForClickAway={false}>
                 <SketchPicker color={props.currentBackgroundColor} onChange={color => props.onChangeColorWidget(props.selectedWidgets[0] ? props.selectedWidgets[0].id : null, rgbaToString(color.rgb))} />
             </Popover>
+        </ToolbarGroup>
+        <ToolbarGroup>
         </ToolbarGroup>
     </Toolbar>
 ));

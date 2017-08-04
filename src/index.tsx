@@ -14,7 +14,7 @@ import * as injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import './fonts/mini-ppt-glyphs.css';
-import { uiReducer, uiInitialState } from "./ui";
+import { uiInitialState, uiReducer } from "./ui/ui-main";
 
 injectTapEventPlugin();
 
@@ -53,13 +53,13 @@ store.dispatch(create('SlideNew', {
 store.dispatch(create('UISetCurrentSlide', { slideId }));
 
 const doRender = (component?: JSX.Element) => render(
-    <Provider store={store}>
-        <MuiThemeProvider>
-            <AppContainer>
-                {component}
-            </AppContainer>
-        </MuiThemeProvider>
-    </Provider>
+    <AppContainer>
+        <Provider store={store}>
+            <MuiThemeProvider>
+                    {component}
+            </MuiThemeProvider>
+        </Provider>
+    </AppContainer>
 , root);
 
 doRender(<App />);

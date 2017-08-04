@@ -1,6 +1,6 @@
 import { Widget } from "./widget";
 import { SlideRecord } from "./slide";
-import { UIState } from "./ui";
+import { UIState } from "./ui/ui-main";
 
 export interface State {
     data: {

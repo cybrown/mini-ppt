@@ -5,7 +5,7 @@ import { selectedWidgets } from "./widget";
 import { AppAction, create } from "./AppAction";
 import { Dispatch } from "redux";
 import { AppBar } from "material-ui";
-import { AppToolBar, RightPanel, Editor, ChangeTextDialog, SlideList } from "./ui";
+import { AppToolBar, RightPanel, Editor, ChangeTextDialog, SlideList } from "./ui/ui-components";
 
 const App = connect((state: State) => ({
     selectedWidgets: selectedWidgets(state),
@@ -22,10 +22,10 @@ const App = connect((state: State) => ({
         dispatch(create('UIChangeTextPopupSetVisibility', {visible: false}));
     },
 }))(props => (
-    <div>
+    <div style={{display: 'flex', height: '100vh', flexDirection: 'column'}}>
         <AppBar title="Mini PPT app" />
         <AppToolBar />
-        <div style={{position: 'relative'}}>
+        <div style={{position: 'relative', flexGrow: 1}}>
             <SlideList />
             <Editor />
             <RightPanel widget={props.selectedWidgets.length === 1 ? props.selectedWidgets[0] : undefined}
