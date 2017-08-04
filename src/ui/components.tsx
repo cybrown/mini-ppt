@@ -1,17 +1,17 @@
 import { AppAction, create } from "../AppAction";
 import { Widget, currentSlide, selectedWidgets, WidgetTextZone, widgetsSelector } from "../widget";
 import { connect, Dispatch } from "react-redux";
-import { State } from "../State";
+import { AppState } from "../AppState";
 import { Toolbar, ToolbarGroup, IconButton, FontIcon, Popover, TextField, Paper, Dialog, FlatButton } from "material-ui";
 import { SketchPicker } from "react-color";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { rgbaToString } from "../util";
-import { SlideEditor, SlideRenderer } from "../slide";
+import { SlideEditor, SlideRenderer } from "../slide/components";
 
 let anchorForBackgroundColorPicker: any;  // TODO: find another solution to store the color picker's anchor
 
-export const AppToolBar = connect((state: State) => ({
+export const AppToolBar = connect((state: AppState) => ({
     currentBackgroundColor: state.ui.currentBackgroundColor,
     slide: currentSlide(state),
     showBackgroundColorPicker: state.ui.showBackgroundColorPicker,
@@ -112,7 +112,7 @@ export const RightPanel: React.SFC<{
     ) : null
 );
 
-export const Editor = connect((state: State) => ({
+export const Editor = connect((state: AppState) => ({
     widgets: widgetsSelector(state),
     slide: currentSlide(state),
     selectedWidgets: selectedWidgets(state),
@@ -144,7 +144,7 @@ export const Editor = connect((state: State) => ({
     </div>
 ));
 
-export const ChangeTextDialog = connect((state: State) => ({
+export const ChangeTextDialog = connect((state: AppState) => ({
     selectedWidgets: selectedWidgets(state),
     currentWidgetText: state.ui.currentWidgetText,
 }), (dispatch: Dispatch<AppAction>) => ({
@@ -176,7 +176,7 @@ export const ChangeTextDialog = connect((state: State) => ({
     </Dialog>
 );
 
-export const SlideList = connect((state: State) => ({
+export const SlideList = connect((state: AppState) => ({
     slides: Object.keys(state.data.slides).map(id => state.data.slides[id]).map(slideRecord => ({
         id: slideRecord.id,
         widgets: slideRecord.widgetsIds.map(widgetId => state.data.widgets[widgetId])

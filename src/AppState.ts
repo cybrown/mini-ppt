@@ -1,8 +1,8 @@
 import { Widget } from "./widget";
 import { SlideRecord } from "./slide";
-import { UIState } from "./ui/ui-main";
+import { UIState } from "./ui";
 
-export interface State {
+export interface AppState {
     data: {
         widgets: {[id: string]: Widget},
         slides: {[id: string]: SlideRecord}

@@ -1,40 +1,8 @@
-import { State } from "./State";
-import { AppAction } from "./AppAction";
-import { set, HasPosition, Movable } from "./util";
-import { Widget, WidgetRenderer } from "./widget";
+import { HasPosition, Movable } from "../util/components";
+import { WidgetRenderer } from "../widget/components";
 import * as React from "react";
-
-export interface SlideActions {
-    SlideNew: {
-        slide: SlideRecord;
-    };
-}
-
-export interface SlideRecord {
-    id: string;
-    widgetsIds: string[];
-}
-
-export interface Slide {
-    id: string;
-    widgets: Widget[];
-}
-
-export const slideRepositoryReducer = (slides: State['data']['slides'], action: AppAction): State['data']['slides'] => {
-    switch (action.type) {
-        case 'WidgetNew':
-            return set(slides, {
-                [action.slideId]: set(slides[action.slideId], {
-                    widgetsIds: [...slides[action.slideId].widgetsIds, action.widget.id]
-                })
-            });
-        case 'SlideNew':
-            return set(slides, {
-                [action.slide.id]: set(slides[action.slide.id], action.slide)
-            });
-    }
-    return slides;
-}
+import { Slide } from "./index";
+import { Widget } from "../widget";
 
 export const SlideRenderer: React.SFC<{
     slide: Slide;

@@ -1,6 +1,6 @@
 import { WidgetActions } from "./widget";
 import { SlideActions } from "./slide";
-import { UIActions } from "./ui/ui-main";
+import { UIActions } from "./ui";
 
 interface Actions extends WidgetActions, UIActions, SlideActions { }
 

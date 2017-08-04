@@ -4,24 +4,25 @@ import { AppContainer } from 'react-hot-loader';
 import App from './App';
 import { createStore, Reducer } from 'redux';
 import { Provider } from 'react-redux';
-import { State } from "./State";
+import * as injectTapEventPlugin from 'react-tap-event-plugin';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import 'roboto-fontface/css/roboto/roboto-fontface.css';
+
+import { AppState } from "./AppState";
 import { AppAction, create } from "./AppAction";
 import { set } from "./util";
 import { widgetRepositoryReducer } from "./widget";
 import './style.scss';
 import { slideRepositoryReducer } from "./slide";
-import * as injectTapEventPlugin from 'react-tap-event-plugin';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import './fonts/mini-ppt-glyphs.css';
-import { uiInitialState, uiReducer } from "./ui/ui-main";
+import { uiInitialState, uiReducer } from "./ui";
 
 injectTapEventPlugin();
 
 const root = document.createElement('div');
 document.body.appendChild(root);
 
-const initialState: State = {
+const initialState: AppState = {
     data: {
         widgets: {},
         slides: {}
@@ -29,7 +30,7 @@ const initialState: State = {
     ui: uiInitialState
 };
 
-const appReducer: Reducer<State> = (state = initialState, action: AppAction) => (
+const appReducer: Reducer<AppState> = (state = initialState, action: AppAction) => (
     set(state, {
         data: set(state.data, {
             widgets: widgetRepositoryReducer(state.data.widgets, action),
@@ -39,7 +40,7 @@ const appReducer: Reducer<State> = (state = initialState, action: AppAction) => 
     })
 );
 
-const store = createStore<State>(appReducer, (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__());
+const store = createStore<AppState>(appReducer, (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__());
 
 const slideId = Math.random().toString();
 

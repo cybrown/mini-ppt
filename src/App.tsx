@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { State } from "./State";
+import { AppState } from "./AppState";
 import { selectedWidgets } from "./widget";
 import { AppAction, create } from "./AppAction";
 import { Dispatch } from "redux";
 import { AppBar } from "material-ui";
-import { AppToolBar, RightPanel, Editor, ChangeTextDialog, SlideList } from "./ui/ui-components";
+import { AppToolBar, RightPanel, Editor, ChangeTextDialog, SlideList } from "./ui/components";
 
-const App = connect((state: State) => ({
+const App = connect((state: AppState) => ({
     selectedWidgets: selectedWidgets(state),
     showChangeTextPopup: state.ui.showChangeTextPopup,
     currentWidgetText: state.ui.currentWidgetText,

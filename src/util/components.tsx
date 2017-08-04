@@ -1,9 +1,5 @@
 import * as React from "react";
 
-export function set<T>(obj: T, data: Partial<T>): T {
-    return {...obj as any, ...data as any};
-}
-
 export const HasPosition: React.SFC<{
     x: number;
     y: number;
@@ -83,5 +79,3 @@ export class Movable extends React.Component<{
         )
     }
 }
-
-export const rgbaToString = ({r, g, b, a}: {r: number, g: number, b: number, a?: number}) => `rgba(${r},${g},${b},${a === undefined ? 1 : a})`;
