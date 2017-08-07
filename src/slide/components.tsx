@@ -1,8 +1,9 @@
-import { HasPosition, Movable, modifierForMultiSelection } from "../util/components";
+import { HasPosition, Movable } from "../util/components";
 import { WidgetRenderer } from "../widget/components";
 import * as React from "react";
 import { Slide } from "./index";
 import { Widget } from "../widget";
+import { modifierForMultiSelection } from "../util/index";
 
 export const SlideRenderer: React.SFC<{
     slide: Slide;

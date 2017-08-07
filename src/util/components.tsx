@@ -1,16 +1,5 @@
 import * as React from "react";
-
-export function isAppleProduct() {
-    return ['MacPPC','MacIntel', 'iPhone', 'iPad', 'iPod'].indexOf(navigator.platform) >= 0;
-}
-
-export function modifierForMultiSelection() {
-    if (isAppleProduct()) {
-        return 'Meta';
-    } else {
-        return 'Ctrl';
-    }
-}
+import { modifierForMultiSelection } from "./index";
 
 export const HasPosition: React.SFC<{
     x: number;
