@@ -1,8 +1,7 @@
-import { AppState } from "../AppState";
 import { createSelector } from "reselect/lib";
 import { set } from "../util";
-import { AppAction } from "../AppAction";
 import { Slide } from "../slide";
+import { AppState, AppAction } from "../app";
 
 export type WidgetKind = 'text' | 'rectangle';
 

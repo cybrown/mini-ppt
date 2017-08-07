@@ -1,7 +1,7 @@
 import { Reducer } from "redux";
-import { AppAction } from "../AppAction";
 import { set } from "../util";
 import { Widget } from "../widget";
+import { AppAction } from "../app";
 
 export interface UIState {
     currentSlide: string | null;

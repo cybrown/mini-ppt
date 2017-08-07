@@ -1,7 +1,6 @@
-import { AppState } from "../AppState";
-import { AppAction } from "../AppAction";
 import { set } from "../util";
 import { Widget } from "../widget";
+import { AppState, AppAction } from "../app";
 
 export interface SlideActions {
     SlideNew: {
