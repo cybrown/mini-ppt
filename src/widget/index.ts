@@ -6,6 +6,32 @@ import { Slide } from "../slide";
 
 export type WidgetKind = 'text' | 'rectangle';
 
+export function createTextZoneWidget(backgroundColor: string): WidgetTextZone {
+    return {
+        id: Math.random().toString(),
+        x: 250 - 100 / 2,
+        y: 250 - 20 / 2,
+        width: 100,
+        height: 20,
+        backgroundColor,
+        fontSize: 14,
+        kind: 'text',
+        text: 'Text'
+    };
+}
+
+export function createRectangleWidget(backgroundColor: string): WidgetRectangle {
+    return {
+        id: Math.random().toString(),
+        kind: 'rectangle',
+        x: 250 - 40 / 2,
+        y: 250 - 40 / 2,
+        width: 40,
+        height: 40,
+        backgroundColor
+    };
+}
+
 export interface BaseWidget {
     kind: WidgetKind;
     id: string;

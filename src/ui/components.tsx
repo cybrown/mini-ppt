@@ -1,5 +1,5 @@
 import { AppAction, create } from "../AppAction";
-import { Widget, currentSlide, selectedWidgets, WidgetTextZone, widgetsSelector } from "../widget";
+import { Widget, currentSlide, selectedWidgets, WidgetTextZone, widgetsSelector, createTextZoneWidget, createRectangleWidget } from "../widget";
 import { connect, Dispatch } from "react-redux";
 import { AppState } from "../AppState";
 import { Toolbar, ToolbarGroup, IconButton, FontIcon, Popover, TextField, Paper, Dialog, FlatButton } from "material-ui";
@@ -19,29 +19,11 @@ export const AppToolBar = connect((state: AppState) => ({
 }), (dispatch: Dispatch<AppAction>) => ({
     onNewTextZoneClick: (slideId: string, backgroundColor: string) => dispatch(create('WidgetNew', {
         slideId,
-        widget: {
-            id: Math.random().toString(),
-            x: 250 - 100 / 2,
-            y: 250 - 20 / 2,
-            width: 100,
-            height: 20,
-            backgroundColor,
-            fontSize: 14,
-            kind: 'text',
-            text: 'Text'
-        }
+        widget: createTextZoneWidget(backgroundColor)
     })),
     onNewRectangle: (slideId: string, backgroundColor: string) => dispatch(create('WidgetNew', {
         slideId,
-        widget: {
-            id: Math.random().toString(),
-            kind: 'rectangle',
-            x: 250 - 40 / 2,
-            y: 250 - 40 / 2,
-            width: 40,
-            height: 40,
-            backgroundColor
-        },
+        widget: createRectangleWidget(backgroundColor),
     })),
     onChangeColorWidget: (widgetId: string | null, backgroundColor: string) => {
         if (widgetId) {
