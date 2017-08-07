@@ -62,17 +62,21 @@ export const AppToolBar = connect((state: AppState) => ({
             <IconButton iconClassName="mppt-icon mppt-icon-plus" onClick={props.onCreateNewSlide} />
         </ToolbarGroup>
         <ToolbarGroup>
-            <IconButton iconClassName="mppt-icon mppt-icon-text" onClick={() => props.slide && props.onNewTextZoneClick(props.slide.id, props.currentBackgroundColor)} />
-            <IconButton iconClassName="mppt-icon mppt-icon-rectangle" onClick={() => props.slide && props.onNewRectangle(props.slide.id, props.currentBackgroundColor)} />
-            <IconButton ref={el => el && (anchorForBackgroundColorPicker = ReactDOM.findDOMNode(el))} onClick={() => props.onSetColorPickerisibility(!props.showBackgroundColorPicker)}>
+            <IconButton iconClassName="mppt-icon mppt-icon-text"
+                        onClick={() => props.slide && props.onNewTextZoneClick(props.slide.id, props.currentBackgroundColor)} />
+            <IconButton iconClassName="mppt-icon mppt-icon-rectangle"
+                        onClick={() => props.slide && props.onNewRectangle(props.slide.id, props.currentBackgroundColor)} />
+            <IconButton ref={el => el && (anchorForBackgroundColorPicker = ReactDOM.findDOMNode(el))}
+                        onClick={() => props.onSetColorPickerisibility(!props.showBackgroundColorPicker)}>
                 <FontIcon color={props.currentBackgroundColor} className="mppt-icon mppt-icon-bucket" />
             </IconButton>
             <Popover open={props.showBackgroundColorPicker}
-                        anchorEl={anchorForBackgroundColorPicker}
-                        anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-                        targetOrigin={{horizontal: 'left', vertical: 'top'}}
-                        useLayerForClickAway={false}>
-                <SketchPicker color={props.currentBackgroundColor} onChange={color => props.onChangeColorWidget(props.selectedWidgets[0] ? props.selectedWidgets[0].id : null, rgbaToString(color.rgb))} />
+                     anchorEl={anchorForBackgroundColorPicker}
+                     anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                     targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                     useLayerForClickAway={false}>
+                <SketchPicker color={props.currentBackgroundColor}
+                              onChange={color => props.onChangeColorWidget(props.selectedWidgets[0] ? props.selectedWidgets[0].id : null, rgbaToString(color.rgb))} />
             </Popover>
         </ToolbarGroup>
         <ToolbarGroup>
@@ -118,27 +122,46 @@ export const Editor = connect((state: AppState) => ({
     selectedWidgets: selectedWidgets(state),
 }), (dispatch: Dispatch<AppAction>) => ({
     onMoveWidget: (widgetId: string, x: number, y: number) => dispatch(create('WidgetUpdate', {widgetId, x, y})),
+    onMoveWidgets: (widgets: Widget[], x: number, y: number) => {
+        widgets.forEach(widget => dispatch(create('WidgetUpdate', {widgetId: widget.id, x: widget.x + x, y: widget.y + y})))
+    },
     onResizeWidget: (widgetId: string, width: number, height: number) => dispatch(create('WidgetUpdate', {widgetId, width, height})),
     onWidgetUnselect: () => dispatch(create('UIWidgetReplaceSelection', {widgets: []})),
     onChangeFontSizeWidget: (widgetId: string, fontSize: number) => dispatch(create('WidgetUpdateTextZone', {
         widgetId, fontSize
     })),
     onStartChangeText: (text: string) => dispatch(create('UIChangeTextPopupSetVisibility', {visible: true, text})),
-    onSelectWidget: (widget: Widget) => dispatch(create('UIWidgetReplaceSelection', {
-        widgets: [widget]
-    })),
+    onSelectWidget: (selectedWidgets: Widget[], widgetToSelect: Widget, addToSelection: boolean) => {
+        let newSelection: Widget[] | null;
+        if (addToSelection) {
+            const isAlreadySelected = selectedWidgets.filter(w => w.id === widgetToSelect.id).length > 0;
+            if (isAlreadySelected) {
+                newSelection = selectedWidgets.filter(w => w.id !== widgetToSelect.id);
+            } else {
+                newSelection = selectedWidgets.concat(widgetToSelect);
+            }
+        } else {
+            newSelection = [widgetToSelect];
+        }
+        dispatch(create('UIWidgetReplaceSelection', {
+            widgets: newSelection
+        }))
+    },
 }))(props => (
     <div style={{
         paddingTop: '100px'
     }}>
         {props.slide !== null ? (
             <Paper zDepth={2} style={{width: '500px', height: '500px', marginLeft: 'auto', marginRight: 'auto'}} onClick={props.onWidgetUnselect}>
-                <SlideEditor onSelectWidget={widgetId => props.onSelectWidget(props.widgets.filter(widget => widget.id === widgetId)[0])}
-                            slide={props.slide}
-                            onMoveWidget={props.onMoveWidget}
-                            onResizeWidget={props.onResizeWidget}
-                            selectedWidgets={props.selectedWidgets}
-                            onStartChangeText={props.onStartChangeText} />
+                <SlideEditor onSelectWidget={(widgetId, ctrl) => props.onSelectWidget(props.selectedWidgets, props.widgets.filter(widget => widget.id === widgetId)[0], ctrl)}
+                             slide={props.slide}
+                             onMoveWidget={(widgetId: string, x: number, y: number) => {
+                                 widgetId;
+                                 props.onMoveWidgets(props.widgets.filter(w => props.selectedWidgets.indexOf(w) !== -1), x, y);
+                             }}
+                             onResizeWidget={props.onResizeWidget}
+                             selectedWidgets={props.selectedWidgets}
+                             onStartChangeText={props.onStartChangeText} />
             </Paper>
         ) : null}
     </div>

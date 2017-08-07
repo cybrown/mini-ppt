@@ -1,11 +1,23 @@
 import * as React from "react";
 
+export function isAppleProduct() {
+    return ['MacPPC','MacIntel', 'iPhone', 'iPad', 'iPod'].indexOf(navigator.platform) >= 0;
+}
+
+export function modifierForMultiSelection() {
+    if (isAppleProduct()) {
+        return 'Meta';
+    } else {
+        return 'Ctrl';
+    }
+}
+
 export const HasPosition: React.SFC<{
     x: number;
     y: number;
-    onClick?: () => void;
+    onClick?: (ctrl: boolean) => void;
 }> = ({x, y, children, onClick}) => (
-    <div style={{position: 'absolute', left: x + 'px', top: y + 'px'}} onClick={e => (onClick && onClick(), e.stopPropagation())}>
+    <div style={{position: 'absolute', left: x + 'px', top: y + 'px'}} onClick={e => (onClick && onClick(e.getModifierState(modifierForMultiSelection())), e.stopPropagation())}>
         {children}
     </div>
 );
