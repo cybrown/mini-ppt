@@ -2,6 +2,8 @@ import * as React from "react";
 
 export class Movable extends React.Component<{
     onMove: (x: number, y: number) => void;
+    onMoveStart?: () => void;
+    onMoveEnd?: () => void;
     immediate?: boolean;
 }, {
     deltaX: number;
@@ -24,6 +26,7 @@ export class Movable extends React.Component<{
         this.setupDocumentEvents();
         event.preventDefault();
         event.stopPropagation();
+        this.props.onMoveStart && this.props.onMoveStart();
     }
 
     onmousemove: EventListener = (event: MouseEvent) => {
@@ -43,7 +46,8 @@ export class Movable extends React.Component<{
     onmouseup = () => {
         this.removeDocumentEvents();
         this.props.onMove(this.state.deltaX, this.state.deltaY);
-        this.setState({deltaX: 0, deltaY: 0})
+        this.setState({deltaX: 0, deltaY: 0});
+        this.props.onMoveEnd && this.props.onMoveEnd();
     }
 
     private setupDocumentEvents() {

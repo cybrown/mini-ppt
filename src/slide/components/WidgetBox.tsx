@@ -14,8 +14,8 @@ export const WidgetBox: React.SFC<{
                  boxSizing: 'border-box',
                  width: widget.width + 'px',
                  height: widget.height + 'px'}}
-        onClick={e => onWidgetClick(widget.id, e.getModifierState(modifierForMultiSelection()))}
-        onDoubleClick={e => (widget.kind === 'text' && onStartChangeText(widget.text), e.stopPropagation(), e.preventDefault())}>
+         onClick={e => onWidgetClick(widget.id, e.getModifierState(modifierForMultiSelection()))}
+         onDoubleClick={e => (widget.kind === 'text' && onStartChangeText(widget.text), e.stopPropagation(), e.preventDefault())}>
         <Movable immediate onMove={(deltaX, deltaY) => (onMoveWidget(widget.id, deltaX, deltaY), onResizeWidget(widget.id, widget.width - deltaX, widget.height - deltaY))}>
             <div style={{position: 'absolute', backgroundColor: 'white', left: '-4px', top: '-4px', width: '8px', height: '8px', border: 'black thin solid'}}></div>
         </Movable>
