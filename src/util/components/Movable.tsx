@@ -26,7 +26,6 @@ export class Movable extends React.Component<{
         this.setupDocumentEvents();
         event.preventDefault();
         event.stopPropagation();
-        this.props.onMoveStart && this.props.onMoveStart();
     }
 
     onmousemove: EventListener = (event: MouseEvent) => {
@@ -41,6 +40,7 @@ export class Movable extends React.Component<{
                 deltaX, deltaY
             });
         }
+        this.props.onMoveStart && this.props.onMoveStart();
     }
 
     onmouseup = () => {
