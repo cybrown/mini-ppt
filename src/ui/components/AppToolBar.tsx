@@ -25,7 +25,7 @@ export const AppToolBar = connect((state: AppState) => ({
     })),
     onChangeColorWidget: (widgetId: string | null, backgroundColor: string) => {
         if (widgetId) {
-            dispatch(create('WidgetUpdate', { widgetId, backgroundColor }));
+            dispatch(create('WidgetSetBackgroundColor', { widgetId, backgroundColor }));
         }
         dispatch(create('UIChangeCurrentBackgroundColor', {backgroundColor}));
     },

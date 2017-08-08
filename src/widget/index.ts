@@ -71,24 +71,49 @@ export const widgetRepositoryReducer = (widgets: AppState['data']['widgets'], ac
     switch (action.type) {
         case 'WidgetNew':
             return set(widgets, {[action.widget.id]: action.widget});
-        case 'WidgetUpdate':
+        case 'WidgetSetPosition':
             return set(widgets, {
                 [action.widgetId]: set(widgets[action.widgetId], {
-                    backgroundColor: action.backgroundColor !== undefined ? action.backgroundColor : widgets[action.widgetId].backgroundColor,
-                    height: action.height !== undefined ? action.height : widgets[action.widgetId].height,
-                    width: action.width !== undefined ? action.width : widgets[action.widgetId].width,
-                    x: action.x !== undefined ? action.x : widgets[action.widgetId].x,
-                    y: action.y !== undefined ? action.y : widgets[action.widgetId].y,
-                    opacity: action.opacity !== undefined ? action.opacity : widgets[action.widgetId].opacity
+                    x: action.x,
+                    y: action.y,
                 })
             });
-        case 'WidgetUpdateTextZone': {
+        case 'WidgetSetDimensions':
+            return set(widgets, {
+                [action.widgetId]: set(widgets[action.widgetId], {
+                    height: action.height,
+                    width: action.width,
+                })
+            });
+        case 'WidgetSetBackgroundColor':
+            return set(widgets, {
+                [action.widgetId]: set(widgets[action.widgetId], {
+                    backgroundColor: action.backgroundColor,
+                })
+            });
+        case 'WidgetSetOpacity':
+            return set(widgets, {
+                [action.widgetId]: set(widgets[action.widgetId], {
+                    opacity: action.opacity
+                })
+            });
+        case 'WidgetTextZoneSetText': {
             const widget = widgets[action.widgetId];
             if (widget.kind === 'text') {
                 return set(widgets, {
                     [action.widgetId]: set(widget, {
-                        text: action.text !== undefined ? action.text : widget.text,
-                        fontSize: action.fontSize !== undefined ? action.fontSize : widget.fontSize,
+                        text: action.text,
+                    })
+                });
+            }
+            break;
+        }
+        case 'WidgetTextZoneSetFontSize': {
+            const widget = widgets[action.widgetId];
+            if (widget.kind === 'text') {
+                return set(widgets, {
+                    [action.widgetId]: set(widget, {
+                        fontSize: action.fontSize,
                     })
                 });
             }
@@ -102,18 +127,30 @@ export interface WidgetActions {
         slideId: string;
         widget: Widget;
     };
-    WidgetUpdate: {
+    WidgetSetPosition: {
         widgetId: string;
-        x?: number;
-        y?: number;
-        backgroundColor?: string;
-        width?: number;
-        height?: number;
-        opacity?: number;
+        x: number;
+        y: number;
     };
-    WidgetUpdateTextZone: {
+    WidgetSetBackgroundColor: {
         widgetId: string;
-        fontSize?: number;
-        text?: string;
+        backgroundColor: string;
+    };
+    WidgetSetDimensions: {
+        widgetId: string;
+        width: number;
+        height: number;
+    };
+    WidgetSetOpacity: {
+        widgetId: string;
+        opacity: number;
+    };
+    WidgetTextZoneSetText: {
+        widgetId: string;
+        text: string;
+    };
+    WidgetTextZoneSetFontSize: {
+        widgetId: string;
+        fontSize: number;
     };
 }

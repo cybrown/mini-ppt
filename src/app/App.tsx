@@ -15,16 +15,16 @@ export const App = connect((state: AppState) => ({
     showChangeTextPopup: state.ui.showChangeTextPopup,
     currentWidgetText: state.ui.currentWidgetText,
 }), (dispatch: Dispatch<AppAction>) => ({
-    onChangeFontSizeWidget: (widgetId: string, fontSize: number) => dispatch(create('WidgetUpdateTextZone', {
+    onChangeFontSizeWidget: (widgetId: string, fontSize: number) => dispatch(create('WidgetTextZoneSetFontSize', {
         widgetId, fontSize
     })),
     onCancelChangeText: () => dispatch(create('UIChangeTextPopupSetVisibility', {visible: false})),
     changeCurrentWidgetText: (text: string) => dispatch(create('UIChangeWidgetText', {text})),
     onSubmitChangeText: (widgetId: string, text: string) => {
-        dispatch(create('WidgetUpdateTextZone', {widgetId, text}));
+        dispatch(create('WidgetTextZoneSetText', {widgetId, text}));
         dispatch(create('UIChangeTextPopupSetVisibility', {visible: false}));
     },
-    onChangeOpacity: (widgetId: string, opacity: number) => dispatch(create('WidgetUpdate', { widgetId, opacity }))
+    onChangeOpacity: (widgetId: string, opacity: number) => dispatch(create('WidgetSetOpacity', { widgetId, opacity }))
 }))(props => (
     <div style={{display: 'flex', height: '100vh', flexDirection: 'column'}}>
         <AppBar title="Mini PPT app" />

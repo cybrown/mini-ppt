@@ -10,13 +10,13 @@ export const Editor = connect((state: AppState) => ({
     slide: currentSlide(state),
     selectedWidgets: selectedWidgets(state),
 }), (dispatch: Dispatch<AppAction>) => ({
-    onMoveWidget: (widgetId: string, x: number, y: number) => dispatch(create('WidgetUpdate', {widgetId, x, y})),
+    onMoveWidget: (widgetId: string, x: number, y: number) => dispatch(create('WidgetSetPosition', {widgetId, x, y})),
     onMoveWidgets: (widgets: Widget[], x: number, y: number) => {
-        widgets.forEach(widget => dispatch(create('WidgetUpdate', {widgetId: widget.id, x: widget.x + x, y: widget.y + y})))
+        widgets.forEach(widget => dispatch(create('WidgetSetPosition', {widgetId: widget.id, x: widget.x + x, y: widget.y + y})))
     },
-    onResizeWidget: (widgetId: string, width: number, height: number) => dispatch(create('WidgetUpdate', {widgetId, width, height})),
+    onResizeWidget: (widgetId: string, width: number, height: number) => dispatch(create('WidgetSetDimensions', {widgetId, width, height})),
     onWidgetUnselect: () => dispatch(create('UIWidgetReplaceSelection', {widgets: []})),
-    onChangeFontSizeWidget: (widgetId: string, fontSize: number) => dispatch(create('WidgetUpdateTextZone', {
+    onChangeFontSizeWidget: (widgetId: string, fontSize: number) => dispatch(create('WidgetTextZoneSetFontSize', {
         widgetId, fontSize
     })),
     onStartChangeText: (text: string) => dispatch(create('UIChangeTextPopupSetVisibility', {visible: true, text})),

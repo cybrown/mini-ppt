@@ -11,7 +11,7 @@ export const ChangeTextDialog = connect((state: AppState) => ({
     onCancelChangeText: () => dispatch(create('UIChangeTextPopupSetVisibility', {visible: false})),
     changeCurrentWidgetText: (text: string) => dispatch(create('UIChangeWidgetText', {text})),
     onSubmitChangeText: (widgetId: string, text: string) => {
-        dispatch(create('WidgetUpdateTextZone', {widgetId, text}));
+        dispatch(create('WidgetTextZoneSetText', {widgetId, text}));
         dispatch(create('UIChangeTextPopupSetVisibility', {visible: false}));
     },
 }))(props =>
