@@ -101,6 +101,12 @@ export const Editor = connect((state: AppState) => ({
                     y: 0,
                     widgets: widgetsToPaste
                 })]
+            }, {
+                caption: 'Remove',
+                actions: [create('WidgetRemove', {
+                    slideId,
+                    widgetIds: selectedWidgets.map(w => w.id)
+                })]
             }]
         }))
     }

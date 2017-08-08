@@ -36,6 +36,12 @@ export const slideRepositoryReducer = (slides: AppState['data']['slides'], actio
                     widgetsIds: slides[action.slideId].widgetsIds.concat(action.widgets.map(widget => widget.id))
                 })
             })
+        case 'WidgetRemove':
+            return set(slides, {
+                [action.slideId]: set(slides[action.slideId], {
+                    widgetsIds: slides[action.slideId].widgetsIds.filter(id => action.widgetIds.indexOf(id) === -1)
+                })
+            });
     }
     return slides;
 }

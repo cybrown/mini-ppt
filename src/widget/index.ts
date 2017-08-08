@@ -158,4 +158,8 @@ export interface WidgetActions {
         widgetId: string;
         fontSize: number;
     };
+    WidgetRemove: {
+        slideId: string;
+        widgetIds: string[];
+    };
 }

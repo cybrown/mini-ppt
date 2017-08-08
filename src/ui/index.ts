@@ -162,6 +162,10 @@ export const uiReducer: Reducer<UIState> = (state: UIState, action: AppAction): 
                     y: widget.y - action.y
                 }))
             });
+        case 'WidgetRemove':
+            return set(state, {
+                selectedWidgets: []
+            });
     }
     return state;
 }
