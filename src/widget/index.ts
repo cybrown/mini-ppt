@@ -117,7 +117,12 @@ export const widgetRepositoryReducer = (widgets: AppState['data']['widgets'], ac
                     })
                 });
             }
+            break;
         }
+        case 'UIPasteWidgets':
+            return action.widgets.reduce((widgets, widget) => set(widgets, {
+                [widget.id]: set(widget, {x: widget.x + action.x, y: widget.y + action.y})
+            }), widgets);
     }
     return widgets;
 }

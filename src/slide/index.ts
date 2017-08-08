@@ -30,6 +30,12 @@ export const slideRepositoryReducer = (slides: AppState['data']['slides'], actio
             return set(slides, {
                 [action.slide.id]: set(slides[action.slide.id], action.slide)
             });
+        case 'UIPasteWidgets':
+            return set(slides, {
+                [action.slideId]: set(slides[action.slideId], {
+                    widgetsIds: slides[action.slideId].widgetsIds.concat(action.widgets.map(widget => widget.id))
+                })
+            })
     }
     return slides;
 }
