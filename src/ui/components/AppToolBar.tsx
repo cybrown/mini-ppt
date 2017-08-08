@@ -23,10 +23,8 @@ export const AppToolBar = connect((state: AppState) => ({
         slideId,
         widget: createRectangleWidget(backgroundColor),
     })),
-    onChangeColorWidget: (widgetId: string | null, backgroundColor: string) => {
-        if (widgetId) {
-            dispatch(create('WidgetSetBackgroundColor', { widgetId, backgroundColor }));
-        }
+    onChangeColorWidget: (widgetIds: string[], backgroundColor: string) => {
+        widgetIds.forEach(widgetId => dispatch(create('WidgetSetBackgroundColor', { widgetId, backgroundColor })));
         dispatch(create('UIChangeCurrentBackgroundColor', {backgroundColor}));
     },
     onSetColorPickerisibility: (visible: boolean) => dispatch(create('UIChangeBackgroundColorPickerVisibility', {visible})),
@@ -56,7 +54,7 @@ export const AppToolBar = connect((state: AppState) => ({
                      targetOrigin={{horizontal: 'left', vertical: 'top'}}
                      useLayerForClickAway={false}>
                 <SketchPicker color={props.currentBackgroundColor}
-                              onChange={color => props.onChangeColorWidget(props.selectedWidgets[0] ? props.selectedWidgets[0].id : null, rgbaToString(color.rgb))} />
+                              onChange={color => props.onChangeColorWidget(props.selectedWidgets.map(w => w.id), rgbaToString(color.rgb))} />
             </Popover>
         </ToolbarGroup>
         <ToolbarGroup>
