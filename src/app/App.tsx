@@ -24,6 +24,7 @@ export const App = connect((state: AppState) => ({
         dispatch(create('WidgetUpdateTextZone', {widgetId, text}));
         dispatch(create('UIChangeTextPopupSetVisibility', {visible: false}));
     },
+    onChangeOpacity: (widgetId: string, opacity: number) => dispatch(create('WidgetUpdate', { widgetId, opacity }))
 }))(props => (
     <div style={{display: 'flex', height: '100vh', flexDirection: 'column'}}>
         <AppBar title="Mini PPT app" />
@@ -32,7 +33,8 @@ export const App = connect((state: AppState) => ({
             <SlideList />
             <Editor />
             <RightPanel widget={props.selectedWidgets.length === 1 ? props.selectedWidgets[0] : undefined}
-                        onChangeFontSizeWidget={fontSize => props.onChangeFontSizeWidget(props.selectedWidgets[0].id, fontSize)} />
+                        onChangeFontSizeWidget={fontSize => props.onChangeFontSizeWidget(props.selectedWidgets[0].id, fontSize)}
+                        onChangeOpacity={opacity => props.onChangeOpacity(props.selectedWidgets[0].id, opacity)} />
         </div>
         { props.showChangeTextPopup ? <ChangeTextDialog /> : null}
     </div>

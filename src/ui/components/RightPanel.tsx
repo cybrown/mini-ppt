@@ -6,10 +6,13 @@ import { PropertiesPanel } from "./PropertiesPanel";
 export const RightPanel: React.SFC<{
     widget?: Widget;
     onChangeFontSizeWidget: (fontSize: number) => void;
-}> = ({widget, onChangeFontSizeWidget}) => (
+    onChangeOpacity: (opacity: number) => void;
+}> = ({widget, onChangeFontSizeWidget, onChangeOpacity}) => (
     widget ? (
         <Paper style={{position: 'absolute', right: 0, top: 0, width: '218px'}}>
-            <PropertiesPanel widget={widget} onChangeFontSizeWidget={onChangeFontSizeWidget} />
+            <PropertiesPanel widget={widget}
+                             onChangeFontSizeWidget={onChangeFontSizeWidget}
+                             onChangeOpacity={onChangeOpacity} />
         </Paper>
     ) : null
 );

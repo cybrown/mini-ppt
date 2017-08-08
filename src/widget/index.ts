@@ -15,7 +15,8 @@ export function createTextZoneWidget(backgroundColor: string): WidgetTextZone {
         backgroundColor,
         fontSize: 14,
         kind: 'text',
-        text: 'Text'
+        text: 'Text',
+        opacity: 1
     };
 }
 
@@ -27,7 +28,8 @@ export function createRectangleWidget(backgroundColor: string): WidgetRectangle 
         y: 250 - 40 / 2,
         width: 40,
         height: 40,
-        backgroundColor
+        backgroundColor,
+        opacity: 1
     };
 }
 
@@ -39,6 +41,7 @@ export interface BaseWidget {
     width: number;
     height: number;
     backgroundColor: string;
+    opacity: number;
 }
 
 export interface WidgetTextZone extends BaseWidget {
@@ -76,6 +79,7 @@ export const widgetRepositoryReducer = (widgets: AppState['data']['widgets'], ac
                     width: action.width !== undefined ? action.width : widgets[action.widgetId].width,
                     x: action.x !== undefined ? action.x : widgets[action.widgetId].x,
                     y: action.y !== undefined ? action.y : widgets[action.widgetId].y,
+                    opacity: action.opacity !== undefined ? action.opacity : widgets[action.widgetId].opacity
                 })
             });
         case 'WidgetUpdateTextZone': {
@@ -105,6 +109,7 @@ export interface WidgetActions {
         backgroundColor?: string;
         width?: number;
         height?: number;
+        opacity?: number;
     };
     WidgetUpdateTextZone: {
         widgetId: string;
