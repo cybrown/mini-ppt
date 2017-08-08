@@ -6,6 +6,9 @@ export interface SlideActions {
     SlideNew: {
         slide: SlideRecord;
     };
+    SlideRemove: {
+        slideId: string;
+    };
 }
 
 export interface SlideRecord {
@@ -42,6 +45,11 @@ export const slideRepositoryReducer = (slides: AppState['data']['slides'], actio
                     widgetsIds: slides[action.slideId].widgetsIds.filter(id => action.widgetIds.indexOf(id) === -1)
                 })
             });
+        case 'SlideRemove': {
+            const newSlides = set(slides, {});
+            delete newSlides[action.slideId];
+            return newSlides;
+        }
     }
     return slides;
 }
