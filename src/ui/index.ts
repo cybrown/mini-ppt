@@ -39,7 +39,7 @@ export const uiInitialState: UIState = {
     selectedWidgets: [],
     showChangeTextPopup: false,
     currentWidgetText: '',
-    currentBackgroundColor: 'rgba(192,137,45,0.3)',
+    currentBackgroundColor: 'rgba(50,139,241,1)',
     showBackgroundColorPicker: false
 };
 
