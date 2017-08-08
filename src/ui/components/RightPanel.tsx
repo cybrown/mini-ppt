@@ -4,13 +4,13 @@ import { Paper } from "material-ui";
 import { PropertiesPanel } from "./PropertiesPanel";
 
 export const RightPanel: React.SFC<{
-    widget?: Widget;
+    widgets: Widget[];
     onChangeFontSizeWidget: (fontSize: number) => void;
     onChangeOpacity: (opacity: number) => void;
-}> = ({widget, onChangeFontSizeWidget, onChangeOpacity}) => (
-    widget ? (
+}> = ({widgets, onChangeFontSizeWidget, onChangeOpacity}) => (
+    widgets.length > 0 ? (
         <Paper style={{position: 'absolute', right: 0, top: 0, width: '218px'}}>
-            <PropertiesPanel widget={widget}
+            <PropertiesPanel widgets={widgets}
                              onChangeFontSizeWidget={onChangeFontSizeWidget}
                              onChangeOpacity={onChangeOpacity} />
         </Paper>

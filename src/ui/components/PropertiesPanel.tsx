@@ -1,26 +1,26 @@
 import * as React from "react";
-import { Widget } from "../../widget";
+import { Widget, WidgetTextZone } from "../../widget";
 import { TextPropertiesPanel } from "./TextPropertiesPanel";
 import { Divider, Slider } from "material-ui";
 
 export const PropertiesPanel: React.SFC<{
-    widget: Widget;
+    widgets: Widget[];
     onChangeFontSizeWidget: (fontSize: number) => void;
     onChangeOpacity: (opacity: number) => void;
-}> = ({widget, onChangeFontSizeWidget, onChangeOpacity}) => {
+}> = ({widgets, onChangeFontSizeWidget, onChangeOpacity}) => {
     let specificPropertiesPanel;
-    switch (widget.kind) {
-        case 'rectangle':
+    switch (true) {
+        case widgets.every(w => w.kind === 'rectangle'):
             specificPropertiesPanel = null;
             break;
-        case 'text':
-            specificPropertiesPanel = <TextPropertiesPanel widget={widget} onChangeFontSizeWidget={onChangeFontSizeWidget} />;
+        case widgets.every(w => w.kind === 'text'):
+            specificPropertiesPanel = <TextPropertiesPanel widgets={widgets as WidgetTextZone[]} onChangeFontSizeWidget={onChangeFontSizeWidget} />;
             break;
     }
     return (
         <div>
             <div>
-                <Slider value={widget.opacity} onChange={(_, opacity) => onChangeOpacity(opacity)} />
+                <Slider value={widgets[0].opacity} onChange={(_, opacity) => onChangeOpacity(opacity)} />
             </div>
             <Divider />
             {specificPropertiesPanel}

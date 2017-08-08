@@ -18,11 +18,11 @@ class AppComponent extends React.Component<{
     currentWidgetText: string;
     contextMenuPosition: {top: number; left: number;};
     showContextMenu: boolean;
-    onChangeFontSizeWidget: (widgetId: string, fontSize: number) => any;
+    onChangeFontSizeWidget: (widgets: Widget[], fontSize: number) => any;
     onCancelChangeText: () => any;
     changeCurrentWidgetText: (text: string) => any;
     onSubmitChangeText: (widgetId: string, text: string) => any;
-    onChangeOpacity: (widgetId: string, opacity: number) => any;
+    onChangeOpacity: (widgets: Widget[], opacity: number) => any;
     showContextMenuAtPosition: (top: number, left: number) => any;
     hideContextMenu: () => any;
 }> {
@@ -61,9 +61,9 @@ class AppComponent extends React.Component<{
                 <div style={{position: 'relative', flexGrow: 1}}>
                     <SlideList />
                     <Editor />
-                    <RightPanel widget={props.selectedWidgets.length === 1 ? props.selectedWidgets[0] : undefined}
-                                onChangeFontSizeWidget={fontSize => props.onChangeFontSizeWidget(props.selectedWidgets[0].id, fontSize)}
-                                onChangeOpacity={opacity => props.onChangeOpacity(props.selectedWidgets[0].id, opacity)} />
+                    <RightPanel widgets={props.selectedWidgets}
+                                onChangeFontSizeWidget={fontSize => props.onChangeFontSizeWidget(props.selectedWidgets, fontSize)}
+                                onChangeOpacity={opacity => props.onChangeOpacity(props.selectedWidgets, opacity)} />
                 </div>
                 { props.showChangeTextPopup ? <ChangeTextDialog /> : null}
             </div>
@@ -78,16 +78,16 @@ export const App = connect((state: AppState) => ({
     contextMenuPosition: state.ui.contextMenu.position,
     showContextMenu: state.ui.contextMenu.visible && Object.keys(state.ui.contextMenu.entries).length > 0
 }), (dispatch: Dispatch<AppAction>) => ({
-    onChangeFontSizeWidget: (widgetId: string, fontSize: number) => dispatch(create('WidgetTextZoneSetFontSize', {
-        widgetId, fontSize
-    })),
+    onChangeFontSizeWidget: (widgets: Widget[], fontSize: number) => widgets.forEach(widget => dispatch(create('WidgetTextZoneSetFontSize', {
+        widgetId: widget.id, fontSize
+    }))),
     onCancelChangeText: () => dispatch(create('UIChangeTextPopupSetVisibility', {visible: false})),
     changeCurrentWidgetText: (text: string) => dispatch(create('UIChangeWidgetText', {text})),
     onSubmitChangeText: (widgetId: string, text: string) => {
         dispatch(create('WidgetTextZoneSetText', {widgetId, text}));
         dispatch(create('UIChangeTextPopupSetVisibility', {visible: false}));
     },
-    onChangeOpacity: (widgetId: string, opacity: number) => dispatch(create('WidgetSetOpacity', { widgetId, opacity })),
+    onChangeOpacity: (widgets: Widget[], opacity: number) => widgets.forEach(widget => dispatch(create('WidgetSetOpacity', { widgetId: widget.id, opacity }))),
     showContextMenuAtPosition: (top: number, left: number) => dispatch(create('UIContextMenuShowAtPosition', { top, left })),
     hideContextMenu: () => dispatch(create('UIContextMenuHide', {}))
 }))(AppComponent);
