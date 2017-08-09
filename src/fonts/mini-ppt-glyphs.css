@@ -25,6 +25,12 @@
 .mppt-icon-bucket:before {
   content: "\e900";
 }
+.mppt-icon-undo:before {
+  content: "\e965";
+}
+.mppt-icon-redo:before {
+  content: "\e966";
+}
 .mppt-icon-plus:before {
   content: "\ea0a";
 }
