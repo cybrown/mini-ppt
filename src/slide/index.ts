@@ -1,32 +1,38 @@
 import { set } from "../util";
 import { Widget } from "../widget";
-import { AppState, AppAction } from "../app";
+import { AppAction } from "../app";
 
 export interface SlideActions {
     SlideNew: {
-        slide: SlideRecord;
+        slide: Slide;
     };
     SlideRemove: {
         slideId: string;
     };
 }
 
-export interface SlideRecord {
-    id: string;
-    widgetsIds: string[];
-}
-
 export interface Slide {
     id: string;
-    widgets: Widget[];
+    widgets: {[widgetId: string]: Widget};
+    widgetOrder: string[];
 }
 
-export const slideRepositoryReducer = (slides: AppState['data']['slides'], action: AppAction): AppState['data']['slides'] => {
+interface SlideState {
+    [slideId: string]: {
+        id: string;
+        widgets: {
+            [widgetId: string]: Widget;
+        };
+        widgetOrder: string[];
+    };
+}
+
+export const slideRepositoryReducer = (slides: SlideState, action: AppAction): SlideState => {
     switch (action.type) {
         case 'WidgetNew':
             return set(slides, {
                 [action.slideId]: set(slides[action.slideId], {
-                    widgetsIds: [...slides[action.slideId].widgetsIds, action.widget.id]
+                    widgetOrder: [...slides[action.slideId].widgetOrder, action.widget.id]
                 })
             });
         case 'SlideNew':
@@ -36,13 +42,13 @@ export const slideRepositoryReducer = (slides: AppState['data']['slides'], actio
         case 'UIPasteWidgets':
             return set(slides, {
                 [action.slideId]: set(slides[action.slideId], {
-                    widgetsIds: slides[action.slideId].widgetsIds.concat(action.widgets.map(widget => widget.id))
+                    widgetOrder: slides[action.slideId].widgetOrder.concat(action.widgets.map(w => w.id))
                 })
             })
         case 'WidgetRemove':
             return set(slides, {
                 [action.slideId]: set(slides[action.slideId], {
-                    widgetsIds: slides[action.slideId].widgetsIds.filter(id => action.widgetIds.indexOf(id) === -1)
+                    widgetOrder: slides[action.slideId].widgetOrder.filter(id => action.widgetIds.indexOf(id) === -1)
                 })
             });
         case 'SlideRemove': {

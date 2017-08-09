@@ -8,7 +8,7 @@ export const SlideRenderer: React.SFC<{
     onWidgetClick?: (widgetId: string, ctrl: boolean) => void;
 }> = ({slide, onWidgetClick}) => (
     <div style={{backgroundColor: 'white', position: 'relative', width: 500 + 'px', height: 500 + 'px'}}>
-        {slide.widgets.map(widget => (
+        {Object.keys(slide.widgets).map(widgetId => slide.widgets[widgetId]).map(widget => (
             <HasPosition key={widget.id} x={widget.x} y={widget.y} onClick={onWidgetClick && ((ctrl) => onWidgetClick(widget.id, ctrl))}>
                 <WidgetRenderer widget={widget}/>
             </HasPosition>

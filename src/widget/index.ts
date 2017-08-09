@@ -56,18 +56,19 @@ export interface WidgetRectangle extends BaseWidget {
 
 export type Widget = WidgetTextZone | WidgetRectangle;
 
-const widgetData = (state: AppState) => state.data.widgets;
-export const currentSlideRecord = (state: AppState) => state.ui.currentSlide ? state.data.slides[state.ui.currentSlide] : null;
-export const widgetList = createSelector(currentSlideRecord, (currentSlide) => currentSlide ? currentSlide.widgetsIds : []);
+const widgetData = (state: AppState) => state.ui.currentSlide ? state.presentation.slides[state.ui.currentSlide].widgets : {};
+export const currentSlideRecord = (state: AppState) => state.ui.currentSlide ? state.presentation.slides[state.ui.currentSlide] : null;
+export const widgetList = createSelector(currentSlideRecord, (currentSlide) => currentSlide ? currentSlide.widgetOrder : []);
 export const widgetsSelector = createSelector(widgetData, widgetList, (widgetData, widgetList) => widgetList.map(id => widgetData[id]));
-export const currentSlide = createSelector(currentSlideRecord, widgetsSelector, (currentSlide, widgets): Slide | null => (currentSlide ? {
-    id: currentSlide.id,
-    widgets
-} : null))
+export const currentSlide = createSelector(currentSlideRecord, (currentSlide): Slide | null => currentSlide)
 
-export const selectedWidgets = (state: AppState) => state.ui.selectedWidgets.map(widgetId => state.data.widgets[widgetId]);
+export const selectedWidgets = (state: AppState) => state.ui.selectedWidgets.map(widgetId => state.presentation.slides[state.ui.currentSlide!].widgets[widgetId]);
 
-export const widgetRepositoryReducer = (widgets: AppState['data']['widgets'], action: AppAction) => {
+interface WidgetReducerState {
+    [widgetId: string]: Widget;
+}
+
+export const widgetRepositoryReducer = (widgets: WidgetReducerState, action: AppAction) => {
     switch (action.type) {
         case 'WidgetNew':
             return set(widgets, {[action.widget.id]: action.widget});

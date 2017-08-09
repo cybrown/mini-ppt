@@ -31,7 +31,8 @@ export const AppToolBar = connect((state: AppState) => ({
     onCreateNewSlide: () => dispatch(create('SlideNew', {
         slide: {
             id: Math.random().toString(),
-            widgetsIds: []
+            widgets: {},
+            widgetOrder: []
         }
     }))
 }))(props => (

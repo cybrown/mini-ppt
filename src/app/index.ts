@@ -1,9 +1,8 @@
 import { WidgetActions } from "../widget";
 import { SlideActions } from "../slide";
 import { UIActions } from "../ui";
-import { Widget } from "../widget";
-import { SlideRecord } from "../slide";
 import { UIState } from "../ui";
+import { PresentationState } from "../presentation/index";
 
 interface Actions extends WidgetActions, UIActions, SlideActions { }
 
@@ -18,9 +17,6 @@ export function create<Type extends keyof Actions>(type: Type, data: Actions[Typ
 }
 
 export interface AppState {
-    data: {
-        widgets: {[id: string]: Widget},
-        slides: {[id: string]: SlideRecord}
-    };
+    presentation: PresentationState;
     ui: UIState;
 }
