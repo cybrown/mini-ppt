@@ -26,6 +26,6 @@
     "redux": "^3.7.2",
     "reselect": "^3.0.1",
     "roboto-fontface": "^0.8.0",
-    "runpack": "^0.4.1"
+    "runpack": "0.4.5"
   }
 }
