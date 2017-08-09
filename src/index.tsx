@@ -2,6 +2,7 @@ import * as React from 'react';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import { Root } from './Root';
+import { store } from './store';
 
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
@@ -17,7 +18,7 @@ const doRender = (component?: JSX.Element) => render(
     </AppContainer>
 , root);
 
-doRender(<Root />);
+doRender(<Root store={store} />);
 
 declare var require: any;
 declare var module: any;
@@ -25,6 +26,6 @@ declare var module: any;
 if (module.hot) {
     module.hot.accept("./Root", () => {
         const NextRoot = require("./Root").Root;
-        doRender(<NextRoot />);
+        doRender(<NextRoot store={store} />);
     });
 }

@@ -1,6 +1,6 @@
-import { set } from "../util";
+import { set, Dictionary } from "../util";
 import { Widget } from "../widget";
-import { AppState, AppAction } from "../app";
+import { AppAction } from "../app";
 
 export interface SlideActions {
     SlideNew: {
@@ -21,7 +21,7 @@ export interface Slide {
     widgets: Widget[];
 }
 
-export const slideRepositoryReducer = (slides: AppState['data']['slides'], action: AppAction): AppState['data']['slides'] => {
+export const slideRepositoryReducer = (slides: Dictionary<SlideRecord> = {}, action: AppAction): Dictionary<SlideRecord> => {
     switch (action.type) {
         case 'WidgetNew':
             return set(slides, {

@@ -70,7 +70,7 @@ export interface ContextMenuEntry {
     actions: AppAction[];
 }
 
-export const uiInitialState: UIState = {
+const uiInitialState: UIState = {
     currentSlide: null,
     selectedWidgets: [],
     showChangeTextPopup: false,
@@ -88,7 +88,7 @@ export const uiInitialState: UIState = {
     clipboard: []
 };
 
-export const uiReducer: Reducer<UIState> = (state: UIState, action: AppAction): UIState => {
+export const uiReducer: Reducer<UIState> = (state: UIState = uiInitialState, action: AppAction): UIState => {
     switch (action.type) {
         case 'UIWidgetReplaceSelection':
             return set(state, {

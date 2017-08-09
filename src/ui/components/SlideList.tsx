@@ -5,9 +5,9 @@ import { SlideRenderer } from "../../slide/components/SlideRenderer";
 import { AppState, AppAction, create } from "../../app";
 
 export const SlideList = connect((state: AppState) => ({
-    slides: Object.keys(state.data.slides).map(id => state.data.slides[id]).map(slideRecord => ({
+    slides: state.presentation.slideList.map(id => state.presentation.slides[id]).map(slideRecord => ({
         id: slideRecord.id,
-        widgets: slideRecord.widgetsIds.map(widgetId => state.data.widgets[widgetId])
+        widgets: slideRecord.widgetsIds.map(widgetId => state.presentation.widgets[widgetId])
     })),
     currentSlide: state.ui.currentSlide
 }), (dispatch: Dispatch<AppAction>) => ({
