@@ -13,7 +13,7 @@ class EditorComponent extends React.Component<{
     selectedWidgets: Widget[];
     widgetsToPaste: Widget[];
     onMoveWidgets: (widgets: Widget[], x: number, y: number, history: boolean) => any;
-    onResizeWidget: (widgetId: string, width: number, height: number, history: boolean) => any;
+    onResizeWidget: (widget: Widget, deltaX: number, deltaY: number, width: number, height: number, history: boolean) => any;
     onWidgetUnselect: () => any;
     onStartChangeText: (text: string) => any;
     onSelectWidget: (selectedWidgets: Widget[], widgetToSelect: Widget, addToSelection: boolean) => any;
@@ -35,13 +35,10 @@ class EditorComponent extends React.Component<{
                         onContextMenu={event => rect && (props.setContextMenuTopic(event.clientX - rect.left, event.clientY - rect.top, props.selectedWidgets, props.widgetsToPaste, props.slide.id))}>
                         <SlideEditor onSelectWidget={(widgetId, ctrl) => props.onSelectWidget(props.selectedWidgets, props.widgets.filter(widget => widget.id === widgetId)[0], ctrl)}
                                      slide={props.slide}
-                                     onMoveWidget={(widgetId: string, x: number, y: number, isEnd: boolean) => {
-                                         props.onMoveWidgets(props.widgets.filter(w => w.id === widgetId), x, y, isEnd);
-                                     }}
                                      onMoveSelectedWidgets={(x: number, y: number, isEnd: boolean) => {
                                          props.onMoveWidgets(props.widgets.filter(w => props.selectedWidgets.indexOf(w) !== -1), x, y, isEnd);
                                      }}
-                                     onResizeWidget={props.onResizeWidget}
+                                     onResizeWidget={(widgetId, deltaX, deltaY, width, height, history) => props.onResizeWidget(props.widgets.filter(widget => widget.id === widgetId)[0], deltaX, deltaY, width, height, history)}
                                      selectedWidgets={props.selectedWidgets}
                                      onStartChangeText={props.onStartChangeText} />
                     </Paper>
@@ -67,7 +64,7 @@ export const Editor = connect((state: AppState) => ({
             history
         }))
     },
-    onResizeWidget: (widgetId: string, width: number, height: number, history) => dispatch(create('WidgetSetDimensions', {widgetId, width, height, history})),
+    onResizeWidget: (widget: Widget, deltaX: number, deltaY: number, width: number, height: number, history) => dispatch(create('WidgetSetDimensionsAndPosition', {widgetId: widget.id, x: widget.x + deltaX, y: widget.y + deltaY, width, height, history})),
     onWidgetUnselect: () => dispatch(create('UIWidgetReplaceSelection', {widgets: []})),
     onStartChangeText: (text: string) => dispatch(create('UIChangeTextPopupSetVisibility', {visible: true, text})),
     onSelectWidget: (selectedWidgets: Widget[], widgetToSelect: Widget, addToSelection: boolean) => {

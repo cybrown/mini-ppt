@@ -92,9 +92,11 @@ export const widgetRepositoryReducer = (widgets: Dictionary<Widget> = {}, action
                     })
                 });
             }, widgets);
-        case 'WidgetSetDimensions':
+        case 'WidgetSetDimensionsAndPosition':
             return set(widgets, {
                 [action.widgetId]: set(widgets[action.widgetId], {
+                    x: action.x,
+                    y: action.y,
                     height: action.height,
                     width: action.width,
                 })
@@ -166,9 +168,11 @@ export interface WidgetActions {
         widgetIds: string[];
         backgroundColor: string;
     };
-    WidgetSetDimensions: {
+    WidgetSetDimensionsAndPosition: {
         widgetId: string;
         history: boolean;
+        x: number;
+        y: number;
         width: number;
         height: number;
     };
