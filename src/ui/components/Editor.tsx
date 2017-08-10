@@ -14,7 +14,6 @@ class EditorComponent extends React.Component<{
     widgetsToPaste: Widget[];
     onMoveWidgets: (widgets: Widget[], x: number, y: number, history: boolean) => any;
     onResizeWidget: (widgetId: string, width: number, height: number, history: boolean) => any;
-    onChangeFontSizeWidget: (widgetId: string, fontSize: number) => any;
     onWidgetUnselect: () => any;
     onStartChangeText: (text: string) => any;
     onSelectWidget: (selectedWidgets: Widget[], widgetToSelect: Widget, addToSelection: boolean) => any;
@@ -56,13 +55,17 @@ export const Editor = connect((state: AppState) => ({
     widgetsToPaste: state.ui.clipboard
 }), (dispatch: Dispatch<AppAction>) => ({
     onMoveWidgets: (widgets: Widget[], x: number, y: number, history) => {
-        widgets.forEach(widget => dispatch(create('WidgetSetPosition', {widgetId: widget.id, x: widget.x + x, y: widget.y + y, history})))
+        dispatch(create('WidgetBulkSetPosition', {
+            widgetProperties: widgets.map(widget => ({
+                widgetId: widget.id,
+                x: widget.x + x,
+                y: widget.y + y
+            })),
+            history
+        }))
     },
     onResizeWidget: (widgetId: string, width: number, height: number, history) => dispatch(create('WidgetSetDimensions', {widgetId, width, height, history})),
     onWidgetUnselect: () => dispatch(create('UIWidgetReplaceSelection', {widgets: []})),
-    onChangeFontSizeWidget: (widgetId: string, fontSize: number) => dispatch(create('WidgetTextZoneSetFontSize', {
-        widgetId, fontSize
-    })),
     onStartChangeText: (text: string) => dispatch(create('UIChangeTextPopupSetVisibility', {visible: true, text})),
     onSelectWidget: (selectedWidgets: Widget[], widgetToSelect: Widget, addToSelection: boolean) => {
         let newSelection: Widget[] | null;

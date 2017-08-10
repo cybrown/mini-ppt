@@ -24,7 +24,7 @@ export const AppToolBar = connect((state: AppState) => ({
         widget: createRectangleWidget(backgroundColor),
     })),
     onChangeColorWidget: (widgetIds: string[], backgroundColor: string) => {
-        widgetIds.forEach(widgetId => dispatch(create('WidgetSetBackgroundColor', { widgetId, backgroundColor })));
+        dispatch(create('WidgetBulkSetBackgroundColor', { widgetIds, backgroundColor }));
         dispatch(create('UIChangeCurrentBackgroundColor', {backgroundColor}));
     },
     onSetColorPickerisibility: (visible: boolean) => dispatch(create('UIChangeBackgroundColorPickerVisibility', {visible})),

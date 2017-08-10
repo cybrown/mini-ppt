@@ -83,6 +83,15 @@ export const widgetRepositoryReducer = (widgets: Dictionary<Widget> = {}, action
                     y: action.y,
                 })
             });
+        case 'WidgetBulkSetPosition':
+            return action.widgetProperties.reduce((widgets, widget) => {
+                return set(widgets, {
+                    [widget.widgetId]: set(widgets[widget.widgetId], {
+                        x: widget.x,
+                        y: widget.y
+                    })
+                });
+            }, widgets);
         case 'WidgetSetDimensions':
             return set(widgets, {
                 [action.widgetId]: set(widgets[action.widgetId], {
@@ -90,18 +99,22 @@ export const widgetRepositoryReducer = (widgets: Dictionary<Widget> = {}, action
                     width: action.width,
                 })
             });
-        case 'WidgetSetBackgroundColor':
-            return set(widgets, {
-                [action.widgetId]: set(widgets[action.widgetId], {
-                    backgroundColor: action.backgroundColor,
+        case 'WidgetBulkSetBackgroundColor':
+            return action.widgetIds.reduce((widgets, widgetId) => {
+                return set(widgets, {
+                    [widgetId]: set(widgets[widgetId], {
+                        backgroundColor: action.backgroundColor,
+                    })
                 })
-            });
-        case 'WidgetSetOpacity':
-            return set(widgets, {
-                [action.widgetId]: set(widgets[action.widgetId], {
-                    opacity: action.opacity
+            }, widgets);
+        case 'WidgetBulkSetOpacity':
+            return action.widgetIds.reduce((widgets, widgetId) => {
+                return set(widgets, {
+                    [widgetId]: set(widgets[widgetId], {
+                        opacity: action.opacity,
+                    })
                 })
-            });
+            }, widgets);
         case 'WidgetTextZoneSetText': {
             const widget = widgets[action.widgetId];
             if (widget.kind === 'text') {
@@ -113,16 +126,14 @@ export const widgetRepositoryReducer = (widgets: Dictionary<Widget> = {}, action
             }
             break;
         }
-        case 'WidgetTextZoneSetFontSize': {
-            const widget = widgets[action.widgetId];
-            if (widget.kind === 'text') {
+        case 'WidgetTextZoneBulkSetFontSize': {
+            return action.widgetIds.reduce((widgets, widgetId) => {
                 return set(widgets, {
-                    [action.widgetId]: set(widget, {
+                    [widgetId]: set(widgets[widgetId], {
                         fontSize: action.fontSize,
                     })
-                });
-            }
-            break;
+                })
+            }, widgets);
         }
         case 'UIPasteWidgets':
             return action.widgets.reduce((widgets, widget) => set(widgets, {
@@ -137,14 +148,22 @@ export interface WidgetActions {
         slideId: string;
         widget: Widget;
     };
+    WidgetBulkSetPosition: {
+        widgetProperties: {
+            widgetId: string;
+            x: number;
+            y: number;
+        }[];
+        history: boolean;
+    };
     WidgetSetPosition: {
         widgetId: string;
         history: boolean;
         x: number;
         y: number;
     };
-    WidgetSetBackgroundColor: {
-        widgetId: string;
+    WidgetBulkSetBackgroundColor: {
+        widgetIds: string[];
         backgroundColor: string;
     };
     WidgetSetDimensions: {
@@ -153,16 +172,16 @@ export interface WidgetActions {
         width: number;
         height: number;
     };
-    WidgetSetOpacity: {
-        widgetId: string;
+    WidgetBulkSetOpacity: {
+        widgetIds: string[];
         opacity: number;
     };
     WidgetTextZoneSetText: {
         widgetId: string;
         text: string;
     };
-    WidgetTextZoneSetFontSize: {
-        widgetId: string;
+    WidgetTextZoneBulkSetFontSize: {
+        widgetIds: string[];
         fontSize: number;
     };
     WidgetRemove: {

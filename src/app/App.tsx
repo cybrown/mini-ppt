@@ -78,16 +78,16 @@ export const App = connect((state: AppState) => ({
     contextMenuPosition: state.ui.contextMenu.position,
     showContextMenu: state.ui.contextMenu.visible && Object.keys(state.ui.contextMenu.entries).length > 0
 }), (dispatch: Dispatch<AppAction>) => ({
-    onChangeFontSizeWidget: (widgets: Widget[], fontSize: number) => widgets.forEach(widget => dispatch(create('WidgetTextZoneSetFontSize', {
-        widgetId: widget.id, fontSize
-    }))),
+    onChangeFontSizeWidget: (widgets: Widget[], fontSize: number) => dispatch(create('WidgetTextZoneBulkSetFontSize', {
+        widgetIds: widgets.map(w => w.id), fontSize
+    })),
     onCancelChangeText: () => dispatch(create('UIChangeTextPopupSetVisibility', {visible: false})),
     changeCurrentWidgetText: (text: string) => dispatch(create('UIChangeWidgetText', {text})),
     onSubmitChangeText: (widgetId: string, text: string) => {
         dispatch(create('WidgetTextZoneSetText', {widgetId, text}));
         dispatch(create('UIChangeTextPopupSetVisibility', {visible: false}));
     },
-    onChangeOpacity: (widgets: Widget[], opacity: number) => widgets.forEach(widget => dispatch(create('WidgetSetOpacity', { widgetId: widget.id, opacity }))),
+    onChangeOpacity: (widgets: Widget[], opacity: number) => dispatch(create('WidgetBulkSetOpacity', { widgetIds: widgets.map(w => w.id), opacity })),
     showContextMenuAtPosition: (top: number, left: number) => dispatch(create('UIContextMenuShowAtPosition', { top, left })),
     hideContextMenu: () => dispatch(create('UIContextMenuHide', {}))
 }))(AppComponent);
