@@ -29,3 +29,8 @@ type ReducersMapObject<S> = {
 export function typedCombineReducers<S>(reducers: ReducersMapObject<S>): Reducer<S> {
     return combineReducers(reducers as any);
 }
+
+export const stopPropagation: React.MouseEventHandler<any> = e => {
+    e.stopPropagation();
+    e.stopPropagation();
+};

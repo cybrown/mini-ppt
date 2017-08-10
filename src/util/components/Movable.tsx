@@ -2,6 +2,7 @@ import * as React from "react";
 
 export class Movable extends React.Component<{
     onMove: (x: number, y: number, isEnd: boolean) => void;
+    onClick?: React.MouseEventHandler<HTMLDivElement>;
     onMoveStart?: () => void;
     onMoveEnd?: () => void;
     immediate?: boolean;
@@ -67,6 +68,7 @@ export class Movable extends React.Component<{
     render() {
         return (
             <div style={{position: 'absolute', left: this.state.deltaX + 'px', top: this.state.deltaY + 'px'}}
+                 onClick={this.props.onClick}
                  onMouseDown={this.onmousedown}>
                 {this.props.children}
             </div>
