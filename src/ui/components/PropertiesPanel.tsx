@@ -19,7 +19,7 @@ export const PropertiesPanel: React.SFC<{
     }
     return (
         <div>
-            <div>
+            <div style={{padding: '8px'}}>
                 <Slider value={widgets[0].opacity} onChange={(_, opacity) => onChangeOpacity(opacity)} />
             </div>
             <Divider />
