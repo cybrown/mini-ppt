@@ -3,7 +3,7 @@ import { uiReducer } from "./ui";
 import { widgetRepositoryReducer } from "./widget";
 import { slideRepositoryReducer } from "./slide";
 import { AppState, AppAction, create, Presentation } from "./app";
-import { typedCombineReducers } from "./util/index";
+import { typedCombineReducers, set } from "./util/index";
 
 const slideId = Math.random().toString();
 
@@ -23,10 +23,26 @@ const presentationReducer: Reducer<Presentation> = typedCombineReducers({
     slideList: slideListeReducer
 });
 
-const appReducer = typedCombineReducers({
-    presentation: presentationReducer,
-    ui: uiReducer
-});
+const appReducer = (state: AppState = {presentation: undefined, ui: undefined, history: []} as any, action: AppAction) => {
+    let newPresentation = presentationReducer(state.presentation, action);
+    let newHistory = state.history;
+    if (newPresentation === state.presentation) {
+        if (action.type === 'UIUndo') {
+            if (state.history.length > 0) {
+                const offset = state.history[state.history.length - 1] === state.presentation ? 2 : 1;
+                newPresentation = state.history[state.history.length - offset];
+                newHistory = state.history.slice(0, state.history.length - offset);
+            }
+        }
+    } else if ((action as any).history !== false && state.presentation != null) {
+        newHistory = [...state.history, newPresentation];
+    }
+    return set(state, {
+        presentation: newPresentation,
+        ui: uiReducer(state.ui, action),
+        history: newHistory
+    });
+}
 
 export const store = createStore<AppState>(appReducer, (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__());
 

@@ -12,9 +12,8 @@ class EditorComponent extends React.Component<{
     widgets: Widget[];
     selectedWidgets: Widget[];
     widgetsToPaste: Widget[];
-    onMoveWidget: (widgetId: string, x: number, y: number) => any;
-    onMoveWidgets: (widgets: Widget[], x: number, y: number) => any;
-    onResizeWidget: (widgetId: string, width: number, height: number) => any;
+    onMoveWidgets: (widgets: Widget[], x: number, y: number, history: boolean) => any;
+    onResizeWidget: (widgetId: string, width: number, height: number, history: boolean) => any;
     onChangeFontSizeWidget: (widgetId: string, fontSize: number) => any;
     onWidgetUnselect: () => any;
     onStartChangeText: (text: string) => any;
@@ -36,13 +35,13 @@ class EditorComponent extends React.Component<{
                         onClick={props.onWidgetUnselect}
                         onContextMenu={event => rect && (props.setContextMenuTopic(event.clientX - rect.left, event.clientY - rect.top, props.selectedWidgets, props.widgetsToPaste, props.slide.id))}>
                         <SlideEditor onSelectWidget={(widgetId, ctrl) => props.onSelectWidget(props.selectedWidgets, props.widgets.filter(widget => widget.id === widgetId)[0], ctrl)}
-                                    slide={props.slide}
-                                    onMoveWidget={(_: string, x: number, y: number) => {
-                                        props.onMoveWidgets(props.widgets.filter(w => props.selectedWidgets.indexOf(w) !== -1), x, y);
-                                    }}
-                                    onResizeWidget={props.onResizeWidget}
-                                    selectedWidgets={props.selectedWidgets}
-                                    onStartChangeText={props.onStartChangeText} />
+                                     slide={props.slide}
+                                     onMoveWidget={(_: string, x: number, y: number, isEnd: boolean) => {
+                                         props.onMoveWidgets(props.widgets.filter(w => props.selectedWidgets.indexOf(w) !== -1), x, y, isEnd);
+                                     }}
+                                     onResizeWidget={props.onResizeWidget}
+                                     selectedWidgets={props.selectedWidgets}
+                                     onStartChangeText={props.onStartChangeText} />
                     </Paper>
                 ) : null}
             </div>
@@ -56,11 +55,10 @@ export const Editor = connect((state: AppState) => ({
     selectedWidgets: selectedWidgets(state),
     widgetsToPaste: state.ui.clipboard
 }), (dispatch: Dispatch<AppAction>) => ({
-    onMoveWidget: (widgetId: string, x: number, y: number) => dispatch(create('WidgetSetPosition', {widgetId, x, y})),
-    onMoveWidgets: (widgets: Widget[], x: number, y: number) => {
-        widgets.forEach(widget => dispatch(create('WidgetSetPosition', {widgetId: widget.id, x: widget.x + x, y: widget.y + y})))
+    onMoveWidgets: (widgets: Widget[], x: number, y: number, history) => {
+        widgets.forEach(widget => dispatch(create('WidgetSetPosition', {widgetId: widget.id, x: widget.x + x, y: widget.y + y, history})))
     },
-    onResizeWidget: (widgetId: string, width: number, height: number) => dispatch(create('WidgetSetDimensions', {widgetId, width, height})),
+    onResizeWidget: (widgetId: string, width: number, height: number, history) => dispatch(create('WidgetSetDimensions', {widgetId, width, height, history})),
     onWidgetUnselect: () => dispatch(create('UIWidgetReplaceSelection', {widgets: []})),
     onChangeFontSizeWidget: (widgetId: string, fontSize: number) => dispatch(create('WidgetTextZoneSetFontSize', {
         widgetId, fontSize

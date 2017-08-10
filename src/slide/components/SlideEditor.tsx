@@ -8,8 +8,8 @@ import { Movable } from "../../util/components/Movable";
 
 export class SlideEditor extends React.Component<{
     slide: Slide;
-    onMoveWidget: (id: string, x: number, y: number) => void;
-    onResizeWidget: (id: string, width: number, y: number) => void;
+    onMoveWidget: (id: string, x: number, y: number, isEnd: boolean) => void;
+    onResizeWidget: (id: string, width: number, y: number, isEnd: boolean) => void;
     selectedWidgets: Widget[];
     onSelectWidget: (widgetId: string, addToCurrentSelection: boolean) => void;
     onStartChangeText: (text: string) => void;
@@ -31,7 +31,8 @@ export class SlideEditor extends React.Component<{
                 <div style={{position: 'absolute', top: 0, left: 0}}>
                     {selectedWidgets.map(widget => (
                         <HasPosition key={widget.id} x={widget.x} y={widget.y}>
-                            <Movable immediate onMove={(deltaX, deltaY) => onMoveWidget(widget.id, deltaX, deltaY)}
+                            <Movable immediate
+                                     onMove={(deltaX, deltaY, isEnd) => onMoveWidget(widget.id, deltaX, deltaY, isEnd)}
                                      onMoveStart={() => this.setState({isMoving: true})}
                                      onMoveEnd={() => this.setState({isMoving: false})}>
                                 {!this.state.isMoving ? (

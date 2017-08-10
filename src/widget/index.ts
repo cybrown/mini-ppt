@@ -56,6 +56,11 @@ export interface WidgetRectangle extends BaseWidget {
 
 export type Widget = WidgetTextZone | WidgetRectangle;
 
+// TODO: Move to util
+function notNull(value: any) {
+    return value != null;
+}
+
 const widgetData = (state: AppState) => state.presentation.widgets;
 export const currentSlideRecord = (state: AppState) => state.ui.currentSlide ? state.presentation.slides[state.ui.currentSlide] : null;
 export const widgetList = createSelector(currentSlideRecord, (currentSlide) => currentSlide ? currentSlide.widgetsIds : []);
@@ -65,7 +70,7 @@ export const currentSlide = createSelector(currentSlideRecord, widgetsSelector, 
     widgets
 } : null))
 
-export const selectedWidgets = (state: AppState) => state.ui.selectedWidgets.map(widgetId => state.presentation.widgets[widgetId]);
+export const selectedWidgets = (state: AppState) => state.ui.selectedWidgets.map(widgetId => state.presentation.widgets[widgetId]).filter(notNull);
 
 export const widgetRepositoryReducer = (widgets: Dictionary<Widget> = {}, action: AppAction) => {
     switch (action.type) {
@@ -134,6 +139,7 @@ export interface WidgetActions {
     };
     WidgetSetPosition: {
         widgetId: string;
+        history: boolean;
         x: number;
         y: number;
     };
@@ -143,6 +149,7 @@ export interface WidgetActions {
     };
     WidgetSetDimensions: {
         widgetId: string;
+        history: boolean;
         width: number;
         height: number;
     };

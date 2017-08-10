@@ -33,13 +33,16 @@ export const AppToolBar = connect((state: AppState) => ({
             id: Math.random().toString(),
             widgetsIds: []
         }
-    }))
+    })),
+    onUndo: () => dispatch(create('UIUndo', {}))
 }))(props => (
     <Toolbar>
         <ToolbarGroup firstChild={true}>
             <IconButton iconClassName="mppt-icon mppt-icon-plus" onClick={props.onCreateNewSlide} />
         </ToolbarGroup>
         <ToolbarGroup>
+            <IconButton iconClassName="mppt-icon mppt-icon-undo"
+                        onClick={() => props.onUndo()} />
             <IconButton iconClassName="mppt-icon mppt-icon-text"
                         onClick={() => props.slide && props.onNewTextZoneClick(props.slide.id, props.currentBackgroundColor)} />
             <IconButton iconClassName="mppt-icon mppt-icon-rectangle"

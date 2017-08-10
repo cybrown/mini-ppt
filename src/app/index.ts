@@ -27,4 +27,5 @@ export interface Presentation {
 export interface AppState {
     presentation: Presentation;
     ui: UIState;
+    history: Presentation[];
 }

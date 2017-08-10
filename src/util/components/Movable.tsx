@@ -1,7 +1,7 @@
 import * as React from "react";
 
 export class Movable extends React.Component<{
-    onMove: (x: number, y: number) => void;
+    onMove: (x: number, y: number, isEnd: boolean) => void;
     onMoveStart?: () => void;
     onMoveEnd?: () => void;
     immediate?: boolean;
@@ -34,7 +34,7 @@ export class Movable extends React.Component<{
         if (this.props.immediate) {
             this.originalX += deltaX;
             this.originalY += deltaY;
-            this.props.onMove(deltaX, deltaY);
+            this.props.onMove(deltaX, deltaY, false);
         } else {
             this.setState({
                 deltaX, deltaY
@@ -45,7 +45,7 @@ export class Movable extends React.Component<{
 
     onmouseup = () => {
         this.removeDocumentEvents();
-        this.props.onMove(this.state.deltaX, this.state.deltaY);
+        this.props.onMove(this.state.deltaX, this.state.deltaY, true);
         this.setState({deltaX: 0, deltaY: 0});
         this.props.onMoveEnd && this.props.onMoveEnd();
     }

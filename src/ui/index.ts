@@ -63,6 +63,7 @@ export interface UIActions {
         slideId: string;
         widgets: Widget[];
     };
+    UIUndo: {};
 }
 
 export interface ContextMenuEntry {
