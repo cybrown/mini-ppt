@@ -27,7 +27,7 @@ const appReducer = (state: AppState = {presentation: undefined, ui: undefined, h
     let newPresentation = presentationReducer(state.presentation, action);
     let newHistory = state.history;
     if (newPresentation === state.presentation) {
-        if (action.type === 'UIUndo') {
+        if (action.type === 'ui.history.undo') {
             if (state.history.length > 0) {
                 const offset = state.history[state.history.length - 1] === state.presentation ? 2 : 1;
                 newPresentation = state.history[state.history.length - offset];
