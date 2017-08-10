@@ -14,7 +14,7 @@ export function modifierForMultiSelection() {
     if (isAppleProduct()) {
         return 'Meta';
     } else {
-        return 'Ctrl';
+        return 'Control';
     }
 }
 
