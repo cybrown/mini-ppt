@@ -34,7 +34,7 @@ export const AppToolBar = connect((state: AppState) => ({
             widgetsIds: []
         }
     })),
-    onUndo: () => dispatch(create('UIUndo', {}))
+    onUndo: () => dispatch(create('ui.history.undo', {}))
 }))(props => (
     <Toolbar>
         <ToolbarGroup firstChild={true}>

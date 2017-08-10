@@ -63,7 +63,7 @@ export interface UIActions {
         slideId: string;
         widgets: Widget[];
     };
-    UIUndo: {};
+    'ui.history.undo': {};
 }
 
 export interface ContextMenuEntry {
