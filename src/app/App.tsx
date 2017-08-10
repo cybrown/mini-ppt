@@ -22,7 +22,7 @@ class AppComponent extends React.Component<{
     onCancelChangeText: () => any;
     changeCurrentWidgetText: (text: string) => any;
     onSubmitChangeText: (widgetId: string, text: string) => any;
-    onChangeOpacity: (widgets: Widget[], opacity: number) => any;
+    onChangeOpacity: (widgets: Widget[], opacity: number, final: boolean) => any;
     showContextMenuAtPosition: (top: number, left: number) => any;
     hideContextMenu: () => any;
 }> {
@@ -63,7 +63,7 @@ class AppComponent extends React.Component<{
                     <Editor />
                     <RightPanel widgets={props.selectedWidgets}
                                 onChangeFontSizeWidget={fontSize => props.onChangeFontSizeWidget(props.selectedWidgets, fontSize)}
-                                onChangeOpacity={opacity => props.onChangeOpacity(props.selectedWidgets, opacity)} />
+                                onChangeOpacity={(opacity, final) => props.onChangeOpacity(props.selectedWidgets, opacity, final)} />
                 </div>
                 { props.showChangeTextPopup ? <ChangeTextDialog /> : null}
             </div>
@@ -87,7 +87,7 @@ export const App = connect((state: AppState) => ({
         dispatch(create('WidgetTextZoneSetText', {widgetId, text}));
         dispatch(create('UIChangeTextPopupSetVisibility', {visible: false}));
     },
-    onChangeOpacity: (widgets: Widget[], opacity: number) => dispatch(create('WidgetBulkSetOpacity', { widgetIds: widgets.map(w => w.id), opacity })),
+    onChangeOpacity: (widgets: Widget[], opacity: number, final: boolean) => dispatch(create('WidgetBulkSetOpacity', { widgetIds: widgets.map(w => w.id), opacity, history: final })),
     showContextMenuAtPosition: (top: number, left: number) => dispatch(create('UIContextMenuShowAtPosition', { top, left })),
     hideContextMenu: () => dispatch(create('UIContextMenuHide', {}))
 }))(AppComponent);

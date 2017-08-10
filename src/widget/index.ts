@@ -179,6 +179,7 @@ export interface WidgetActions {
     WidgetBulkSetOpacity: {
         widgetIds: string[];
         opacity: number;
+        history: boolean;
     };
     WidgetTextZoneSetText: {
         widgetId: string;

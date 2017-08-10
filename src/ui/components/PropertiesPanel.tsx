@@ -1,12 +1,13 @@
 import * as React from "react";
 import { Widget, WidgetTextZone } from "../../widget";
 import { TextPropertiesPanel } from "./TextPropertiesPanel";
-import { Divider, Slider } from "material-ui";
+import { Divider } from "material-ui";
+import { CustomSlider } from "../../util/components/CustomSlider";
 
 export const PropertiesPanel: React.SFC<{
     widgets: Widget[];
     onChangeFontSizeWidget: (fontSize: number) => void;
-    onChangeOpacity: (opacity: number) => void;
+    onChangeOpacity: (opacity: number, final: boolean) => void;
 }> = ({widgets, onChangeFontSizeWidget, onChangeOpacity}) => {
     let specificPropertiesPanel;
     switch (true) {
@@ -20,7 +21,7 @@ export const PropertiesPanel: React.SFC<{
     return (
         <div>
             <div style={{padding: '8px'}}>
-                <Slider value={widgets[0].opacity} onChange={(_, opacity) => onChangeOpacity(opacity)} />
+                <CustomSlider value={widgets[0].opacity} onChange={(_, opacity) => onChangeOpacity(opacity, false)}  onDragStop={(_, opacity) => onChangeOpacity(opacity, true)} />
             </div>
             <Divider />
             {specificPropertiesPanel}
