@@ -23,7 +23,7 @@ export interface Slide {
 
 export const slideRepositoryReducer = (slides: Dictionary<SlideRecord> = {}, action: AppAction): Dictionary<SlideRecord> => {
     switch (action.type) {
-        case 'WidgetNew':
+        case 'widget.new':
             return set(slides, {
                 [action.slideId]: set(slides[action.slideId], {
                     widgetsIds: [...slides[action.slideId].widgetsIds, action.widget.id]
@@ -33,13 +33,13 @@ export const slideRepositoryReducer = (slides: Dictionary<SlideRecord> = {}, act
             return set(slides, {
                 [action.slide.id]: set(slides[action.slide.id], action.slide)
             });
-        case 'UIPasteWidgets':
+        case 'ui.clipboard.paste.widgets':
             return set(slides, {
                 [action.slideId]: set(slides[action.slideId], {
                     widgetsIds: slides[action.slideId].widgetsIds.concat(action.widgets.map(widget => widget.id))
                 })
             })
-        case 'WidgetRemove':
+        case 'widget.remove':
             return set(slides, {
                 [action.slideId]: set(slides[action.slideId], {
                     widgetsIds: slides[action.slideId].widgetsIds.filter(id => action.widgetIds.indexOf(id) === -1)

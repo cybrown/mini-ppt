@@ -74,16 +74,16 @@ export const selectedWidgets = (state: AppState) => state.ui.selectedWidgets.map
 
 export const widgetRepositoryReducer = (widgets: Dictionary<Widget> = {}, action: AppAction) => {
     switch (action.type) {
-        case 'WidgetNew':
+        case 'widget.new':
             return set(widgets, {[action.widget.id]: action.widget});
-        case 'WidgetSetPosition':
+        case 'widget.set.position':
             return set(widgets, {
                 [action.widgetId]: set(widgets[action.widgetId], {
                     x: action.x,
                     y: action.y,
                 })
             });
-        case 'WidgetBulkSetPosition':
+        case 'widget.set.bulk.position':
             return action.widgetProperties.reduce((widgets, widget) => {
                 return set(widgets, {
                     [widget.widgetId]: set(widgets[widget.widgetId], {
@@ -92,7 +92,7 @@ export const widgetRepositoryReducer = (widgets: Dictionary<Widget> = {}, action
                     })
                 });
             }, widgets);
-        case 'WidgetSetDimensionsAndPosition':
+        case 'widget.set.dimensionsAndPosition':
             return set(widgets, {
                 [action.widgetId]: set(widgets[action.widgetId], {
                     x: action.x,
@@ -101,7 +101,7 @@ export const widgetRepositoryReducer = (widgets: Dictionary<Widget> = {}, action
                     width: action.width,
                 })
             });
-        case 'WidgetBulkSetBackgroundColor':
+        case 'widget.set.bulk.backgroundColor':
             return action.widgetIds.reduce((widgets, widgetId) => {
                 return set(widgets, {
                     [widgetId]: set(widgets[widgetId], {
@@ -109,7 +109,7 @@ export const widgetRepositoryReducer = (widgets: Dictionary<Widget> = {}, action
                     })
                 })
             }, widgets);
-        case 'WidgetBulkSetOpacity':
+        case 'widget.set.bulk.opacity':
             return action.widgetIds.reduce((widgets, widgetId) => {
                 return set(widgets, {
                     [widgetId]: set(widgets[widgetId], {
@@ -117,7 +117,7 @@ export const widgetRepositoryReducer = (widgets: Dictionary<Widget> = {}, action
                     })
                 })
             }, widgets);
-        case 'WidgetTextZoneSetText': {
+        case 'widget.textZone.set.text': {
             const widget = widgets[action.widgetId];
             if (widget.kind === 'text') {
                 return set(widgets, {
@@ -128,7 +128,7 @@ export const widgetRepositoryReducer = (widgets: Dictionary<Widget> = {}, action
             }
             break;
         }
-        case 'WidgetTextZoneBulkSetFontSize': {
+        case 'widget.textZone.set.bulk.fontSize': {
             return action.widgetIds.reduce((widgets, widgetId) => {
                 return set(widgets, {
                     [widgetId]: set(widgets[widgetId], {
@@ -137,7 +137,7 @@ export const widgetRepositoryReducer = (widgets: Dictionary<Widget> = {}, action
                 })
             }, widgets);
         }
-        case 'UIPasteWidgets':
+        case 'ui.clipboard.paste.widgets':
             return action.widgets.reduce((widgets, widget) => set(widgets, {
                 [widget.id]: set(widget, {x: widget.x + action.x, y: widget.y + action.y})
             }), widgets);
@@ -146,11 +146,11 @@ export const widgetRepositoryReducer = (widgets: Dictionary<Widget> = {}, action
 }
 
 export interface WidgetActions {
-    WidgetNew: {
+    'widget.new': {
         slideId: string;
         widget: Widget;
     };
-    WidgetBulkSetPosition: {
+    'widget.set.bulk.position': {
         widgetProperties: {
             widgetId: string;
             x: number;
@@ -158,18 +158,18 @@ export interface WidgetActions {
         }[];
         history: boolean;
     };
-    WidgetSetPosition: {
+    'widget.set.position': {
         widgetId: string;
         history: boolean;
         x: number;
         y: number;
     };
-    WidgetBulkSetBackgroundColor: {
+    'widget.set.bulk.backgroundColor': {
         widgetIds: string[];
         backgroundColor: string;
         history: boolean;
     };
-    WidgetSetDimensionsAndPosition: {
+    'widget.set.dimensionsAndPosition': {
         widgetId: string;
         history: boolean;
         x: number;
@@ -177,20 +177,20 @@ export interface WidgetActions {
         width: number;
         height: number;
     };
-    WidgetBulkSetOpacity: {
+    'widget.set.bulk.opacity': {
         widgetIds: string[];
         opacity: number;
         history: boolean;
     };
-    WidgetTextZoneSetText: {
+    'widget.textZone.set.text': {
         widgetId: string;
         text: string;
     };
-    WidgetTextZoneBulkSetFontSize: {
+    'widget.textZone.set.bulk.fontSize': {
         widgetIds: string[];
         fontSize: number;
     };
-    WidgetRemove: {
+    'widget.remove': {
         slideId: string;
         widgetIds: string[];
     };

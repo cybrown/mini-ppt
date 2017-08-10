@@ -24,40 +24,40 @@ export interface UIState {
 }
 
 export interface UIActions {
-    UIChangeTextPopupSetVisibility: {
+    'ui.popup.changeText.set.visibility': {
         visible: boolean;
         text?: string;
     };
-    UIChangeWidgetText: {
+    'ui.set.widgetText': {
         text: string;
     };
-    UIWidgetReplaceSelection: {
+    'ui.selection.widgets.replace': {
         widgets: Widget[];
     };
-    UIChangeCurrentBackgroundColor: {
+    'ui.current.backgroundColor.set': {
         backgroundColor: string;
     };
-    UIChangeBackgroundColorPickerVisibility: {
+    'ui.backgroundColorPicker.set.visiblity': {
         visible: boolean;
     };
-    UISetCurrentSlide: {
+    'ui.current.slide.set': {
         slideId: string;
     };
-    UIContextMenuShowAtPosition: {
+    'ui.contextMenu.showAtPosition': {
         top: number;
         left: number;
     };
-    UIContextMenuSetTopic: {
+    'ui.contextMenu.topic.add': {
         topic: string;
         entries: ContextMenuEntry[];
     };
-    UIContextMenuHide: {};
-    UICopyWidgets: {
+    'ui.contextMenu.hide': {};
+    'ui.clipboard.copy.widgets': {
         x: number;
         y: number;
         widgets: Widget[];
     };
-    UIPasteWidgets: {
+    'ui.clipboard.paste.widgets': {
         x: number;
         y: number;
         slideId: string;
@@ -91,35 +91,35 @@ const uiInitialState: UIState = {
 
 export const uiReducer: Reducer<UIState> = (state: UIState = uiInitialState, action: AppAction): UIState => {
     switch (action.type) {
-        case 'UIWidgetReplaceSelection':
+        case 'ui.selection.widgets.replace':
             return set(state, {
                 selectedWidgets: action.widgets.map(w => w.id),
                 showBackgroundColorPicker: false,
                 currentBackgroundColor: action.widgets.length === 1 ? action.widgets[0].backgroundColor : state.currentBackgroundColor
             });
-        case 'UIChangeWidgetText':
+        case 'ui.set.widgetText':
             return set(state, {
                 showChangeTextPopup: true,
                 currentWidgetText: action.text
             });
-        case 'UIChangeTextPopupSetVisibility':
+        case 'ui.popup.changeText.set.visibility':
             return set(state, {
                 showChangeTextPopup: action.visible,
                 currentWidgetText: action.text ? action.text : state.currentWidgetText
             });
-        case 'UIChangeCurrentBackgroundColor':
+        case 'ui.current.backgroundColor.set':
             return set(state, {
                 currentBackgroundColor: action.backgroundColor
             });
-        case 'WidgetNew':
+        case 'widget.new':
             return set(state, {
                 selectedWidgets: [action.widget.id]
             });
-        case 'UIChangeBackgroundColorPickerVisibility':
+        case 'ui.backgroundColorPicker.set.visiblity':
             return set(state, {
                 showBackgroundColorPicker: action.visible
             });
-        case 'UISetCurrentSlide':
+        case 'ui.current.slide.set':
             return set(state, {
                 currentSlide: action.slideId,
                 selectedWidgets: []
@@ -129,7 +129,7 @@ export const uiReducer: Reducer<UIState> = (state: UIState = uiInitialState, act
                 currentSlide: action.slide.id,
                 selectedWidgets: []
             });
-        case 'UIContextMenuShowAtPosition':
+        case 'ui.contextMenu.showAtPosition':
             return set(state, {
                 contextMenu: set(state.contextMenu, {
                     position: set(state.contextMenu.position, {
@@ -139,7 +139,7 @@ export const uiReducer: Reducer<UIState> = (state: UIState = uiInitialState, act
                     visible: true
                 })
             });
-        case 'UIContextMenuSetTopic':
+        case 'ui.contextMenu.topic.add':
             return set(state, {
                 contextMenu: set(state.contextMenu, {
                     entries: set(state.contextMenu.entries, {
@@ -147,14 +147,14 @@ export const uiReducer: Reducer<UIState> = (state: UIState = uiInitialState, act
                     })
                 })
             });
-        case 'UIContextMenuHide':
+        case 'ui.contextMenu.hide':
             return set(state, {
                 contextMenu: set(state.contextMenu, {
                     visible: false,
                     entries: {}
                 })
             });
-        case 'UICopyWidgets':
+        case 'ui.clipboard.copy.widgets':
             return set(state, {
                 selectedWidgets: action.widgets.map(widget => widget.id),
                 clipboard: action.widgets.map(widget => set(widget, {
@@ -163,7 +163,7 @@ export const uiReducer: Reducer<UIState> = (state: UIState = uiInitialState, act
                     y: widget.y - action.y
                 }))
             });
-        case 'WidgetRemove':
+        case 'widget.remove':
             return set(state, {
                 selectedWidgets: []
             });

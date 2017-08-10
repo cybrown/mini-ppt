@@ -8,11 +8,11 @@ export const ChangeTextDialog = connect((state: AppState) => ({
     selectedWidgets: selectedWidgets(state),
     currentWidgetText: state.ui.currentWidgetText,
 }), (dispatch: Dispatch<AppAction>) => ({
-    onCancelChangeText: () => dispatch(create('UIChangeTextPopupSetVisibility', {visible: false})),
-    changeCurrentWidgetText: (text: string) => dispatch(create('UIChangeWidgetText', {text})),
+    onCancelChangeText: () => dispatch(create('ui.popup.changeText.set.visibility', {visible: false})),
+    changeCurrentWidgetText: (text: string) => dispatch(create('ui.set.widgetText', {text})),
     onSubmitChangeText: (widgetId: string, text: string) => {
-        dispatch(create('WidgetTextZoneSetText', {widgetId, text}));
-        dispatch(create('UIChangeTextPopupSetVisibility', {visible: false}));
+        dispatch(create('widget.textZone.set.text', {widgetId, text}));
+        dispatch(create('ui.popup.changeText.set.visibility', {visible: false}));
     },
 }))(props =>
     <Dialog title="Change text"

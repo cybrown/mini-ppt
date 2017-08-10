@@ -15,19 +15,19 @@ export const AppToolBar = connect((state: AppState) => ({
     showBackgroundColorPicker: state.ui.showBackgroundColorPicker,
     selectedWidgets: selectedWidgets(state),
 }), (dispatch: Dispatch<AppAction>) => ({
-    onNewTextZoneClick: (slideId: string, backgroundColor: string) => dispatch(create('WidgetNew', {
+    onNewTextZoneClick: (slideId: string, backgroundColor: string) => dispatch(create('widget.new', {
         slideId,
         widget: createTextZoneWidget(backgroundColor)
     })),
-    onNewRectangle: (slideId: string, backgroundColor: string) => dispatch(create('WidgetNew', {
+    onNewRectangle: (slideId: string, backgroundColor: string) => dispatch(create('widget.new', {
         slideId,
         widget: createRectangleWidget(backgroundColor),
     })),
     onChangeColorWidget: (widgetIds: string[], backgroundColor: string, final: boolean) => {
-        dispatch(create('WidgetBulkSetBackgroundColor', { widgetIds, backgroundColor, history: final }));
-        dispatch(create('UIChangeCurrentBackgroundColor', {backgroundColor}));
+        dispatch(create('widget.set.bulk.backgroundColor', { widgetIds, backgroundColor, history: final }));
+        dispatch(create('ui.current.backgroundColor.set', {backgroundColor}));
     },
-    onSetColorPickerisibility: (visible: boolean) => dispatch(create('UIChangeBackgroundColorPickerVisibility', {visible})),
+    onSetColorPickerisibility: (visible: boolean) => dispatch(create('ui.backgroundColorPicker.set.visiblity', {visible})),
     onCreateNewSlide: () => dispatch(create('slide.new', {
         slide: {
             id: Math.random().toString(),

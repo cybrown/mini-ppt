@@ -78,18 +78,18 @@ export const App = connect((state: AppState) => ({
     contextMenuPosition: state.ui.contextMenu.position,
     showContextMenu: state.ui.contextMenu.visible && Object.keys(state.ui.contextMenu.entries).length > 0
 }), (dispatch: Dispatch<AppAction>) => ({
-    onChangeFontSizeWidget: (widgets: Widget[], fontSize: number) => dispatch(create('WidgetTextZoneBulkSetFontSize', {
+    onChangeFontSizeWidget: (widgets: Widget[], fontSize: number) => dispatch(create('widget.textZone.set.bulk.fontSize', {
         widgetIds: widgets.map(w => w.id), fontSize
     })),
-    onCancelChangeText: () => dispatch(create('UIChangeTextPopupSetVisibility', {visible: false})),
-    changeCurrentWidgetText: (text: string) => dispatch(create('UIChangeWidgetText', {text})),
+    onCancelChangeText: () => dispatch(create('ui.popup.changeText.set.visibility', {visible: false})),
+    changeCurrentWidgetText: (text: string) => dispatch(create('ui.set.widgetText', {text})),
     onSubmitChangeText: (widgetId: string, text: string) => {
-        dispatch(create('WidgetTextZoneSetText', {widgetId, text}));
-        dispatch(create('UIChangeTextPopupSetVisibility', {visible: false}));
+        dispatch(create('widget.textZone.set.text', {widgetId, text}));
+        dispatch(create('ui.popup.changeText.set.visibility', {visible: false}));
     },
-    onChangeOpacity: (widgets: Widget[], opacity: number, final: boolean) => dispatch(create('WidgetBulkSetOpacity', { widgetIds: widgets.map(w => w.id), opacity, history: final })),
-    showContextMenuAtPosition: (top: number, left: number) => dispatch(create('UIContextMenuShowAtPosition', { top, left })),
-    hideContextMenu: () => dispatch(create('UIContextMenuHide', {}))
+    onChangeOpacity: (widgets: Widget[], opacity: number, final: boolean) => dispatch(create('widget.set.bulk.opacity', { widgetIds: widgets.map(w => w.id), opacity, history: final })),
+    showContextMenuAtPosition: (top: number, left: number) => dispatch(create('ui.contextMenu.showAtPosition', { top, left })),
+    hideContextMenu: () => dispatch(create('ui.contextMenu.hide', {}))
 }))(AppComponent);
 
 export default App;

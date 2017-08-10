@@ -11,8 +11,8 @@ export const SlideList = connect((state: AppState) => ({
     })),
     currentSlide: state.ui.currentSlide
 }), (dispatch: Dispatch<AppAction>) => ({
-    onSetCurrentSlide: (slideId: string) => dispatch(create('UISetCurrentSlide', { slideId })),
-    setContextMenu: (slideId: string) => dispatch(create('UIContextMenuSetTopic', {
+    onSetCurrentSlide: (slideId: string) => dispatch(create('ui.current.slide.set', { slideId })),
+    setContextMenu: (slideId: string) => dispatch(create('ui.contextMenu.topic.add', {
         topic: 'slide-list-element',
         entries: [{
             caption: 'Remove',

@@ -55,7 +55,7 @@ export const Editor = connect((state: AppState) => ({
     widgetsToPaste: state.ui.clipboard
 }), (dispatch: Dispatch<AppAction>) => ({
     onMoveWidgets: (widgets: Widget[], x: number, y: number, history) => {
-        dispatch(create('WidgetBulkSetPosition', {
+        dispatch(create('widget.set.bulk.position', {
             widgetProperties: widgets.map(widget => ({
                 widgetId: widget.id,
                 x: widget.x + x,
@@ -64,9 +64,9 @@ export const Editor = connect((state: AppState) => ({
             history
         }))
     },
-    onResizeWidget: (widget: Widget, deltaX: number, deltaY: number, width: number, height: number, history) => dispatch(create('WidgetSetDimensionsAndPosition', {widgetId: widget.id, x: widget.x + deltaX, y: widget.y + deltaY, width, height, history})),
-    onWidgetUnselect: () => dispatch(create('UIWidgetReplaceSelection', {widgets: []})),
-    onStartChangeText: (text: string) => dispatch(create('UIChangeTextPopupSetVisibility', {visible: true, text})),
+    onResizeWidget: (widget: Widget, deltaX: number, deltaY: number, width: number, height: number, history) => dispatch(create('widget.set.dimensionsAndPosition', {widgetId: widget.id, x: widget.x + deltaX, y: widget.y + deltaY, width, height, history})),
+    onWidgetUnselect: () => dispatch(create('ui.selection.widgets.replace', {widgets: []})),
+    onStartChangeText: (text: string) => dispatch(create('ui.popup.changeText.set.visibility', {visible: true, text})),
     onSelectWidget: (selectedWidgets: Widget[], widgetToSelect: Widget, addToSelection: boolean) => {
         let newSelection: Widget[] | null;
         if (addToSelection) {
@@ -79,32 +79,32 @@ export const Editor = connect((state: AppState) => ({
         } else {
             newSelection = [widgetToSelect];
         }
-        dispatch(create('UIWidgetReplaceSelection', {
+        dispatch(create('ui.selection.widgets.replace', {
             widgets: newSelection
         }))
     },
     setContextMenuTopic: (x: number, y: number, selectedWidgets: Widget[], widgetsToPaste: Widget[], slideId: string) => {
-        dispatch(create('UIContextMenuSetTopic', {
+        dispatch(create('ui.contextMenu.topic.add', {
             topic: 'editor',
             entries: [{
                 caption: 'Copy',
-                actions: [create('UICopyWidgets', {
+                actions: [create('ui.clipboard.copy.widgets', {
                     x, y,
                     widgets: selectedWidgets
                 })]
             }, {
                 caption: 'Paste',
-                actions: [create('UIPasteWidgets', {
+                actions: [create('ui.clipboard.paste.widgets', {
                     slideId, x, y,
                     widgets: widgetsToPaste
-                }), create('UICopyWidgets', {
+                }), create('ui.clipboard.copy.widgets', {
                     x: 0,
                     y: 0,
                     widgets: widgetsToPaste
                 })]
             }, {
                 caption: 'Remove',
-                actions: [create('WidgetRemove', {
+                actions: [create('widget.remove', {
                     slideId,
                     widgetIds: selectedWidgets.map(w => w.id)
                 })]

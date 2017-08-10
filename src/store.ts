@@ -53,4 +53,4 @@ store.dispatch(create('slide.new', {
     }
 }));
 
-store.dispatch(create('UISetCurrentSlide', { slideId }));
+store.dispatch(create('ui.current.slide.set', { slideId }));
