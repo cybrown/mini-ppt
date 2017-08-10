@@ -167,6 +167,7 @@ export interface WidgetActions {
     WidgetBulkSetBackgroundColor: {
         widgetIds: string[];
         backgroundColor: string;
+        history: boolean;
     };
     WidgetSetDimensionsAndPosition: {
         widgetId: string;
