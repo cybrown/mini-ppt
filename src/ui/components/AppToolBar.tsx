@@ -28,7 +28,7 @@ export const AppToolBar = connect((state: AppState) => ({
         dispatch(create('UIChangeCurrentBackgroundColor', {backgroundColor}));
     },
     onSetColorPickerisibility: (visible: boolean) => dispatch(create('UIChangeBackgroundColorPickerVisibility', {visible})),
-    onCreateNewSlide: () => dispatch(create('SlideNew', {
+    onCreateNewSlide: () => dispatch(create('slide.new', {
         slide: {
             id: Math.random().toString(),
             widgetsIds: []

@@ -16,7 +16,7 @@ export const SlideList = connect((state: AppState) => ({
         topic: 'slide-list-element',
         entries: [{
             caption: 'Remove',
-            actions: [create('SlideRemove', { slideId })]
+            actions: [create('slide.remove', { slideId })]
         }]
     }))
 }))(props => (

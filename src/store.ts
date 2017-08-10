@@ -9,9 +9,9 @@ const slideId = Math.random().toString();
 
 const slideListeReducer: Reducer<string[]> = (slideList: string[] = [], action: AppAction): string[] => {
     switch (action.type) {
-        case 'SlideNew':
+        case 'slide.new':
             return [...slideList, action.slide.id];
-        case 'SlideRemove':
+        case 'slide.remove':
             return slideList.filter(slideId => slideId !== action.slideId);
     }
     return slideList;
@@ -46,7 +46,7 @@ const appReducer = (state: AppState = {presentation: undefined, ui: undefined, h
 
 export const store = createStore<AppState>(appReducer, (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__());
 
-store.dispatch(create('SlideNew', {
+store.dispatch(create('slide.new', {
     slide: {
         id: slideId,
         widgetsIds: []

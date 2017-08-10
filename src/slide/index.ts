@@ -3,10 +3,10 @@ import { Widget } from "../widget";
 import { AppAction } from "../app";
 
 export interface SlideActions {
-    SlideNew: {
+    'slide.new': {
         slide: SlideRecord;
     };
-    SlideRemove: {
+    'slide.remove': {
         slideId: string;
     };
 }
@@ -29,7 +29,7 @@ export const slideRepositoryReducer = (slides: Dictionary<SlideRecord> = {}, act
                     widgetsIds: [...slides[action.slideId].widgetsIds, action.widget.id]
                 })
             });
-        case 'SlideNew':
+        case 'slide.new':
             return set(slides, {
                 [action.slide.id]: set(slides[action.slide.id], action.slide)
             });
@@ -45,7 +45,7 @@ export const slideRepositoryReducer = (slides: Dictionary<SlideRecord> = {}, act
                     widgetsIds: slides[action.slideId].widgetsIds.filter(id => action.widgetIds.indexOf(id) === -1)
                 })
             });
-        case 'SlideRemove': {
+        case 'slide.remove': {
             const newSlides = set(slides, {});
             delete newSlides[action.slideId];
             return newSlides;

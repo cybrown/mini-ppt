@@ -124,7 +124,7 @@ export const uiReducer: Reducer<UIState> = (state: UIState = uiInitialState, act
                 currentSlide: action.slideId,
                 selectedWidgets: []
             });
-        case 'SlideNew':
+        case 'slide.new':
             return set(state, {
                 currentSlide: action.slide.id,
                 selectedWidgets: []
