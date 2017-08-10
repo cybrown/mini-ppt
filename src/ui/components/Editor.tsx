@@ -35,7 +35,10 @@ class EditorComponent extends React.Component<{
                         onContextMenu={event => rect && (props.setContextMenuTopic(event.clientX - rect.left, event.clientY - rect.top, props.selectedWidgets, props.widgetsToPaste, props.slide.id))}>
                         <SlideEditor onSelectWidget={(widgetId, ctrl) => props.onSelectWidget(props.selectedWidgets, props.widgets.filter(widget => widget.id === widgetId)[0], ctrl)}
                                      slide={props.slide}
-                                     onMoveWidget={(_: string, x: number, y: number, isEnd: boolean) => {
+                                     onMoveWidget={(widgetId: string, x: number, y: number, isEnd: boolean) => {
+                                         props.onMoveWidgets(props.widgets.filter(w => w.id === widgetId), x, y, isEnd);
+                                     }}
+                                     onMoveSelectedWidgets={(x: number, y: number, isEnd: boolean) => {
                                          props.onMoveWidgets(props.widgets.filter(w => props.selectedWidgets.indexOf(w) !== -1), x, y, isEnd);
                                      }}
                                      onResizeWidget={props.onResizeWidget}

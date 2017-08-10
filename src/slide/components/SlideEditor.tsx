@@ -9,6 +9,7 @@ import { Movable } from "../../util/components/Movable";
 export class SlideEditor extends React.Component<{
     slide: Slide;
     onMoveWidget: (id: string, x: number, y: number, isEnd: boolean) => void;
+    onMoveSelectedWidgets: (x: number, y: number, isEnd: boolean) => void;
     onResizeWidget: (id: string, width: number, y: number, isEnd: boolean) => void;
     selectedWidgets: Widget[];
     onSelectWidget: (widgetId: string, addToCurrentSelection: boolean) => void;
@@ -22,7 +23,7 @@ export class SlideEditor extends React.Component<{
     };
 
     render() {
-        const {slide, onMoveWidget, onResizeWidget, selectedWidgets, onSelectWidget, onStartChangeText} = this.props;
+        const {slide, onMoveWidget, onMoveSelectedWidgets, onResizeWidget, selectedWidgets, onSelectWidget, onStartChangeText} = this.props;
         return (
             <div style={{position: 'relative'}}>
                 <div>
@@ -32,7 +33,7 @@ export class SlideEditor extends React.Component<{
                     {selectedWidgets.map(widget => (
                         <HasPosition key={widget.id} x={widget.x} y={widget.y}>
                             <Movable immediate
-                                     onMove={(deltaX, deltaY, isEnd) => onMoveWidget(widget.id, deltaX, deltaY, isEnd)}
+                                     onMove={(deltaX, deltaY, isEnd) => onMoveSelectedWidgets( deltaX, deltaY, isEnd)}
                                      onMoveStart={() => this.setState({isMoving: true})}
                                      onMoveEnd={() => this.setState({isMoving: false})}>
                                 {!this.state.isMoving ? (
