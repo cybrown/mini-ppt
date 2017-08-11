@@ -10,6 +10,7 @@ import 'roboto-fontface/css/roboto/roboto-fontface.css';
 injectTapEventPlugin();
 
 const root = document.createElement('div');
+root.setAttribute('id', 'app-root');
 document.body.appendChild(root);
 
 const doRender = (component?: JSX.Element) => render(

@@ -1,5 +1,17 @@
 @import '~normalize.css';
 
+html, body {
+    position: fixed;
+    overflow: hidden;
+}
+
+#app-root {
+    width: 100vw;
+    height: 100vh;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
 body {
     background-color: lightgrey;
     font-family: roboto;
