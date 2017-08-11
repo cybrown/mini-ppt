@@ -12,12 +12,13 @@ class EditorComponent extends React.Component<{
     widgets: Widget[];
     selectedWidgets: Widget[];
     widgetsToPaste: Widget[];
+    cutWidgetIds: string[];
     onMoveWidgets: (widgets: Widget[], x: number, y: number, history: boolean) => any;
     onResizeWidget: (widget: Widget, deltaX: number, deltaY: number, width: number, height: number, history: boolean) => any;
     onWidgetUnselect: () => any;
     onStartChangeText: (text: string) => any;
     onSelectWidget: (selectedWidgets: Widget[], widgetToSelect: Widget, addToSelection: boolean) => any;
-    setContextMenuTopic: (x: number, y: number, selectedWidgets: Widget[], widgetsToPaste: Widget[], slideId: string) => any;
+    setContextMenuTopic: (x: number, y: number, selectedWidgets: Widget[], widgetsToPaste: Widget[], slideId: string, cutWidgetIds: string[]) => any;
 }> {
 
     editorElement: Element | null;
@@ -32,7 +33,7 @@ class EditorComponent extends React.Component<{
                         ref={el => el && (this.editorElement = ReactDOM.findDOMNode(el))}
                         style={{width: '500px', height: '500px', marginLeft: 'auto', marginRight: 'auto'}}
                         onClick={props.onWidgetUnselect}
-                        onContextMenu={event => rect && (props.setContextMenuTopic(event.clientX - rect.left, event.clientY - rect.top, props.selectedWidgets, props.widgetsToPaste, props.slide.id))}>
+                        onContextMenu={event => rect && (props.setContextMenuTopic(event.clientX - rect.left, event.clientY - rect.top, props.selectedWidgets, props.widgetsToPaste, props.slide.id, props.cutWidgetIds))}>
                         <SlideEditor onSelectWidget={(widgetId, ctrl) => props.onSelectWidget(props.selectedWidgets, props.widgets.filter(widget => widget.id === widgetId)[0], ctrl)}
                                      slide={props.slide}
                                      onMoveSelectedWidgets={(x: number, y: number, isEnd: boolean) => {
@@ -52,7 +53,8 @@ export const Editor = connect((state: AppState) => ({
     widgets: widgetsSelector(state),
     slide: currentSlide(state),
     selectedWidgets: selectedWidgets(state),
-    widgetsToPaste: state.ui.clipboard
+    widgetsToPaste: state.ui.clipboard,
+    cutWidgetIds: state.ui.removeOnPaste
 }), (dispatch: Dispatch<AppAction>) => ({
     onMoveWidgets: (widgets: Widget[], x: number, y: number, history) => {
         dispatch(create('widget.set.bulk.position', {
@@ -83,10 +85,16 @@ export const Editor = connect((state: AppState) => ({
             widgets: newSelection
         }))
     },
-    setContextMenuTopic: (x: number, y: number, selectedWidgets: Widget[], widgetsToPaste: Widget[], slideId: string) => {
+    setContextMenuTopic: (x: number, y: number, selectedWidgets: Widget[], widgetsToPaste: Widget[], slideId: string, cutWidgetIds: string[]) => {
         dispatch(create('ui.contextMenu.topic.add', {
             topic: 'editor',
             entries: [{
+                caption: 'Cut',
+                actions: [create('ui.clipboard.cut.widgets', {
+                    x, y,
+                    widgets: selectedWidgets
+                })]
+            }, {
                 caption: 'Copy',
                 actions: [create('ui.clipboard.copy.widgets', {
                     x, y,
@@ -96,7 +104,8 @@ export const Editor = connect((state: AppState) => ({
                 caption: 'Paste',
                 actions: [create('ui.clipboard.paste.widgets', {
                     slideId, x, y,
-                    widgets: widgetsToPaste
+                    widgets: widgetsToPaste,
+                    idsToRemove: cutWidgetIds
                 }), create('ui.clipboard.copy.widgets', {
                     x: 0,
                     y: 0,

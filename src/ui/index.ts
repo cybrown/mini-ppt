@@ -21,6 +21,7 @@ export interface UIState {
         };
     };
     clipboard: Widget[];
+    removeOnPaste: string[];
 }
 
 export interface UIActions {
@@ -52,6 +53,11 @@ export interface UIActions {
         entries: ContextMenuEntry[];
     };
     'ui.contextMenu.hide': {};
+    'ui.clipboard.cut.widgets': {
+        x: number;
+        y: number;
+        widgets: Widget[];
+    };
     'ui.clipboard.copy.widgets': {
         x: number;
         y: number;
@@ -62,6 +68,7 @@ export interface UIActions {
         y: number;
         slideId: string;
         widgets: Widget[];
+        idsToRemove: string[];
     };
     'ui.history.undo': {};
 }
@@ -86,7 +93,8 @@ const uiInitialState: UIState = {
         visible: false,
         entries: {}
     },
-    clipboard: []
+    clipboard: [],
+    removeOnPaste: []
 };
 
 export const uiReducer: Reducer<UIState> = (state: UIState = uiInitialState, action: AppAction): UIState => {
@@ -154,6 +162,16 @@ export const uiReducer: Reducer<UIState> = (state: UIState = uiInitialState, act
                     entries: {}
                 })
             });
+        case 'ui.clipboard.cut.widgets':
+            return set(state, {
+                selectedWidgets: action.widgets.map(widget => widget.id),
+                clipboard: action.widgets.map(widget => set(widget, {
+                    id: widget.id,
+                    x: widget.x - action.x,
+                    y: widget.y - action.y
+                })),
+                removeOnPaste: action.widgets.map(w => w.id)
+            });
         case 'ui.clipboard.copy.widgets':
             return set(state, {
                 selectedWidgets: action.widgets.map(widget => widget.id),
@@ -162,6 +180,10 @@ export const uiReducer: Reducer<UIState> = (state: UIState = uiInitialState, act
                     x: widget.x - action.x,
                     y: widget.y - action.y
                 }))
+            });
+        case 'ui.clipboard.paste.widgets':
+            return set(state, {
+                removeOnPaste: []
             });
         case 'widget.remove':
             return set(state, {

@@ -34,11 +34,17 @@ export const slideRepositoryReducer = (slides: Dictionary<SlideRecord> = {}, act
                 [action.slide.id]: set(slides[action.slide.id], action.slide)
             });
         case 'ui.clipboard.paste.widgets':
-            return set(slides, {
+            const newSlides = Object.keys(slides).reduce((newSlides, slideId) => {
+                newSlides[slideId] = set(slides[slideId], {
+                    widgetsIds: slides[slideId].widgetsIds.filter(id => action.idsToRemove.indexOf(id) === -1)
+                });
+                return newSlides;
+            }, {} as Dictionary<SlideRecord>);
+            return set(newSlides, {
                 [action.slideId]: set(slides[action.slideId], {
-                    widgetsIds: slides[action.slideId].widgetsIds.concat(action.widgets.map(widget => widget.id))
+                    widgetsIds: [...slides[action.slideId].widgetsIds, ...action.widgets.map(widget => widget.id)]
                 })
-            })
+            });
         case 'widget.remove':
             return set(slides, {
                 [action.slideId]: set(slides[action.slideId], {
