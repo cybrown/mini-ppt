@@ -34,7 +34,10 @@ export const AppToolBar = connect((state: AppState) => ({
             widgetsIds: []
         }
     })),
-    onUndo: () => dispatch(create('ui.history.undo', {}))
+    onUndo: () => dispatch(create('ui.history.undo', {})),
+    onPlay: () => dispatch(create('ui.presentation.play', {
+        startingSlide: 0
+    }))
 }))(props => (
     <Toolbar>
         <ToolbarGroup firstChild={true}>
@@ -60,6 +63,8 @@ export const AppToolBar = connect((state: AppState) => ({
                               onChangeComplete={color => props.onChangeColorWidget(props.selectedWidgets.map(w => w.id), rgbaToString(color.rgb), true)}
                               onChange={color => props.onChangeColorWidget(props.selectedWidgets.map(w => w.id), rgbaToString(color.rgb), false)} />
             </Popover>
+            <IconButton iconClassName="mppt-icon mppt-icon-play3"
+                        onClick={props.onPlay} />
         </ToolbarGroup>
         <ToolbarGroup>
         </ToolbarGroup>

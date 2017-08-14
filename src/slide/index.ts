@@ -59,3 +59,10 @@ export const slideRepositoryReducer = (slides: Dictionary<SlideRecord> = {}, act
     }
     return slides;
 }
+
+export function slideRecordToSlide(slideRecord: SlideRecord, widgets: Dictionary<Widget>): Slide {
+    return {
+        id: slideRecord.id,
+        widgets: slideRecord.widgetsIds.map(widgetId => widgets[widgetId])
+    }
+}

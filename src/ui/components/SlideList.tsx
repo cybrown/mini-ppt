@@ -3,12 +3,10 @@ import { connect, Dispatch } from "react-redux";
 import { Paper } from "material-ui";
 import { SlideRenderer } from "../../slide/components/SlideRenderer";
 import { AppState, AppAction, create } from "../../app";
+import { slideRecordToSlide } from "../../slide";
 
 export const SlideList = connect((state: AppState) => ({
-    slides: state.presentation.slideList.map(id => state.presentation.slides[id]).map(slideRecord => ({
-        id: slideRecord.id,
-        widgets: slideRecord.widgetsIds.map(widgetId => state.presentation.widgets[widgetId])
-    })),
+    slides: state.presentation.slideList.map(id => state.presentation.slides[id]).map(slideRecord => slideRecordToSlide(slideRecord, state.presentation.widgets)),
     currentSlide: state.ui.currentSlide
 }), (dispatch: Dispatch<AppAction>) => ({
     onSetCurrentSlide: (slideId: string) => dispatch(create('ui.current.slide.set', { slideId })),

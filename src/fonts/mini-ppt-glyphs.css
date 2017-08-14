@@ -34,6 +34,24 @@
 .mppt-icon-plus:before {
   content: "\ea0a";
 }
+.mppt-icon-exit:before {
+  content: "\ea14";
+}
+.mppt-icon-play3:before {
+  content: "\ea1c";
+}
+.mppt-icon-pause2:before {
+  content: "\ea1d";
+}
+.mppt-icon-stop2:before {
+  content: "\ea1e";
+}
+.mppt-icon-previous2:before {
+  content: "\ea23";
+}
+.mppt-icon-next2:before {
+  content: "\ea24";
+}
 .mppt-icon-rectangle:before {
   content: "\ea53";
 }

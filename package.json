@@ -21,6 +21,7 @@
     "react-color": "^2.13.4",
     "react-dom": "^15.6.1",
     "react-hot-loader": "next",
+    "react-mui-speeddial": "^0.0.6",
     "react-redux": "^5.0.5",
     "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.7.2",

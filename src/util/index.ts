@@ -34,3 +34,17 @@ export const stopPropagation: React.MouseEventHandler<any> = e => {
     e.stopPropagation();
     e.stopPropagation();
 };
+
+export function requestFullscreen(el: Element): void {
+    if (el.requestFullscreen) {
+        el.requestFullscreen();
+    } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+    } else if (el.webkitRequestFullScreen) {
+        el.webkitRequestFullScreen();
+    } else if ((el as any).mozRequestFullscreen) {
+        (el as any).mozRequestFullscreen();
+    } else if ((el as any).msRequestFullscreen) {
+        (el as any).msRequestFullscreen();
+    }
+}

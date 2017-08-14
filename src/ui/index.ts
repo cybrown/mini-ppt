@@ -22,6 +22,7 @@ export interface UIState {
     };
     clipboard: Widget[];
     removeOnPaste: string[];
+    playmode: null | number;
 }
 
 export interface UIActions {
@@ -71,6 +72,13 @@ export interface UIActions {
         idsToRemove: string[];
     };
     'ui.history.undo': {};
+    'ui.presentation.play': {
+        startingSlide: number;
+    };
+    'ui.presentation.stop': {};
+    'ui.presentation.slide.change': {
+        slideIndex: number;
+    };
 }
 
 export interface ContextMenuEntry {
@@ -94,7 +102,8 @@ const uiInitialState: UIState = {
         entries: {}
     },
     clipboard: [],
-    removeOnPaste: []
+    removeOnPaste: [],
+    playmode: null
 };
 
 export const uiReducer: Reducer<UIState> = (state: UIState = uiInitialState, action: AppAction): UIState => {
@@ -188,6 +197,18 @@ export const uiReducer: Reducer<UIState> = (state: UIState = uiInitialState, act
         case 'widget.remove':
             return set(state, {
                 selectedWidgets: []
+            });
+        case 'ui.presentation.play':
+            return set(state, {
+                playmode: action.startingSlide
+            });
+        case 'ui.presentation.stop':
+            return set(state, {
+                playmode: null
+            });
+        case 'ui.presentation.slide.change':
+            return set(state, {
+                playmode: action.slideIndex
             });
     }
     return state;
