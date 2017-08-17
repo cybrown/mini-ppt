@@ -6,7 +6,11 @@ import { SlideRecord } from "../slide";
 import { UIState } from "../ui";
 import { Dictionary } from "../util/index";
 
-interface Actions extends WidgetActions, UIActions, SlideActions { }
+interface Actions extends WidgetActions, UIActions, SlideActions {
+    'state.set': {
+        state: AppState;
+    };
+}
 
 type ActionsWithTypes = {
     [ActionType in keyof Actions]: {type: ActionType} & Actions[ActionType];

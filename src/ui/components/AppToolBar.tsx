@@ -14,6 +14,8 @@ export const AppToolBar = connect((state: AppState) => ({
     slide: currentSlide(state),
     showBackgroundColorPicker: state.ui.showBackgroundColorPicker,
     selectedWidgets: selectedWidgets(state),
+    playRemote: state.ui.playRemote,
+    numberOfSlides: state.presentation.slideList.length - 1
 }), (dispatch: Dispatch<AppAction>) => ({
     onNewTextZoneClick: (slideId: string, backgroundColor: string) => dispatch(create('widget.new', {
         slideId,
@@ -37,7 +39,11 @@ export const AppToolBar = connect((state: AppState) => ({
     onUndo: () => dispatch(create('ui.history.undo', {})),
     onPlay: () => dispatch(create('ui.presentation.play', {
         startingSlide: 0
-    }))
+    })),
+    onPlayRemote: (slideToDisplay: number) => dispatch(create('ui.presentation.play.remote.on', {
+        slideToDisplay
+    })),
+    onStopRemote: () => dispatch(create('ui.presentation.play.remote.off', {}))
 }))(props => (
     <Toolbar>
         <ToolbarGroup firstChild={true}>
@@ -65,8 +71,20 @@ export const AppToolBar = connect((state: AppState) => ({
             </Popover>
             <IconButton iconClassName="mppt-icon mppt-icon-play3"
                         onClick={props.onPlay} />
+            <IconButton iconClassName="mppt-icon mppt-icon-play3"
+                        onClick={() => props.onPlayRemote(0)} />
         </ToolbarGroup>
-        <ToolbarGroup>
-        </ToolbarGroup>
+        { props.playRemote != null ? (
+            <ToolbarGroup>
+                    <IconButton iconClassName="mppt-icon mppt-icon-stop2"
+                                onClick={props.onStopRemote} />
+                    <IconButton iconClassName="mppt-icon mppt-icon-previous2"
+                                onClick={() => props.onPlayRemote(Math.max(props.playRemote! - 1, 0))} />
+                    <IconButton iconClassName="mppt-icon mppt-icon-next2"
+                                onClick={() => props.onPlayRemote(Math.min(props.playRemote! + 1, props.numberOfSlides))} />
+            </ToolbarGroup>
+        ) : (
+            <ToolbarGroup />
+        )}
     </Toolbar>
 ));

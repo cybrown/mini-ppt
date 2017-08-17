@@ -26,6 +26,9 @@ const presentationReducer: Reducer<Presentation> = typedCombineReducers({
 const appReducer = (state: AppState = {presentation: undefined, ui: undefined, history: []} as any, action: AppAction) => {
     let newPresentation = presentationReducer(state.presentation, action);
     let newHistory = state.history;
+    if (action.type === 'state.set') {
+        return action.state;
+    }
     if (newPresentation === state.presentation) {
         if (action.type === 'ui.history.undo') {
             if (state.history.length > 0) {

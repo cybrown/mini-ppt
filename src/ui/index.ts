@@ -23,6 +23,7 @@ export interface UIState {
     clipboard: Widget[];
     removeOnPaste: string[];
     playmode: null | number;
+    playRemote: number | null;
 }
 
 export interface UIActions {
@@ -79,6 +80,10 @@ export interface UIActions {
     'ui.presentation.slide.change': {
         slideIndex: number;
     };
+    'ui.presentation.play.remote.on': {
+        slideToDisplay: number;
+    };
+    'ui.presentation.play.remote.off': {};
 }
 
 export interface ContextMenuEntry {
@@ -103,7 +108,8 @@ const uiInitialState: UIState = {
     },
     clipboard: [],
     removeOnPaste: [],
-    playmode: null
+    playmode: null,
+    playRemote: null
 };
 
 export const uiReducer: Reducer<UIState> = (state: UIState = uiInitialState, action: AppAction): UIState => {
@@ -209,6 +215,14 @@ export const uiReducer: Reducer<UIState> = (state: UIState = uiInitialState, act
         case 'ui.presentation.slide.change':
             return set(state, {
                 playmode: action.slideIndex
+            });
+        case 'ui.presentation.play.remote.on':
+            return set(state, {
+                playRemote: action.slideToDisplay
+            });
+        case 'ui.presentation.play.remote.off':
+            return set(state, {
+                playRemote: null
             });
     }
     return state;

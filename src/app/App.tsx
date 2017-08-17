@@ -13,6 +13,7 @@ import * as ReactDOM from "react-dom";
 import { ContextMenu } from "../ui/components/ContextMenu";
 import { Slide, slideRecordToSlide } from "../slide/index";
 import { FullScreenPresenter } from "../ui/components/FullScreenPresenter";
+import RemoteFullScreenPresenter from '../ui/components/RemoteFullScreenPresenter';
 
 class AppComponent extends React.Component<{
     selectedWidgets: Widget[];
@@ -61,7 +62,8 @@ class AppComponent extends React.Component<{
             <div>
                 { (props.presentationMode && props.slideToDisplay && props.slideIndex != null)  ? (
                     <FullScreenPresenter
-                        slideToDisplay={props.slideToDisplay} onExitPresenterMode={props.onExitPresenterMode}
+                        slideToDisplay={props.slideToDisplay}
+                        onExitPresenterMode={props.onExitPresenterMode}
                         slideIndex={props.slideIndex}
                         numberSlides={props.numberSlides}
                         onChangeSlide={props.onChangeSlide}
@@ -85,6 +87,7 @@ class AppComponent extends React.Component<{
                         { props.showChangeTextPopup ? <ChangeTextDialog /> : null}
                     </div>
                 )}
+                <RemoteFullScreenPresenter />
             </div>
         )
     }
