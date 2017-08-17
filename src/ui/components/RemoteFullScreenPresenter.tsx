@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from "redux";
-import { AppState, AppAction, create } from "../../App";
+import { AppState, AppAction, create } from "../../app";
 import { set } from "../../util";
 
 interface RemoteFullScreenPresenterProps {
