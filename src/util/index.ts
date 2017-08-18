@@ -48,3 +48,11 @@ export function requestFullscreen(el: Element): void {
         (el as any).msRequestFullscreen();
     }
 }
+
+export function getFullscreenElement(): Element {
+    return document.fullscreenElement ||
+           document.webkitFullscreenElement ||
+           (document as any).webkitFullScreenElement ||
+           (document as any).mozFullscreenElement ||
+           (document as any).msFullscreenElement;
+}
