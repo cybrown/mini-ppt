@@ -56,16 +56,15 @@ export class FullScreenPresenter extends React.Component<{
     render() {
         const props = this.props;
         return (
-            <div ref={this.requestFullscreen} style={{position: 'absolute', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'black', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            <div
+                ref={this.requestFullscreen}
+                style={{position: 'absolute', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'black', display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+            >
                 { props.slideToDisplay ? <SlideRenderer slide={props.slideToDisplay} /> : null }
                 <SpeedDial
                     style={{position: 'absolute', bottom: '32px', right: '32px'}}
-                    fabContentOpen={
-                        <ContentAdd />
-                    }
-                    fabContentClose={
-                        <NavigationClose />
-                    }
+                    fabContentOpen={ <ContentAdd /> }
+                    fabContentClose={ <NavigationClose /> }
                 >
                     <SpeedDialItem
                         label={<span style={{color: 'white'}}>Previous slide</span>}

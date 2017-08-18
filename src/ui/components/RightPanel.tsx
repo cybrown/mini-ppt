@@ -10,9 +10,11 @@ export const RightPanel: React.SFC<{
 }> = ({widgets, onChangeFontSizeWidget, onChangeOpacity}) => (
     widgets.length > 0 ? (
         <Paper style={{position: 'absolute', right: 0, top: 0, width: '218px'}}>
-            <PropertiesPanel widgets={widgets}
-                             onChangeFontSizeWidget={onChangeFontSizeWidget}
-                             onChangeOpacity={onChangeOpacity} />
+            <PropertiesPanel
+                widgets={widgets}
+                onChangeFontSizeWidget={onChangeFontSizeWidget}
+                onChangeOpacity={onChangeOpacity}
+            />
         </Paper>
     ) : null
 );

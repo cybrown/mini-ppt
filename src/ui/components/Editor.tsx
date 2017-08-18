@@ -29,19 +29,23 @@ class EditorComponent extends React.Component<{
         return (
             <div style={{ paddingTop: '100px' }}>
                 {props.slide !== null ? (
-                    <Paper zDepth={2}
+                    <Paper
+                        zDepth={2}
                         ref={el => el && (this.editorElement = ReactDOM.findDOMNode(el))}
                         style={{width: '500px', height: '500px', marginLeft: 'auto', marginRight: 'auto'}}
                         onClick={props.onWidgetUnselect}
-                        onContextMenu={event => rect && (props.setContextMenuTopic(event.clientX - rect.left, event.clientY - rect.top, props.selectedWidgets, props.widgetsToPaste, props.slide.id, props.cutWidgetIds))}>
-                        <SlideEditor onSelectWidget={(widgetId, ctrl) => props.onSelectWidget(props.selectedWidgets, props.widgets.filter(widget => widget.id === widgetId)[0], ctrl)}
-                                     slide={props.slide}
-                                     onMoveSelectedWidgets={(x: number, y: number, isEnd: boolean) => {
-                                         props.onMoveWidgets(props.widgets.filter(w => props.selectedWidgets.indexOf(w) !== -1), x, y, isEnd);
-                                     }}
-                                     onResizeWidget={(widgetId, deltaX, deltaY, width, height, history) => props.onResizeWidget(props.widgets.filter(widget => widget.id === widgetId)[0], deltaX, deltaY, Math.max(2, width), Math.max(2, height), history)}
-                                     selectedWidgets={props.selectedWidgets}
-                                     onStartChangeText={props.onStartChangeText} />
+                        onContextMenu={event => rect && (props.setContextMenuTopic(event.clientX - rect.left, event.clientY - rect.top, props.selectedWidgets, props.widgetsToPaste, props.slide.id, props.cutWidgetIds))}
+                    >
+                        <SlideEditor
+                            onSelectWidget={(widgetId, ctrl) => props.onSelectWidget(props.selectedWidgets, props.widgets.filter(widget => widget.id === widgetId)[0], ctrl)}
+                            slide={props.slide}
+                            onMoveSelectedWidgets={(x: number, y: number, isEnd: boolean) => {
+                                props.onMoveWidgets(props.widgets.filter(w => props.selectedWidgets.indexOf(w) !== -1), x, y, isEnd);
+                            }}
+                            onResizeWidget={(widgetId, deltaX, deltaY, width, height, history) => props.onResizeWidget(props.widgets.filter(widget => widget.id === widgetId)[0], deltaX, deltaY, Math.max(2, width), Math.max(2, height), history)}
+                            selectedWidgets={props.selectedWidgets}
+                            onStartChangeText={props.onStartChangeText}
+                        />
                     </Paper>
                 ) : null}
             </div>

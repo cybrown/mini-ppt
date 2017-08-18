@@ -32,6 +32,10 @@ export const ChangeTextDialog = connect((state: AppState) => ({
             modal={false}
             open={true}
             onRequestClose={() => null} >
-        <TextField fullWidth value={props.currentWidgetText} onChange={e => props.changeCurrentWidgetText((e.target as any).value)} />
+        <TextField
+            fullWidth
+            value={props.currentWidgetText}
+            onChange={e => props.changeCurrentWidgetText((e.target as any).value)}
+        />
     </Dialog>
 );

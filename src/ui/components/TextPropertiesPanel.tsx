@@ -11,6 +11,7 @@ export const TextPropertiesPanel: React.SFC<{
             fullWidth
             floatingLabelText="Font size"
             value={widgets[0].fontSize}
-            onChange={e => onChangeFontSizeWidget(Number((e.target as any).value))} />
+            onChange={e => onChangeFontSizeWidget(Number((e.target as any).value))}
+        />
     </div>
 );

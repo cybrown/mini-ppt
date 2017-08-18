@@ -26,21 +26,32 @@ export class SlideEditor extends React.Component<{
         return (
             <div style={{position: 'relative'}}>
                 <div>
-                    <SlideRenderer slide={slide} onWidgetClick={onSelectWidget} />
+                    <SlideRenderer
+                        slide={slide}
+                        onWidgetClick={onSelectWidget}
+                    />
                 </div>
                 <div style={{position: 'absolute', top: 0, left: 0}}>
                     {selectedWidgets.map(widget => (
-                        <HasPosition key={widget.id} x={widget.x} y={widget.y}>
-                            <Movable immediate
-                                     onMove={(deltaX, deltaY, isEnd) => onMoveSelectedWidgets( deltaX, deltaY, isEnd)}
-                                     onMoveStart={() => this.setState({isMoving: true})}
-                                     onMoveEnd={() => this.setState({isMoving: false})}>
+                        <HasPosition
+                            key={widget.id}
+                            x={widget.x}
+                            y={widget.y}
+                        >
+                            <Movable
+                                immediate
+                                onMove={(deltaX, deltaY, isEnd) => onMoveSelectedWidgets( deltaX, deltaY, isEnd)}
+                                onMoveStart={() => this.setState({isMoving: true})}
+                                onMoveEnd={() => this.setState({isMoving: false})}
+                            >
                                 {!this.state.isMoving ? (
-                                    <WidgetBox key={widget.id}
-                                               widget={widget}
-                                               onWidgetClick={onSelectWidget}
-                                               onResizeWidget={onResizeWidget}
-                                               onStartChangeText={onStartChangeText} />
+                                    <WidgetBox
+                                        key={widget.id}
+                                        widget={widget}
+                                        onWidgetClick={onSelectWidget}
+                                        onResizeWidget={onResizeWidget}
+                                        onStartChangeText={onStartChangeText}
+                                    />
                                 ) : null}
                             </Movable>
                         </HasPosition>

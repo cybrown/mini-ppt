@@ -67,9 +67,11 @@ export class Movable extends React.Component<{
 
     render() {
         return (
-            <div style={{position: 'absolute', left: this.state.deltaX + 'px', top: this.state.deltaY + 'px'}}
-                 onClick={this.props.onClick}
-                 onMouseDown={this.onmousedown}>
+            <div
+                style={{position: 'absolute', left: this.state.deltaX + 'px', top: this.state.deltaY + 'px'}}
+                onClick={this.props.onClick}
+                onMouseDown={this.onmousedown}
+            >
                 {this.props.children}
             </div>
         )

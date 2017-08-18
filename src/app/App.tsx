@@ -71,7 +71,10 @@ class AppComponent extends React.Component<{
                 ) : (
                     <div style={{display: 'flex', height: '100vh', flexDirection: 'column'}}
                         onContextMenuCapture={this.props.hideContextMenu}>
-                        <div ref={el => el && (this.contextMenuElement = ReactDOM.findDOMNode(el))} style={{position: 'fixed', top: props.contextMenuPosition.top + 'px', left: props.contextMenuPosition.left + 'px'}}></div>
+                        <div
+                            ref={el => el && (this.contextMenuElement = ReactDOM.findDOMNode(el))}
+                            style={{position: 'fixed', top: props.contextMenuPosition.top + 'px', left: props.contextMenuPosition.left + 'px'}}
+                        />
                         <Popover open={this.props.showContextMenu} anchorEl={this.contextMenuElement} useLayerForClickAway={false}>
                             <ContextMenu />
                         </Popover>
@@ -80,9 +83,11 @@ class AppComponent extends React.Component<{
                         <div style={{position: 'relative', flexGrow: 1}}>
                             <SlideList />
                             <Editor />
-                            <RightPanel widgets={props.selectedWidgets}
-                                        onChangeFontSizeWidget={fontSize => props.onChangeFontSizeWidget(props.selectedWidgets, fontSize)}
-                                        onChangeOpacity={(opacity, final) => props.onChangeOpacity(props.selectedWidgets, opacity, final)} />
+                            <RightPanel
+                                widgets={props.selectedWidgets}
+                                onChangeFontSizeWidget={fontSize => props.onChangeFontSizeWidget(props.selectedWidgets, fontSize)}
+                                onChangeOpacity={(opacity, final) => props.onChangeOpacity(props.selectedWidgets, opacity, final)}
+                            />
                         </div>
                         { props.showChangeTextPopup ? <ChangeTextDialog /> : null}
                     </div>

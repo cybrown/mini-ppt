@@ -19,5 +19,9 @@ export const WidgetRenderer: React.SFC<{widget: Widget}> = ({widget}) => {
                                       height={widget.height} />;
         break;
     }
-    return <div style={{opacity: widget.opacity}}>{innerElement}</div>
+    return (
+        <div style={{opacity: widget.opacity}}>
+            {innerElement}
+        </div>
+    );
 }

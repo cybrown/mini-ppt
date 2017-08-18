@@ -47,41 +47,69 @@ export const AppToolBar = connect((state: AppState) => ({
 }))(props => (
     <Toolbar>
         <ToolbarGroup firstChild={true}>
-            <IconButton iconClassName="mppt-icon mppt-icon-plus" onClick={props.onCreateNewSlide} />
+            <IconButton
+                iconClassName="mppt-icon mppt-icon-plus"
+                onClick={props.onCreateNewSlide}
+            />
         </ToolbarGroup>
         <ToolbarGroup>
-            <IconButton iconClassName="mppt-icon mppt-icon-undo"
-                        onClick={() => props.onUndo()} />
-            <IconButton iconClassName="mppt-icon mppt-icon-text"
-                        onClick={() => props.slide && props.onNewTextZoneClick(props.slide.id, props.currentBackgroundColor)} />
-            <IconButton iconClassName="mppt-icon mppt-icon-rectangle"
-                        onClick={() => props.slide && props.onNewRectangle(props.slide.id, props.currentBackgroundColor)} />
-            <IconButton ref={el => el && (anchorForBackgroundColorPicker = ReactDOM.findDOMNode(el))}
-                        onClick={() => props.onSetColorPickerisibility(!props.showBackgroundColorPicker)}>
-                <FontIcon color={props.currentBackgroundColor} className="mppt-icon mppt-icon-bucket" />
+            <IconButton
+                iconClassName="mppt-icon mppt-icon-undo"
+                onClick={() => props.onUndo()}
+            />
+            <IconButton
+                iconClassName="mppt-icon mppt-icon-text"
+                onClick={() => props.slide && props.onNewTextZoneClick(props.slide.id, props.currentBackgroundColor)}
+            />
+            <IconButton
+                iconClassName="mppt-icon mppt-icon-rectangle"
+                onClick={() => props.slide && props.onNewRectangle(props.slide.id, props.currentBackgroundColor)}
+            />
+            <IconButton
+                ref={el => el && (anchorForBackgroundColorPicker = ReactDOM.findDOMNode(el))}
+                onClick={() => props.onSetColorPickerisibility(!props.showBackgroundColorPicker)}
+            >
+                <FontIcon
+                    color={props.currentBackgroundColor}
+                    className="mppt-icon mppt-icon-bucket"
+                />
             </IconButton>
-            <Popover open={props.showBackgroundColorPicker}
-                     anchorEl={anchorForBackgroundColorPicker}
-                     anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-                     targetOrigin={{horizontal: 'left', vertical: 'top'}}
-                     useLayerForClickAway={false}>
-                <SketchPicker color={props.currentBackgroundColor}
-                              onChangeComplete={color => props.onChangeColorWidget(props.selectedWidgets.map(w => w.id), rgbaToString(color.rgb), true)}
-                              onChange={color => props.onChangeColorWidget(props.selectedWidgets.map(w => w.id), rgbaToString(color.rgb), false)} />
+            <Popover
+                open={props.showBackgroundColorPicker}
+                anchorEl={anchorForBackgroundColorPicker}
+                anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                useLayerForClickAway={false}
+            >
+                <SketchPicker
+                    color={props.currentBackgroundColor}
+                    onChangeComplete={color => props.onChangeColorWidget(props.selectedWidgets.map(w => w.id), rgbaToString(color.rgb), true)}
+                    onChange={color => props.onChangeColorWidget(props.selectedWidgets.map(w => w.id), rgbaToString(color.rgb), false)}
+                />
             </Popover>
-            <IconButton iconClassName="mppt-icon mppt-icon-play3"
-                        onClick={props.onPlay} />
-            <IconButton iconClassName="mppt-icon mppt-icon-play3"
-                        onClick={() => props.onPlayRemote(0)} />
+            <IconButton
+                iconClassName="mppt-icon mppt-icon-play3"
+                onClick={props.onPlay}
+            />
+            <IconButton
+                iconClassName="mppt-icon mppt-icon-play3"
+                onClick={() => props.onPlayRemote(0)}
+            />
         </ToolbarGroup>
         { props.playRemote != null ? (
             <ToolbarGroup>
-                    <IconButton iconClassName="mppt-icon mppt-icon-stop2"
-                                onClick={props.onStopRemote} />
-                    <IconButton iconClassName="mppt-icon mppt-icon-previous2"
-                                onClick={() => props.onPlayRemote(Math.max(props.playRemote! - 1, 0))} />
-                    <IconButton iconClassName="mppt-icon mppt-icon-next2"
-                                onClick={() => props.onPlayRemote(Math.min(props.playRemote! + 1, props.numberOfSlides))} />
+                    <IconButton
+                        iconClassName="mppt-icon mppt-icon-stop2"
+                        onClick={props.onStopRemote}
+                    />
+                    <IconButton
+                        iconClassName="mppt-icon mppt-icon-previous2"
+                        onClick={() => props.onPlayRemote(Math.max(props.playRemote! - 1, 0))}
+                    />
+                    <IconButton
+                        iconClassName="mppt-icon mppt-icon-next2"
+                        onClick={() => props.onPlayRemote(Math.min(props.playRemote! + 1, props.numberOfSlides))}
+                    />
             </ToolbarGroup>
         ) : (
             <ToolbarGroup />

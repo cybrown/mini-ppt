@@ -28,11 +28,15 @@ export class CustomSlider extends React.Component<CustomSliderProps, {
     }
 
     render() {
-        return <Slider value={this.state.value}
-                       onChange={(event, value) => {
-                           this.setState({ value });
-                           this.props.onChange(event, value);
-                       }}
-                       onDragStop={event => this.props.onDragStop(event, this.state.value)} />;
+        return (
+        <Slider
+            value={this.state.value}
+            onChange={(event, value) => {
+                this.setState({ value });
+                this.props.onChange(event, value);
+            }}
+            onDragStop={event => this.props.onDragStop(event, this.state.value)}
+        />
+        );
     }
 }

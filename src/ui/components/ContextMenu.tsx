@@ -12,7 +12,11 @@ export const ContextMenu = connect((state: AppState) => ({
 }))(props => (
     <Menu>
         {props.entries.map((entry, index) => (
-            <MenuItem key={index} primaryText={entry.caption} onClick={() => props.onItemClick(entry)}/>
+            <MenuItem
+                key={index}
+                primaryText={entry.caption}
+                onClick={() => props.onItemClick(entry)}
+            />
         ))}
     </Menu>
 ));

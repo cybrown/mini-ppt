@@ -21,7 +21,11 @@ export const PropertiesPanel: React.SFC<{
     return (
         <div>
             <div style={{padding: '8px'}}>
-                <CustomSlider value={widgets[0].opacity} onChange={(_, opacity) => onChangeOpacity(opacity, false)}  onDragStop={(_, opacity) => onChangeOpacity(opacity, true)} />
+                <CustomSlider
+                    value={widgets[0].opacity}
+                    onChange={(_, opacity) => onChangeOpacity(opacity, false)}
+                    onDragStop={(_, opacity) => onChangeOpacity(opacity, true)}
+                />
             </div>
             <Divider />
             {specificPropertiesPanel}

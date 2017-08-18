@@ -6,7 +6,10 @@ export const HasPosition: React.SFC<{
     y: number;
     onClick?: (ctrl: boolean) => void;
 }> = ({x, y, children, onClick}) => (
-    <div style={{position: 'absolute', left: x + 'px', top: y + 'px'}} onClick={e => (onClick && onClick(e.getModifierState(modifierForMultiSelection())), e.stopPropagation())}>
+    <div
+        style={{position: 'absolute', left: x + 'px', top: y + 'px'}}
+        onClick={e => (onClick && onClick(e.getModifierState(modifierForMultiSelection())), e.stopPropagation())}
+    >
         {children}
     </div>
 );

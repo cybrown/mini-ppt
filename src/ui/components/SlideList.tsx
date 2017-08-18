@@ -18,15 +18,28 @@ export const SlideList = connect((state: AppState) => ({
         }]
     }))
 }))(props => (
-    <Paper style={{backgroundColor: 'lightgrey', position: 'absolute', top: 0, bottom: 0, width: '200px', overflow: 'auto'}}
-           zDepth={2}>
+    <Paper
+        style={{
+            backgroundColor: 'lightgrey',
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            width: '200px',
+            overflow: 'auto'
+        }}
+        zDepth={2}
+    >
         {props.slides.map(slide => (
-            <div key={slide.id}
-                 style={{width: '200px', height: '200px', padding: '35.25px'}}
-                 onContextMenu={() => props.setContextMenu(slide.id)}>
-                <Paper zDepth={slide.id === props.currentSlide ? 3 : 1}
-                       style={{width: '125px', height: '125px'}}
-                       onClick={() => props.onSetCurrentSlide(slide.id)}>
+            <div
+                key={slide.id}
+                style={{width: '200px', height: '200px', padding: '35.25px'}}
+                onContextMenu={() => props.setContextMenu(slide.id)}
+            >
+                <Paper
+                    zDepth={slide.id === props.currentSlide ? 3 : 1}
+                    style={{width: '125px', height: '125px'}}
+                    onClick={() => props.onSetCurrentSlide(slide.id)}
+                >
                     <div style={{transform: 'scale(0.25, 0.25)', transformOrigin: 'top left', pointerEvents: 'none'}}>
                         <SlideRenderer slide={slide} />
                     </div>

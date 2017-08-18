@@ -7,5 +7,7 @@ export const TextZone: React.SFC<{
     fontSize: number;
     backgroundColor: string;
 }> = ({text, width, height, fontSize, backgroundColor}) => (
-    <div style={{width: width + 'px', height: height + 'px', fontSize: fontSize + 'px', backgroundColor}}>{text}</div>
+    <div style={{width: width + 'px', height: height + 'px', fontSize: fontSize + 'px', backgroundColor}}>
+        {text}
+    </div>
 );
