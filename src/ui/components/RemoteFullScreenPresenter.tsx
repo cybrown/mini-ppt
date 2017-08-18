@@ -34,7 +34,7 @@ class RemoteFullScreenPresenterInner extends React.Component<RemoteFullScreenPre
                 this.remoteWindow.addEventListener('beforeunload', () => {
                     this.props.closeRemoteWindow()
                 });
-                setTimeout(() => {
+                this.remoteWindow.addEventListener('load', () => {
                     if (this.remoteWindow) {
                         this.remoteWindow.postMessage({
                             isAppMessage: true,
@@ -48,7 +48,7 @@ class RemoteFullScreenPresenterInner extends React.Component<RemoteFullScreenPre
                             })
                         }, location.origin);
                     }
-                }, 100);
+                });
             } else if (this.remoteWindow) {
                 this.remoteWindow.close();
                 this.remoteWindow = null;
